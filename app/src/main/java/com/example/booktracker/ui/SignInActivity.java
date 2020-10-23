@@ -28,7 +28,9 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String cityName = usernameEditText.getText().toString();
                 final String provinceName = passwordEditText.getText().toString();
+                //check credentials
                 Intent intent = new Intent(v.getContext(), HomeActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -36,7 +38,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), SignUpActivity.class);
-                v.getContext().startActivity(intent);
+                startActivity(intent);
             }
         });
     }
