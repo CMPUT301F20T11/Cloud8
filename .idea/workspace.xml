@@ -1,12 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a65f1e49-6b31-47b4-bc76-41bd80f4180f" name="Default Changelist" comment="" />
+    <list default="true" id="a65f1e49-6b31-47b4-bc76-41bd80f4180f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_gson_gson_2_8_6_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_junit_jupiter_junit_jupiter_api_5_0_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_junit_platform_junit_platform_commons_1_0_1_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_opentest4j_opentest4j_1_0_0_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/booktracker/boundary/addBookQuery.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/test/java/com/example/booktracker/boundary/addBookQueryTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/6.1.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/app/app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/booktracker/boundary/BookQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/booktracker/boundary/BookQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/booktracker/entities/Book.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/booktracker/entities/Book.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/example/booktracker/boundary/TestBookQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/example/booktracker/boundary/TestBookQuery.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_XL_API_30" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -19,6 +38,13 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -30,12 +56,29 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../cmput_301/lab6" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Android JUnit.addBookQueryTest">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="addBookQueryTest" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
+      <module name="app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.booktracker.boundary.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.booktracker.boundary" />
+      <option name="MAIN_CLASS_NAME" value="com.example.booktracker.boundary.addBookQueryTest" />
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
       <method v="2">
@@ -93,6 +136,11 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Android JUnit.addBookQueryTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -106,5 +154,54 @@
       <updated>1603213392373</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl" timestamp="1603659677252">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="776" y="329" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603659677252" />
+    <state x="2696" y="310" width="424" height="484" key="FileChooserDialogImpl/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1603590724771" />
+    <state width="1874" height="287" key="GridCell.Tab.0.bottom" timestamp="1603660477463">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660477463" />
+    <state width="1874" height="287" key="GridCell.Tab.0.center" timestamp="1603660477463">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.center/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660477463" />
+    <state width="1874" height="287" key="GridCell.Tab.0.left" timestamp="1603660477462">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.left/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660477462" />
+    <state width="1874" height="287" key="GridCell.Tab.0.right" timestamp="1603660477463">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="287" key="GridCell.Tab.0.right/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660477463" />
+    <state x="2569" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1603566689440">
+      <screen x="1920" y="0" width="1920" height="1080" />
+    </state>
+    <state x="2569" y="380" key="com.intellij.ide.util.TipDialog/1920.0.1920.1080/0.27.1920.1053@1920.0.1920.1080" timestamp="1603566689440" />
+    <state x="100" y="98" width="1720" height="882" key="dock-window-1" timestamp="1603660253217">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="100" y="98" width="1720" height="882" key="dock-window-1/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660253217" />
+    <state x="623" y="237" width="672" height="678" key="search.everywhere.popup" timestamp="1603660250074">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="623" y="237" width="672" height="678" key="search.everywhere.popup/1920.0.1920.1080/0.27.1920.1053@0.27.1920.1053" timestamp="1603660250074" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="java-method">
+          <url>file://$PROJECT_DIR$/app/src/main/java/com/example/booktracker/boundary/BookQuery.java</url>
+          <line>1</line>
+          <properties class="com.example.booktracker.boundary.BookQuery">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
