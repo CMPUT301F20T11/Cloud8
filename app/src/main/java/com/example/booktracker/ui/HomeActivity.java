@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         bookList = findViewById(R.id.book_list);
 
         //buttons
+
+        Button addBookBtn = findViewById(R.id.add_book_button);
+        addBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), AddBookActivity.class)); }
+        });
 
     }
 
