@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="bookTracker/app" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/bookTracker.iml" filepath="$PROJECT_DIR$/.idea/modules/bookTracker.iml" group="bookTracker" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/bookTracker-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/bookTracker-app.iml" group="bookTracker/app" />
     </modules>
   </component>
 </project>

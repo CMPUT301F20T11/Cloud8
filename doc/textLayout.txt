@@ -1,0 +1,80 @@
+
+Menu 
+Books
+	My books 
+	Borrowed books
+	Find a book
+	Scan book 
+Requests
+	Incoming requests 
+	Outgoing requests 
+Profile
+
+
+SIGN IN 
+Check credentials -> login -> menu
+SIGNUP
+Check username unique -> login - US 02.01.01
+
+BOOKS
+My books
+My book list (description, status, current borrower) - US 01.03.01, US 01.04.01
+Actions 
+	Add book (description: title, author, isbn, optional: photo) - US 01.01.01, US 08.01.01
+	Filter (status: available, borrowed, requested, accepted) - US 01.05.01
+	View book 
+		Edit book details - US 01.06.01, US 08.02.01
+		Delete book - US 01.07.01
+		View user profile (current borrower) - US 2.03.01
+
+Borrowed Books
+List of all books I am borrowing (description, owner username) - US 06.03.01
+Actions
+	View book info	 - US 08.03.01
+	View user profile (book owner) - US 2.03.01
+
+Find a book
+List of all available/requested books (description, owner username, status) - US 01.03.01, US 03.02.01
+Actions
+	Search by description - US 3.01.01, 
+	View book - US 08.03.01
+		Request book - US 4.01.01
+		View user profile (book owner) - US 2.03.01
+
+Scan Book
+Display description (at least isbn) - US 01.02.01
+Actions
+	Book owner scan
+		available -> borrowed - US 06.01.01
+		borrowed -> available - US 07.02.01
+	Book borrower scan
+		Add to borrowed books - US 06.02.01
+		Remove from borrowed books - US 07.01.01
+
+
+REQUESTS
+Incoming requests
+List of all requests on my books ordered by book - US 04.04.01
+Actions
+	Accept request (decline any others on the book) - US 05.01.01
+		- specify geo location - US 09.01.01
+	Decline request - US 05.02.01
+	View user profile (requester) - US 2.03.01
+	~Notification of new request - US 04.03.01
+
+Outgoing requests
+List of sent requests (description, owner username, status) - US 01.03.01
+Actions
+	Display requested books - US 04.02.01
+	Display accepted requests - US 05.04.01
+		- view geo location - US 09.02.01
+	View user profile (book owner) - US 2.03.01
+	~Notification of accepted request - US 05.03.01
+	
+
+PROFILE
+Show profile (unique username, email, phone) - US 2.01.01
+Actions
+	Edit profile - US 2.02.01
+
+
