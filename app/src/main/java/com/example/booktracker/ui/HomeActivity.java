@@ -27,7 +27,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        //===============Ivan code: create log out button=================
+        Button logOut = findViewById(R.id.log_out_button);
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                finish();
+            }
+        });
+        //=========================================
         bookList = findViewById(R.id.book_list);
 
         //buttons

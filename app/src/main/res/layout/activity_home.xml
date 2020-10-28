@@ -13,6 +13,13 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/log_out_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="log out" />
+
+        <Button
             android:id="@+id/all_books_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

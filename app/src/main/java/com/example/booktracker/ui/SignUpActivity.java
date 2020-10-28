@@ -20,6 +20,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.concurrent.TimeUnit;
+
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText new_username_field, editTextPassword, editTextEmailAddress, editTextPhone;
     private Button confirmSignUp;
@@ -41,10 +43,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         editTextEmailAddress = (EditText) findViewById(R.id.editTextEmailAddress);
         editTextPhone = (EditText) findViewById(R.id.editTextPhone);
     }
-
-
-
-
 
 
         private void registerUser () {
@@ -84,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 return;
             }
             mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
@@ -96,6 +94,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(SignUpActivity.this, "User successfully registered!", Toast.LENGTH_LONG).show();
+                                            //====Ivan: made it so that the activity automatically exits==
+                                            try{
+                                                Thread.sleep(2000);
+                                            }catch (InterruptedException e){
+                                                Thread.currentThread().interrupt();
+                                            }
+                                            finish();
+                                            //============================================================
                                             return;
                                         } else {
                                             Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();

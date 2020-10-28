@@ -22,6 +22,15 @@ public class AddBookActivity extends AppCompatActivity {
         final EditText authorView = findViewById(R.id.addbook_author);
         final EditText isbnView = findViewById(R.id.addbook_isbn);
         final EditText descView = findViewById(R.id.addbook_description);
+        //============Ivan===============
+        Button scanBtn = findViewById(R.id.scan_btn);
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), ScanActivity.class));
+            }
+        });
+        //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
         addBtn.setOnClickListener(new View.OnClickListener() {

@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".boundary.MainActivity">
+        <activity android:name=".ui.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
@@ -28,6 +28,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
+        <activity android:name=".ui.ScanActivity"></activity>
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.HomeActivity" />
         <activity
