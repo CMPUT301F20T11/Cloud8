@@ -16,6 +16,10 @@ import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
 
+/**
+ * ArrayAdapter class for the Book entity
+ * @author Edlee Ducay
+ */
 public class BookAdapter extends ArrayAdapter<Book> {
     private ArrayList<Book> bookList = new ArrayList<>();
     private Context context;
