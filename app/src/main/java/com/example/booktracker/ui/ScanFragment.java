@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
-import com.example.booktracker.ui.Activities.MainActivity;
 import com.example.booktracker.ui.Activities.ScanActivity;
 
 /**

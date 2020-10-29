@@ -17,8 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.ui.Activities.AddBookActivity;
-import com.example.booktracker.ui.Activities.MainActivity;
 import com.example.booktracker.ui.Activities.SetGeoActivity;
 
 import java.util.ArrayList;

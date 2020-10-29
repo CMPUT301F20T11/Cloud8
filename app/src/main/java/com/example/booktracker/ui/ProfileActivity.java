@@ -19,6 +19,6 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         // code here to show dialog
-        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+        startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
     }
 }

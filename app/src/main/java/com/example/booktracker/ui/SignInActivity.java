@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
-import com.example.booktracker.ui.Activities.MainActivity;
-import com.example.booktracker.ui.Activities.SignUpActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -75,7 +73,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(SignInActivity.this, "User successfully signed in!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                    startActivity(new Intent(SignInActivity.this, HomeActivity.class));
 
 
                 }else{

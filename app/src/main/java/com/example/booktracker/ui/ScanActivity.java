@@ -77,6 +77,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed(){
         // code here to show dialog
-        startActivity(new Intent(ScanActivity.this, MainActivity.class));
+        startActivity(new Intent(ScanActivity.this, HomeActivity.class));
     }
 }

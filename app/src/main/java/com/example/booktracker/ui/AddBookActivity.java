@@ -23,13 +23,13 @@ public class AddBookActivity extends AppCompatActivity {
         final EditText descView = findViewById(R.id.addbook_description);
 
         //============Ivan===============
-//        Button scanBtn = findViewById(R.id.scan_btn);
-//        scanBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(view.getContext(), ScanActivity.class));
-//            }
-//        });
+        Button scanBtn = findViewById(R.id.scan_btn);
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), ScanActivity.class));
+            }
+        });
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
@@ -40,7 +40,7 @@ public class AddBookActivity extends AppCompatActivity {
                 String isbn = isbnView.getText().toString();
                 String desc = descView.getText().toString();
 
-                startActivity(new Intent(v.getContext(), MainActivity.class));
+                startActivity(new Intent(v.getContext(), HomeActivity.class));
 
             }
         });
@@ -48,7 +48,7 @@ public class AddBookActivity extends AppCompatActivity {
         Button cancelBtn = findViewById(R.id.addbook_cancelbtn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), MainActivity.class));
+                startActivity(new Intent(v.getContext(), HomeActivity.class));
             }
         });
 
