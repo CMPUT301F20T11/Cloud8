@@ -1,4 +1,4 @@
-package com.example.booktracker.ui.Requests;
+package com.example.booktracker.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.ui.Activities.SetGeoActivity;
+import com.example.booktracker.ui.SetGeoActivity;
 
 import java.util.ArrayList;
 

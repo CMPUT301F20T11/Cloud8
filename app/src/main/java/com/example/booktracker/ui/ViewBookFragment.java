@@ -1,4 +1,4 @@
-package com.example.booktracker.ui.Books;
+package com.example.booktracker.ui;
 
 public class ViewBookFragment {
 }

@@ -1,4 +1,4 @@
-package com.example.booktracker.ui.Activities;
+package com.example.booktracker.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;

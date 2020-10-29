@@ -7,48 +7,48 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.booktracker.ui.Books.MyBooksFragment"
+        android:name="com.example.booktracker.ui.MyBooksFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_my_books" />
 
     <fragment
         android:id="@+id/nav_borrowed"
-        android:name="com.example.booktracker.ui.Books.BorrowedBooksFragment"
+        android:name="com.example.booktracker.ui.BorrowedBooksFragment"
         android:label="@string/menu_borrowed"
         tools:layout="@layout/fragment_borrowed_books" />
     <fragment
         android:id="@+id/nav_find"
-        android:name="com.example.booktracker.ui.Books.FindBooksFragment"
+        android:name="com.example.booktracker.ui.FindBooksFragment"
         android:label="@string/menu_find"
         tools:layout="@layout/fragment_find_book" />
     <fragment
         android:id="@+id/nav_scan"
-        android:name="com.example.booktracker.ui.Books.ScanFragment"
+        android:name="com.example.booktracker.ui.ScanFragment"
         android:label="@string/menu_scan"
         tools:layout="@layout/fragment_scan" />
     <fragment
         android:id="@+id/nav_incoming"
-        android:name="com.example.booktracker.ui.Requests.IncomingReqFragment"
+        android:name="com.example.booktracker.ui.IncomingReqFragment"
         android:label="@string/menu_incoming"
         tools:layout="@layout/fragment_incoming_req" />
     <fragment
         android:id="@+id/nav_accepted"
-        android:name="com.example.booktracker.ui.Requests.AcceptedReqFragment"
+        android:name="com.example.booktracker.ui.AcceptedReqFragment"
         android:label="@string/menu_accepted"
         tools:layout="@layout/fragment_accepted_req" />
     <fragment
         android:id="@+id/nav_requested"
-        android:name="com.example.booktracker.ui.Requests.RequestedFragment"
+        android:name="com.example.booktracker.ui.RequestedFragment"
         android:label="@string/menu_requested"
         tools:layout="@layout/fragment_requested" />
     <fragment
         android:id="@+id/nav_profile"
-        android:name="com.example.booktracker.ui.Profile.ProfileFragment"
+        android:name="com.example.booktracker.ui.ProfileFragment"
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/nav_notifications"
-        android:name="com.example.booktracker.ui.Profile.NotificationsFragment"
+        android:name="com.example.booktracker.ui.NotificationsFragment"
         android:label="@string/menu_notifications"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

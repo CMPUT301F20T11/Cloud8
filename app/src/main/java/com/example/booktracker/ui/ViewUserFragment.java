@@ -1,4 +1,4 @@
-package com.example.booktracker.ui.Profile;
+package com.example.booktracker.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

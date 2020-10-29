@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.Activities.SignInActivity">
+        <activity android:name=".ui.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
@@ -27,16 +27,16 @@
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
-        <activity android:name=".ui.Activities.ScanActivity"></activity>
-        <activity android:name=".ui.Activities.SignUpActivity" />
-        <activity android:name=".ui.Activities.SetGeoActivity" />
-        <activity android:name=".ui.Activities.HomeActivity" />
+        <activity android:name=".ui.ScanActivity"></activity>
+        <activity android:name=".ui.SignUpActivity" />
+        <activity android:name=".ui.SetGeoActivity" />
+        <activity android:name=".ui.HomeActivity" />
 
 
-        <activity android:name=".ui.Activities.ProfileActivity" />
+        <activity android:name=".ui.ProfileActivity" />
         <activity
-            android:name=".ui.Activities.AddBookActivity"
-            android:parentActivityName=".ui.Activities.HomeActivity" />
+            android:name=".ui.AddBookActivity"
+            android:parentActivityName=".ui.HomeActivity" />
     </application>
 
 
