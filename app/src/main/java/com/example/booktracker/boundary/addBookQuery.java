@@ -1,6 +1,7 @@
 package com.example.booktracker.boundary;
 
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.User;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,7 +57,7 @@ public class addBookQuery {
             //parse json and extract author and book title
             JSONObject json = new JSONObject(getJson(isbn));
             JSONArray arr = json.getJSONArray("items");
-
+            User user;
             for (int i = 0;  i < arr.length(); i++){
 
                 JSONObject curObj = (JSONObject) arr.get(i);
@@ -66,7 +67,7 @@ public class addBookQuery {
                 for (int j = 0; j < authors.length();j++){
                     authorList.add((String) authors.get(j));
                 }
-                output.add(new Book(authorList,obj2.getString("title"),Integer.parseInt(isbn)));
+                output.add(new Book(User user, authorList,obj2.getString("title"),Integer.parseInt(isbn)));
             }
         }catch (Exception e){
             throw new RuntimeException(e);

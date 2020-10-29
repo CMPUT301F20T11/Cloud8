@@ -13,40 +13,42 @@ public class Book implements Serializable {
     private String title;
     private int isbn;
     private String description;
-    private String owner;
+    private User owner;
+    private User borrower;
     private String status;
-    private String borrower;
 
     /**
      * Constructor for books with a description
+     * @param argOwner
      * @param argAuthor
      * @param argTitle
      * @param argIsbn
      * @param argDesc
      */
-    public Book(List<String>argAuthor, String argTitle, int argIsbn, String argDesc) {
+    public Book(User argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.description = argDesc;
-        //this.owner =    <== ADD
+        this.owner = argOwner;
         this.status = "available";
-        this.borrower = "none";
+        this.borrower = null;
     }
 
     /**
      * Constructor for books without a description
+     * @param argOwner
      * @param argAuthor
      * @param argTitle
      * @param argIsbn
      */
-    public Book(List<String>argAuthor, String argTitle, int argIsbn) {
+    public Book(User argOwner, List<String>argAuthor, String argTitle, int argIsbn) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
-        //this.owner =    <== ADD
+        this.owner = argOwner;
         this.status = "available";
-        this.borrower = "none";
+        this.borrower = null;
     }
 
     /**
@@ -133,7 +135,7 @@ public class Book implements Serializable {
      * Get the book's owner
      * @return owner
      */
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
@@ -141,7 +143,7 @@ public class Book implements Serializable {
      * Set the book's owner
      * @param owner
      */
-    public void setOwner(String owner) {
+    public void setOwner(User owner) {
         this.owner = owner;
     }
 
@@ -149,7 +151,7 @@ public class Book implements Serializable {
      * Get the book's current borrower
      * @return borrower (returns 'none' if no borrower)
      */
-    public String getBorrower() {
+    public User getBorrower() {
         return borrower;
     }
 
@@ -157,9 +159,7 @@ public class Book implements Serializable {
      * Set the book's current borrower
      * @param borrower
      */
-    public void setBorrower(String borrower) {
+    public void setBorrower(User borrower) {
         this.borrower = borrower;
     }
-
-
 }

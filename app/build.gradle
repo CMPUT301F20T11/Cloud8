@@ -13,6 +13,7 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -38,6 +39,13 @@ dependencies {
     testImplementation'org.junit.jupiter:junit-jupiter-api:5.0.1'
     testRuntimeOnly'org.junit.jupiter:junit-jupiter-engine:5.0.1'
 
-
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
+
+    // Android-Image-Cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    // Glide
+    def glide_version = "4.9.0"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
 }

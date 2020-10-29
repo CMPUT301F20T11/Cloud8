@@ -64,7 +64,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         bookTitle.setText(book.getTitle());
         bookAuthor.setText(authors.toString());
-        bookOwner.setText(book.getOwner());
+        bookOwner.setText(book.getOwner().toString());
         bookStatus.setText(book.getStatus());
 
 
