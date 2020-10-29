@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ public class AddBookActivity extends AppCompatActivity {
         final EditText authorView = findViewById(R.id.addbook_author);
         final EditText isbnView = findViewById(R.id.addbook_isbn);
         final EditText descView = findViewById(R.id.addbook_description);
+
         final ImageView imageView = findViewById(R.id.addbook_image);
 
         //============Ivan===============

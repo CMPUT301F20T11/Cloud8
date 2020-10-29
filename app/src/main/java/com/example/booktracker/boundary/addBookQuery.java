@@ -67,7 +67,7 @@ public class addBookQuery {
                 for (int j = 0; j < authors.length();j++){
                     authorList.add((String) authors.get(j));
                 }
-                output.add(new Book(User user, authorList,obj2.getString("title"),Integer.parseInt(isbn)));
+                output.add(new Book(authorList,obj2.getString("title"),Integer.parseInt(isbn)));
             }
         }catch (Exception e){
             throw new RuntimeException(e);

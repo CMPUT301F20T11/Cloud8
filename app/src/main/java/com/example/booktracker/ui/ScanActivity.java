@@ -22,7 +22,7 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_scan);
 
         scanButton = findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
@@ -72,5 +72,11 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onBackPressed(){
+        // code here to show dialog
+        startActivity(new Intent(ScanActivity.this, HomeActivity.class));
     }
 }
