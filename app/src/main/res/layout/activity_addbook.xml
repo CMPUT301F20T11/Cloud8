@@ -51,13 +51,6 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/scan_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Scan" />
-
-            <Button
                 android:id="@+id/addbook_addbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,6 +65,7 @@
                 android:text="Cancel" />
 
         </LinearLayout>
+
 
     </LinearLayout>
 

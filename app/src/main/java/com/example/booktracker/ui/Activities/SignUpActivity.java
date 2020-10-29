@@ -1,4 +1,4 @@
-package com.example.booktracker.ui;
+package com.example.booktracker.ui.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;

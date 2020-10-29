@@ -1,4 +1,26 @@
 <resources>
     <string name="app_name">bookTracker</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">My Books</string>
+    <string name="menu_borrowed">Borrowed Books</string>
+    <string name="menu_find">Find Books</string>
+    <string name="menu_scan">Scan Book</string>
+    <string name="menu_incoming">Incoming Requests</string>
+    <string name="menu_outgoing">Outgoing Requests</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="action_view_user">View User</string>
+    <string name="menu_accepted">Accepted Requests</string>
+    <string name="menu_requested">Requested Books</string>
+    <string name="view_pickup_location">View Pickup Location</string>
+    <string name="request_text">Request</string>
+    <string name="accept_text">Accept</string>
+    <string name="decline_text">Decline</string>
 
 </resources>
