@@ -11,12 +11,13 @@ import java.util.List;
 public class Book implements Serializable {
     private List<String> author;
     private String title;
-    private int isbn;
+    private String isbn;
     private String description;
-    private User owner;
-    private User borrower;
+    //=======These will be emails=========
+    private String owner;
+    private String borrower;
+    //======================
     private String status;
-
     /**
      * Constructor for books with a description
      * @param argOwner
@@ -25,13 +26,13 @@ public class Book implements Serializable {
      * @param argIsbn
      * @param argDesc
      */
-    public Book(User argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc) {
+    public Book(String argOwner, List<String>argAuthor, String argTitle, String argIsbn, String argDesc) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.description = argDesc;
         this.owner = argOwner;
-        this.status = "available";
+        this.status = "";
         this.borrower = null;
     }
 
@@ -42,12 +43,12 @@ public class Book implements Serializable {
      * @param argTitle
      * @param argIsbn
      */
-    public Book(User argOwner, List<String>argAuthor, String argTitle, int argIsbn) {
+    public Book(String argOwner, List<String>argAuthor, String argTitle, String argIsbn) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.owner = argOwner;
-        this.status = "available";
+        this.status = "";
         this.borrower = null;
     }
     /**
@@ -56,11 +57,11 @@ public class Book implements Serializable {
      * @param argTitle
      * @param argIsbn
      */
-    public Book( List<String>argAuthor, String argTitle, int argIsbn) {
+    public Book( List<String>argAuthor, String argTitle, String argIsbn) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
-        this.status = "available";
+        this.status = "";
         this.borrower = null;
     }
     /**
@@ -99,7 +100,7 @@ public class Book implements Serializable {
      * Get the book's ISBN
      * @return isbn as integer
      */
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
@@ -107,7 +108,7 @@ public class Book implements Serializable {
      * Set the book's ISBN
      * @param isbn
      */
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
@@ -147,7 +148,7 @@ public class Book implements Serializable {
      * Get the book's owner
      * @return owner
      */
-    public User getOwner() {
+    public String getOwner() {
         return owner;
     }
 
@@ -155,7 +156,7 @@ public class Book implements Serializable {
      * Set the book's owner
      * @param owner
      */
-    public void setOwner(User owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -163,7 +164,7 @@ public class Book implements Serializable {
      * Get the book's current borrower
      * @return borrower (returns 'none' if no borrower)
      */
-    public User getBorrower() {
+    public String getBorrower() {
         return borrower;
     }
 
@@ -171,7 +172,7 @@ public class Book implements Serializable {
      * Set the book's current borrower
      * @param borrower
      */
-    public void setBorrower(User borrower) {
+    public void setBorrower(String borrower) {
         this.borrower = borrower;
     }
 }

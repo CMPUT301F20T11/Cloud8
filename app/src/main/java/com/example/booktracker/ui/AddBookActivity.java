@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -18,8 +19,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.AddBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.control.Email;
+import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.BookCollection;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,6 +39,9 @@ public class AddBookActivity extends AppCompatActivity {
     private String TAG = "AppDebug";
     private int GALLERY_REQUEST_CODE = 1234;
     private Uri imageUri;
+    private BookCollection bookList;
+    private String email;
+    private AddBookQuery addQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +63,33 @@ public class AddBookActivity extends AppCompatActivity {
                 startActivity(new Intent(view.getContext(), ScanActivity.class));
             }
         });
+        email = ((Email) this.getApplication()).getEmail();
+
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
         addBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                List<String> authors = new ArrayList<String>();
                 String title = titleView.getText().toString();
                 String author = authorView.getText().toString();
                 String isbn = isbnView.getText().toString();
                 String desc = descView.getText().toString();
-
-                startActivity(new Intent(v.getContext(), HomeActivity.class));
-
+                if (isbn.length() != 13){
+                    isbnView.setError("isbn must have 13 digits");
+                }
+                authors.add(author);
+                Book newBook = new Book(email,authors,title,isbn,desc);
+                addQuery = new AddBookQuery(email);
+                Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
+                //====Ivan: made it so that the activity automatically exits==
+                try{
+                    Thread.sleep(2000);
+                }catch (InterruptedException e){
+                    Thread.currentThread().interrupt();
+                }
+                finish();
+                //============================================================
             }
         });
 

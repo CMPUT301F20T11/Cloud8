@@ -1,8 +1,16 @@
 package com.example.booktracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 
+import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.control.Email;
+import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.BookCollection;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -14,10 +22,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.booktracker.R;
 
+import java.util.ArrayList;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-
+    private String userEmail;
+    private BookCollection bookList;
+    private String email;
+    private GetBookQuery getQuery;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +40,8 @@ public class HomeActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
+        ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -38,6 +54,42 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        email = ((Email) this.getApplication()).getEmail();
+        //=============execute async operation===============
+        //books will be displayed after async operation is done
+        getQuery = (new GetBookQuery(email));
+        getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
+        findViewById(R.id.book_list).bringToFront();
+        //===================================================
+        //========================nav buttons============================================
+        Button addBookBtn = (Button) findViewById(R.id.add_book_button);
+        addBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(view.getContext(), AddBookActivity.class)); }
+        });
+        Button editBookBtn = (Button) findViewById(R.id.edit_book_button);
+        editBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //edit book frag
+            }
+        });
+        Button filterBookBtn = (Button) findViewById(R.id.filter_button);
+        filterBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //filter fragment
+            }
+        });
+        Button deleteBookBtn = (Button) findViewById(R.id.delete_book_button);
+        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //delete frag (confirm)
+            }
+        });
 
     }
 
