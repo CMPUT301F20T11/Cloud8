@@ -1,6 +1,8 @@
 package com.example.booktracker.entities;
 
 
+import android.net.Uri;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class Book implements Serializable {
     private String title;
     private String isbn;
     private String description;
+    private Uri uri;
     //=======These will be emails=========
     private String owner;
     private String borrower;
@@ -34,6 +37,7 @@ public class Book implements Serializable {
         this.owner = argOwner;
         this.status = "";
         this.borrower = null;
+
     }
 
     /**
@@ -175,4 +179,21 @@ public class Book implements Serializable {
     public void setBorrower(String borrower) {
         this.borrower = borrower;
     }
+
+    /**
+     * Return the book's URI
+     * @return
+     */
+    public Uri getUri() {
+        return uri;
+    }
+
+    /**
+     * Set the book's URI
+     * @param uri
+     */
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
 }
