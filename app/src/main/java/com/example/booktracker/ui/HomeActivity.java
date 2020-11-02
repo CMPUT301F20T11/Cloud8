@@ -92,6 +92,20 @@ public class HomeActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    /**
+     * @author Ivan Penales
+     * Check if updates where made to the list of books
+     */
+    protected void onResume() {
+        super.onResume();
+        //=============execute async operation===============
+        //books will be displayed after async operation is done
+        getQuery = (new GetBookQuery(email));
+        getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
+        findViewById(R.id.book_list).bringToFront();
+        //===================================================
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
