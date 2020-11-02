@@ -51,23 +51,15 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         Book book = bookList.get(position);
 
-        TextView bookTitle = view.findViewById(R.id.title_text);
-        TextView bookAuthor = view.findViewById(R.id.author_text);
-        TextView bookOwner = view.findViewById(R.id.owner_text);
-        TextView bookStatus = view.findViewById(R.id.status_text);
+        TextView mainView = view.findViewById(R.id.all_text);
+
 
         StringBuilder authors = new StringBuilder();
         for (String s: book.getAuthor()) {
             authors.append(s);
             authors.append(", ");
         }
-
-        bookTitle.setText(book.getTitle());
-        bookAuthor.setText(authors.toString());
-        bookOwner.setText(book.getOwner().toString());
-        bookStatus.setText(book.getStatus());
-
-
+        mainView.setText(book.getTitle()+"\n"+authors.toString()+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
         return view;
     }
 

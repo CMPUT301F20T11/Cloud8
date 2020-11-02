@@ -6,13 +6,12 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class addBookQueryTest {
     @Test
     public void testIsbnQuery(){
-        addBookQuery test = new addBookQuery();
+        AddBookQuery test = new AddBookQuery();
         ArrayList<Book> result = test.isbnQuery("9780871295422");
         ArrayList<String> authors = (ArrayList) Arrays.
                 asList("Robert Owens","George Orwell","Wilton E. Hall","William A. Miles");
