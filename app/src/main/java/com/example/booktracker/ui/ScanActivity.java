@@ -28,12 +28,18 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         scanButton.setOnClickListener(this);
     }
 
+
     @Override
     public void onClick(View view) {
         scanCode();
 
     }
 
+    /**
+     * scanCode instantiate intent integrator and initiate the scan
+     * https://github.com/zxing/zxing/wiki/Scanning-Via-Intent
+     * @author Andrew Wood <awood@ualberta.ca>
+     */
     private void scanCode(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(CaptureAct.class);
@@ -44,6 +50,14 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         integrator.initiateScan();
     }
 
+    /**
+     * onActivityResult will handle the result of the initiateScan
+     * https://github.com/zxing/zxing/wiki/Scanning-Via-Intent
+     * @author Andrew Wood <awood@ualberta.ca>
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -74,6 +88,9 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * onBackPressed will handle
+     */
     @Override
     public void onBackPressed(){
         // code here to show dialog
