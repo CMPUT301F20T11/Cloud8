@@ -75,21 +75,20 @@ public class AddBookActivity extends AppCompatActivity {
                 String author = authorView.getText().toString();
                 String isbn = isbnView.getText().toString();
                 String desc = descView.getText().toString();
-                if (isbn.length() != 13){
+                if (isbn.length() != 13 && !isbn.matches("^[0-9]*$")){
                     isbnView.setError("isbn must have 13 digits");
+                }else{
+                    authors.add(author);
+                    Book newBook = new Book(email,authors,title,isbn,desc);
+                    addQuery = new AddBookQuery(email);
+                    Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
+                    try{
+                        Thread.sleep(2000);
+                    }catch (InterruptedException e){
+                        Thread.currentThread().interrupt();
+                    }
+                    finish();
                 }
-                authors.add(author);
-                Book newBook = new Book(email,authors,title,isbn,desc);
-                addQuery = new AddBookQuery(email);
-                Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
-                //====Ivan: made it so that the activity automatically exits==
-                try{
-                    Thread.sleep(2000);
-                }catch (InterruptedException e){
-                    Thread.currentThread().interrupt();
-                }
-                finish();
-                //============================================================
             }
         });
 
