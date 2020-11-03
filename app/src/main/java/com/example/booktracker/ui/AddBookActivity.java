@@ -42,16 +42,19 @@ public class AddBookActivity extends AppCompatActivity {
     private BookCollection bookList;
     private String email;
     private AddBookQuery addQuery;
-
+    EditText titleView;
+    EditText authorView;
+    EditText isbnView;
+    EditText descView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addbook);
 
-        final EditText titleView = findViewById(R.id.addbook_title);
-        final EditText authorView = findViewById(R.id.addbook_author);
-        final EditText isbnView = findViewById(R.id.addbook_isbn);
-        final EditText descView = findViewById(R.id.addbook_description);
+        titleView = findViewById(R.id.addbook_title);
+        authorView = findViewById(R.id.addbook_author);
+        isbnView = findViewById(R.id.addbook_isbn);
+        descView = findViewById(R.id.addbook_description);
 
         final ImageView imageView = findViewById(R.id.addbook_image);
 
@@ -64,7 +67,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
         email = ((Email) this.getApplication()).getEmail();
-
+        addQuery = new AddBookQuery(email);
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
@@ -75,19 +78,19 @@ public class AddBookActivity extends AppCompatActivity {
                 String author = authorView.getText().toString();
                 String isbn = isbnView.getText().toString();
                 String desc = descView.getText().toString();
-                if (isbn.length() != 13 && !isbn.matches("^[0-9]*$")){
+                if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")){
                     isbnView.setError("isbn must have 13 digits");
                 }else{
                     authors.add(author);
                     Book newBook = new Book(email,authors,title,isbn,desc);
-                    addQuery = new AddBookQuery(email);
                     Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
                     try{
                         Thread.sleep(2000);
+                        finish();
                     }catch (InterruptedException e){
                         Thread.currentThread().interrupt();
                     }
-                    finish();
+
                 }
             }
         });
@@ -95,7 +98,7 @@ public class AddBookActivity extends AppCompatActivity {
         Button cancelBtn = findViewById(R.id.addbook_cancelbtn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), HomeActivity.class));
+                finish();
             }
         });
 
@@ -121,6 +124,29 @@ public class AddBookActivity extends AppCompatActivity {
             imageUri = result.getUri();
             launchImageCrop(imageUri);
             setImage(imageUri);
+        }
+        if (requestCode == 69){
+            if (resultCode == RESULT_OK){
+                String isbn = data.getData().toString();
+                ArrayList<Book> result = addQuery.isbnQuery(isbn);
+                if (result.size() > 0){
+                    Book newBook = result.get(0);//get first book of the query
+                    titleView.setText(newBook.getTitle());
+                    authorView.setText(newBook.getAuthor().get(0));
+                    isbnView.setText(newBook.getIsbn());
+                    descView.setText(newBook.getDescription());
+                    //====Ivan: made it so that the activity automatically exits==
+                    try{
+                        Thread.sleep(2000);
+                    }catch (InterruptedException e){
+                        Thread.currentThread().interrupt();
+                    }
+                    finish();
+                    //============================================================
+                }else{
+                    Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
+                }
+            }
         }
 
         else {

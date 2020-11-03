@@ -2,6 +2,7 @@ package com.example.booktracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,7 +42,14 @@ public class HomeActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
+        //======================save the email if the activity gets killed
+        if (savedInstanceState != null){
+            userEmail = savedInstanceState.getString("email");
+        }else{
+            userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
+        }
+        //====================================================================
+
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -58,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         email = ((Email) this.getApplication()).getEmail();
         //=============execute async operation===============
         //books will be displayed after async operation is done
-        getQuery = (new GetBookQuery(email));
+        getQuery = (new GetBookQuery(userEmail));
         getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
         findViewById(R.id.book_list).bringToFront();
         //===================================================
@@ -67,7 +76,10 @@ public class HomeActivity extends AppCompatActivity {
         addBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), AddBookActivity.class)); }
+                Intent intent = new Intent(HomeActivity.this,AddBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE,userEmail);
+                startActivity(intent);
+            }
         });
         Button editBookBtn = (Button) findViewById(R.id.edit_book_button);
         editBookBtn.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +117,17 @@ public class HomeActivity extends AppCompatActivity {
         getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
         findViewById(R.id.book_list).bringToFront();
         //===================================================
+    }
+
+    /**
+     * This method will be used to save user email in case this activity gets killed
+     * @param outState
+     * @param outPersistentState
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString("email",userEmail);
     }
 
     @Override
