@@ -30,6 +30,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for adding book's to the user's book collection
+ * @author Edlee Ducay
+ */
 public class AddBookActivity extends AppCompatActivity {
 
     private Uri imageUri;
@@ -109,8 +113,10 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     /**
-     * Launches the AndroidImageCropper activity
+     * Launches the 3rd party AndroidImageCropper activity
+     * Uses a fixed aspect ratio of 1200x1200
      * Retrieved from: https://github.com/mitchtabian/AndroidImageCropper-Example
+     * mitchtabian - 10/31/2020
      */
     private void pickFromGallery(View v) {
         CropImage.activity()
@@ -127,7 +133,7 @@ public class AddBookActivity extends AppCompatActivity {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
+            // Get the uri from selected image and set into the image view
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
                 imageView.setImageURI(imageUri);

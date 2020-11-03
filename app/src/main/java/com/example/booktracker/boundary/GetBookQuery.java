@@ -1,6 +1,7 @@
 package com.example.booktracker.boundary;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -43,6 +44,8 @@ public class GetBookQuery extends BookQuery{
                                 //Book(String argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc)
                                 List<String> authors = ( List<String>) document.get("author");
                                 Book book = new Book((String) document.get("owner"),authors, (String) document.get("title"),document.getId(),(String) document.get("description"));
+                                Uri imageUri = Uri.parse((String) document.get("image_uri"));
+                                book.setUri(imageUri);
                                 output.add(book);
                             }
                             if (output.size() > 0){

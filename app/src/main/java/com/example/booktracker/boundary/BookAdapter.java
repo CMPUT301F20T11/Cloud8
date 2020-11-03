@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,7 +53,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         Book book = bookList.get(position);
 
         TextView mainView = view.findViewById(R.id.all_text);
-
+        ImageView imageView = view.findViewById(R.id.imageView);
 
         StringBuilder authors = new StringBuilder();
         for (String s: book.getAuthor()) {
@@ -60,6 +61,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             authors.append(", ");
         }
         mainView.setText(book.getTitle()+"\n"+authors.toString()+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
+        imageView.setImageURI(book.getUri());
         return view;
     }
 
