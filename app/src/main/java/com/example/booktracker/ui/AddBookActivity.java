@@ -42,15 +42,19 @@ public class AddBookActivity extends AppCompatActivity {
     private AddBookQuery addQuery;
     private ImageView imageView;
 
+    EditText titleView;
+    EditText authorView;
+    EditText isbnView;
+    EditText descView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addbook);
 
-        final EditText titleView = findViewById(R.id.addbook_title);
-        final EditText authorView = findViewById(R.id.addbook_author);
-        final EditText isbnView = findViewById(R.id.addbook_isbn);
-        final EditText descView = findViewById(R.id.addbook_description);
+        titleView = findViewById(R.id.addbook_title);
+        authorView = findViewById(R.id.addbook_author);
+        isbnView = findViewById(R.id.addbook_isbn);
+        descView = findViewById(R.id.addbook_description);
 
         imageView = findViewById(R.id.addbook_image);
 
@@ -63,7 +67,7 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
         email = ((Email) this.getApplication()).getEmail();
-
+        addQuery = new AddBookQuery(email);
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
@@ -74,25 +78,26 @@ public class AddBookActivity extends AppCompatActivity {
                 String author = authorView.getText().toString();
                 String isbn = isbnView.getText().toString();
                 String desc = descView.getText().toString();
-                if (isbn.length() != 13){
+                if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")){
                     isbnView.setError("isbn must have 13 digits");
-                }
-                authors.add(author);
-                Book newBook = new Book(email,authors,title,isbn,desc);
-                if (imageUri != null) {
-                    newBook.setUri(imageUri);
-                }
-                addQuery = new AddBookQuery(email);
-                Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
-                //====Ivan: made it so that the activity automatically exits==
-                try{
-                    Thread.sleep(2000);
-                }catch (InterruptedException e){
-                    Thread.currentThread().interrupt();
-                }
+                }else{
+                    authors.add(author);
+                    Book newBook = new Book(email,authors,title,isbn,desc);
+                    if (imageUri != null) {
+                        newBook.setUri(imageUri);
+                    }
+                    Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
+                    //====Ivan: made it so that the activity automatically exits==
+                    try{
+                        Thread.sleep(2000);
+                    }catch (InterruptedException e){
+                        Thread.currentThread().interrupt();
+                    }
 
-                finish();
-                //============================================================
+                    finish();
+                    //============================================================
+
+                }
             }
         });
 
@@ -133,12 +138,37 @@ public class AddBookActivity extends AppCompatActivity {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
             // Get the uri from selected image and set into the image view
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
                 imageView.setImageURI(imageUri);
             }
 
+        }
+        if (requestCode == 69){
+            if (resultCode == RESULT_OK){
+                String isbn = data.getData().toString();
+                ArrayList<Book> result = addQuery.isbnQuery(isbn);
+                if (result.size() > 0){
+                    Book newBook = result.get(0);//get first book of the query
+                    titleView.setText(newBook.getTitle());
+                    authorView.setText(newBook.getAuthor().get(0));
+                    isbnView.setText(newBook.getIsbn());
+                    descView.setText(newBook.getDescription());
+                    //====Ivan: made it so that the activity automatically exits==
+                    try{
+                        Thread.sleep(2000);
+                    }catch (InterruptedException e){
+                        Thread.currentThread().interrupt();
+                    }
+                    finish();
+                    //============================================================
+                }else{
+                    Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
@@ -147,4 +177,4 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
 
-}
+

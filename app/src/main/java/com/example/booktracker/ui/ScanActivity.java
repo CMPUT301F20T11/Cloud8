@@ -2,6 +2,7 @@ package com.example.booktracker.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -60,7 +61,7 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null){
             if (result.getContents() != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -74,6 +75,11 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
                 }).setNegativeButton("Finish", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //==========code to pass data back to parent activity======
+                        Intent data = new Intent();
+                        data.setData(Uri.parse(result.getContents()));
+                        setResult(RESULT_OK,data);
+                        //=========================================================
                         finish();
                     }
                 });
@@ -94,6 +100,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBackPressed(){
         // code here to show dialog
-        startActivity(new Intent(ScanActivity.this, HomeActivity.class));
+        finish();
     }
 }

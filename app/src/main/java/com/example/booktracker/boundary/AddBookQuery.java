@@ -119,7 +119,9 @@ public class AddBookQuery extends BookQuery{
         data.put("borrower",newBook.getBorrower());
         data.put("description",newBook.getDescription());
         data.put("author",newBook.getAuthor());
-        data.put("image_uri", newBook.getUri().toString());
+        if (newBook.getUri() != null){
+            data.put("image_uri", newBook.getUri().toString());
+        }
         return data;
     }
 
@@ -142,7 +144,7 @@ public class AddBookQuery extends BookQuery{
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    queryOutput = "couldnt add book";
+                    queryOutput = "couldn't add book";
                 }
             });
         }
