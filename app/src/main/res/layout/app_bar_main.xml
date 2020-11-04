@@ -22,18 +22,4 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/fragment_my_books" />
-
-    <ListView
-        android:id="@+id/book_list"
-        android:layout_width="373dp"
-        android:layout_height="436dp"
-        android:layout_margin="10dp"
-        android:visibility="visible"
-        app:layout_anchor="@+id/include"
-        app:layout_anchorGravity="center"
-        tools:visibility="visible" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

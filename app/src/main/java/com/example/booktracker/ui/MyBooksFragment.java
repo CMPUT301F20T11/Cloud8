@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +22,8 @@ import com.example.booktracker.ui.AddBookActivity;
 
 import java.util.ArrayList;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class MyBooksFragment extends Fragment implements View.OnClickListener {
 
 
@@ -28,13 +31,53 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
-
+    private GetBookQuery getQuery;
+    private String userEmail;
+    private View view;
 //    CustomList customBookList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_books, container, false);
+        view = inflater.inflate(R.layout.fragment_my_books, container, false);
+        HomeActivity activity = (HomeActivity) getActivity();
 
+
+        //=============execute async operation===============
+        userEmail = ((HomeActivity)activity).getUserEmail();
+        //books will be displayed after async operation is done
+        getQuery = (new GetBookQuery(userEmail));
+        getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
+        //===================================================
+        Button addBookBtn = (Button) view.findViewById(R.id.add_book_button);
+        addBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),AddBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE,userEmail);
+                startActivity(intent);
+            }
+        });
+        Button editBookBtn = (Button) view.findViewById(R.id.edit_book_button);
+        editBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //edit book frag
+            }
+        });
+        Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);
+        filterBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //filter fragment
+            }
+        });
+        Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
+        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //delete frag (confirm)
+            }
+        });
 
         return view;
     }
@@ -49,5 +92,9 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
+    }
 }

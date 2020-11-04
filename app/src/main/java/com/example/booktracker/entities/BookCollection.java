@@ -28,7 +28,7 @@ public class BookCollection {
      * @param userEmail
      */
     public BookCollection(ArrayList<Book> argBookList, ListView parent, String userEmail, Context context){
-        bookList = argBookList;;
+        bookList = argBookList;
         email = userEmail;
         adapter = new BookAdapter(context,argBookList);
         status = "";

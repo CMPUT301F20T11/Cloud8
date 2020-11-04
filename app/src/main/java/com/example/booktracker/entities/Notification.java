@@ -1,4 +1,4 @@
 package com.example.booktracker.entities;
 
-public abstract class Notificatoin {
+public abstract class Notification {
 }

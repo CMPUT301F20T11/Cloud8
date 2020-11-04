@@ -63,62 +63,11 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        email = ((Email) this.getApplication()).getEmail();
-        //=============execute async operation===============
-        //books will be displayed after async operation is done
-        getQuery = (new GetBookQuery(userEmail));
-        getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
-        findViewById(R.id.book_list).bringToFront();
-        //===================================================
         //========================nav buttons============================================
-        Button addBookBtn = (Button) findViewById(R.id.add_book_button);
-        addBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(HomeActivity.this,AddBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE,userEmail);
-                startActivity(intent);
-            }
-        });
-        Button editBookBtn = (Button) findViewById(R.id.edit_book_button);
-        editBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //edit book frag
-            }
-        });
-        Button filterBookBtn = (Button) findViewById(R.id.filter_button);
-        filterBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //filter fragment
-            }
-        });
-        Button deleteBookBtn = (Button) findViewById(R.id.delete_book_button);
-        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //delete frag (confirm)
-            }
-        });
-
     }
-    @Override
-    /**
-     * @author Ivan Penales
-     * Check if updates where made to the list of books
-     */
-    protected void onResume() {
-        super.onResume();
-        //=============execute async operation===============
-        //books will be displayed after async operation is done
-        getQuery = (new GetBookQuery(email));
-        getQuery.getMyBooks((ListView) findViewById(R.id.book_list),getApplicationContext());
-        findViewById(R.id.book_list).bringToFront();
-        //===================================================
+    public String getUserEmail() {
+        return userEmail;
     }
-
     /**
      * This method will be used to save user email in case this activity gets killed
      * @param outState

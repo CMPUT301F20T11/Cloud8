@@ -31,17 +31,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * https://github.com/mitchtabian/AndroidImageCropper-Example
+ * Activity for adding book's to the user's book collection
+ * @author Edlee Ducay
  */
 public class AddBookActivity extends AppCompatActivity {
 
-    private String TAG = "AppDebug";
-    private int GALLERY_REQUEST_CODE = 1234;
     private Uri imageUri;
     private BookCollection bookList;
     private String email;
     private AddBookQuery addQuery;
+    private ImageView imageView;
+
     EditText titleView;
     EditText authorView;
     EditText isbnView;
@@ -56,7 +56,7 @@ public class AddBookActivity extends AppCompatActivity {
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
 
-        final ImageView imageView = findViewById(R.id.addbook_image);
+        imageView = findViewById(R.id.addbook_image);
 
         //============Ivan===============
         Button scanBtn = findViewById(R.id.scan_btn);
@@ -83,13 +83,19 @@ public class AddBookActivity extends AppCompatActivity {
                 }else{
                     authors.add(author);
                     Book newBook = new Book(email,authors,title,isbn,desc);
+                    if (imageUri != null) {
+                        newBook.setUri(imageUri);
+                    }
                     Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
+                    //====Ivan: made it so that the activity automatically exits==
                     try{
                         Thread.sleep(2000);
-                        finish();
                     }catch (InterruptedException e){
                         Thread.currentThread().interrupt();
                     }
+
+                    finish();
+                    //============================================================
 
                 }
             }
@@ -112,18 +118,33 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     *
+     * Launches the 3rd party AndroidImageCropper activity
+     * Uses a fixed aspect ratio of 1200x1200
+     * Retrieved from: https://github.com/mitchtabian/AndroidImageCropper-Example
+     * mitchtabian - 10/31/2020
      */
+    private void pickFromGallery(View v) {
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(1200, 1200)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .start(AddBookActivity.this);
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == this.GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            imageUri = result.getUri();
-            launchImageCrop(imageUri);
-            setImage(imageUri);
+
+            // Get the uri from selected image and set into the image view
+            if (resultCode == RESULT_OK) {
+                imageUri = result.getUri();
+                imageView.setImageURI(imageUri);
+            }
+
         }
         if (requestCode == 69){
             if (resultCode == RESULT_OK){
@@ -148,36 +169,12 @@ public class AddBookActivity extends AppCompatActivity {
                 }
             }
         }
-
-        else {
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+            }
         }
-    }
-
-    private void setImage(Uri uri) {
-        ImageView image = findViewById(R.id.addbook_image);
-        Glide.with(this)
-                .load(uri)
-                .into(image);
-    }
-
-    private void launchImageCrop(Uri uri) {
-        CropImage.activity(uri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1200, 1200)
-                .setCropShape(CropImageView.CropShape.RECTANGLE)
-                .start(this);
-    }
-
-    private void pickFromGallery(View v) {
-        Intent intent = new Intent(v.getContext(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI.getClass());
-        intent.setType("image/*");
-        String[] mimeTypes = new String[]{"image/jpeg", "image/png", "image/jpg"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
 
     }
 
 
-}
+
