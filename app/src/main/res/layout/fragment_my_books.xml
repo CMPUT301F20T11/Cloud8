@@ -9,14 +9,13 @@
     <ListView
         android:id="@+id/my_book_list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="650dp"
         android:choiceMode="singleChoice"
         android:divider="#000"
         android:dividerHeight="1dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:listSelector="@android:color/darker_gray">
-    </ListView>
+        android:listSelector="@android:color/darker_gray"></ListView>
 
     <LinearLayout android:layout_width="match_parent"
         android:id="@+id/btns"

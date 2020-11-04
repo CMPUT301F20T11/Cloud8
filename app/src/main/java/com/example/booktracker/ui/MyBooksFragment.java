@@ -32,16 +32,18 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
     ArrayList<Book> bookDataList;
     Book selected_book = null;
     private GetBookQuery getQuery;
+    private String userEmail;
+    private View view;
 //    CustomList customBookList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_books, container, false);
+
+        view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
 
-
         //=============execute async operation===============
-        String userEmail = ((HomeActivity)activity).getUserEmail();
+        userEmail = ((HomeActivity)activity).getUserEmail();
         //books will be displayed after async operation is done
         getQuery = (new GetBookQuery(userEmail));
         getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
@@ -90,5 +92,9 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
+    }
 }

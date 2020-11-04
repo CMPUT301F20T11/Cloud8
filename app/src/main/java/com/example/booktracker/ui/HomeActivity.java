@@ -63,33 +63,11 @@ public class HomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-        email = ((Email) this.getApplication()).getEmail();
-
         //========================nav buttons============================================
-
-
     }
-
     public String getUserEmail() {
         return userEmail;
     }
-
-    @Override
-    /**
-     * @author Ivan Penales
-     * Check if updates where made to the list of books
-     */
-    protected void onResume() {
-        super.onResume();
-        //=============execute async operation===============
-        //books will be displayed after async operation is done
-        getQuery = (new GetBookQuery(email));
-        getQuery.getMyBooks((ListView) findViewById(R.id.my_book_list),getApplicationContext());
-        findViewById(R.id.my_book_list).bringToFront();
-        //===================================================
-    }
-
     /**
      * This method will be used to save user email in case this activity gets killed
      * @param outState
