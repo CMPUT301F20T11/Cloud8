@@ -25,22 +25,23 @@ public class GetBookQuery extends BookQuery{
     private ArrayList<Book> output = new ArrayList();
     private CountDownLatch done = new CountDownLatch(1);
     private boolean isDone = false;
+    private BookCollection bookList;
     /**
      * This will call its parent constructore from BookQuery
      * @param userEmail
      */
-    public GetBookQuery(String userEmail){
+    public GetBookQuery(String userEmail,BookCollection argBookList){
         super(userEmail);
+        bookList = argBookList;
     }
 
     /**
      * This will query the data base and use the initialize a Book Collection object which
      * modifies the listView
-     * @param listView ListView to be modified
      * @param context Context of the app this is being rendered in
      * @throws RuntimeException
      */
-    public void getMyBooks(final ListView listView, final Context context) throws RuntimeException{
+    public void getMyBooks(final Context context) throws RuntimeException{
         userDoc.collection("myBooks")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -58,7 +59,8 @@ public class GetBookQuery extends BookQuery{
                                 output.add(book);
                             }
                             if (output.size() > 0){
-                                new BookCollection(output,listView,email,context);
+                                bookList.setBookList(output);
+                                bookList.displayBooks();
                             }
 
                         } else {
@@ -94,7 +96,8 @@ public class GetBookQuery extends BookQuery{
                                 output.add(book);
                             }
                             if (output.size() > 0){
-                                new BookCollection(output,listView,email,context);
+                                bookList.setBookList(output);
+                                bookList.displayBooks();
                             }
 
                         } else {
