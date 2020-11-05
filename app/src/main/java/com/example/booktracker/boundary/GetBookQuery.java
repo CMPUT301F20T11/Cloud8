@@ -9,8 +9,10 @@ import androidx.annotation.NonNull;
 
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
+import com.example.booktracker.ui.ScanFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -22,32 +24,36 @@ import java.util.concurrent.CountDownLatch;
 import static android.content.ContentValues.TAG;
 
 public class GetBookQuery extends BookQuery{
-    private ArrayList<Book> output = new ArrayList();
+    private ArrayList<Book> outputBooks = new ArrayList();
+    private Book output;
     private CountDownLatch done = new CountDownLatch(1);
     private boolean isDone = false;
     private BookCollection bookList;
+    private Context context;
     /**
      * This will call its parent constructore from BookQuery
      * @param userEmail
+     * @param argBookList Book collectoin containing listView
      */
-    public GetBookQuery(String userEmail,BookCollection argBookList){
+    public GetBookQuery(String userEmail,BookCollection argBookList,Context argContext){
         super(userEmail);
         bookList = argBookList;
+        context = argContext;
     }
 
     /**
      * This will query the data base and use the initialize a Book Collection object which
      * modifies the listView
-     * @param context Context of the app this is being rendered in
      * @throws RuntimeException
      */
-    public void getMyBooks(final Context context) throws RuntimeException{
+    public void getMyBooks() throws RuntimeException{
         userDoc.collection("myBooks")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            outputBooks = new ArrayList<Book>();//
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 //Book(String argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc)
                                 List<String> authors = ( List<String>) document.get("author");
@@ -56,10 +62,10 @@ public class GetBookQuery extends BookQuery{
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
                                     book.setUri(imageUri);
                                 }
-                                output.add(book);
+                                outputBooks.add(book);
                             }
-                            if (output.size() > 0){
-                                bookList.setBookList(output);
+                            if (outputBooks.size() > 0){
+                                bookList.setBookList(outputBooks);
                                 bookList.displayBooks();
                             }
 
@@ -73,18 +79,17 @@ public class GetBookQuery extends BookQuery{
     /**
      * This will query the data base and use the initialize a Book Collection object which
      * modifies the listView. A category is specified to get specific list of books.
-     * @param listView ListView to be modified
-     * @param context Context of the app this is being rendered in
      * @param category this will be the id of the collection of books in the user document
      * @throws RuntimeException
      */
-    public void getMyBooks(final ListView listView, final Context context,String category) throws RuntimeException{
+    public void getMyBooks(String category) throws RuntimeException{
         userDoc.collection(category)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            outputBooks = new ArrayList<Book>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 //Book(String argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc)
                                 List<String> authors = ( List<String>) document.get("author");
@@ -93,10 +98,10 @@ public class GetBookQuery extends BookQuery{
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
                                     book.setUri(imageUri);
                                 }
-                                output.add(book);
+                                outputBooks.add(book);
                             }
-                            if (output.size() > 0){
-                                bookList.setBookList(output);
+                            if (outputBooks.size() > 0){
+                                bookList.setBookList(outputBooks);
                                 bookList.displayBooks();
                             }
 
@@ -104,6 +109,34 @@ public class GetBookQuery extends BookQuery{
                             throw new RuntimeException("Error getting books");
                         }
 
+                    }
+                });
+    }
+
+    /**
+     * This will fill up the contents of an empty book by querying firestore for a book
+     * @param isbn
+     * @param emptyBook
+     */
+    public void getABook(String isbn, Book emptyBook, ScanFragment activity){
+        userDoc.collection("myBooks")
+                .document(isbn)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot res = task.getResult();
+                            if (res != null){
+                                List<String> authors = ( List<String>) res.get("author");
+                                emptyBook.setAuthor(authors);
+                                emptyBook.setIsbn(isbn);
+                                emptyBook.setTitle((String) res.get("title"));
+                                emptyBook.setOwner((String) res.get("owner"));
+                                emptyBook.setDescription((String) res.get("description"));
+                                activity.displayDescription();
+                            }
+                        }
                     }
                 });
     }

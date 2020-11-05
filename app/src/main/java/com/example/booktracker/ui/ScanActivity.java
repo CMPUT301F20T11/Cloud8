@@ -75,6 +75,7 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
                 }).setNegativeButton("Finish", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println(result.getContents());
                         //==========code to pass data back to parent activity======
                         Intent data = new Intent();
                         data.setData(Uri.parse(result.getContents()));

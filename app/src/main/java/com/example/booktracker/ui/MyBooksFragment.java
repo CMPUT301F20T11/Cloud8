@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class MyBooksFragment extends Fragment implements View.OnClickListener {
+public class MyBooksFragment extends Fragment{
 
 
     ListView bookList;
@@ -50,15 +50,15 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
         userEmail = ((HomeActivity)activity).getUserEmail();
         collection = new BookCollection(new ArrayList<Book>(),bookList,userEmail,view.getContext());
         del = new DeleteBookQuery(userEmail);
-        getQuery = (new GetBookQuery(userEmail,collection));
+        getQuery = (new GetBookQuery(userEmail,collection,view.getContext()));
         //======================================================
 
         setSelectListener();
+        setDeleteListener();
         //=============execute async operation=======
         //books will be displayed after async operation is done
-        getQuery.getMyBooks(view.getContext());
+        getQuery.getMyBooks();
         //===========================================
-
         Button addBookBtn = (Button) view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,14 +82,17 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
                 //filter fragment
             }
         });
+        return view;
+    }
+    /**
+     * Set the callback function to be executed when a book need to be deleted
+     */
+    private void setDeleteListener(){
         Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(selected_book.getOwner().trim());
-                System.out.println(userEmail.trim());
-                System.out.println(selected_book.getOwner().trim().equals(userEmail.trim()));
-                if (selected_book.getOwner().trim().equals(userEmail.trim())){
+                if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
                     del.deleteBook(selected_book);//remove book from database
                     collection.deleteBook(selected_book);//remove book from listview
                 }else{
@@ -99,12 +102,9 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
 
             }
         });
-
-        return view;
     }
-
     /**
-     * This will set the callback function when the
+     * Set the callback function to keep track of the selected books
      */
     private void setSelectListener(){
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -114,21 +114,16 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
-    // know what book is referenced when view profile option selected
-    @Override
-    public void onClick(View v) {
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                selected_book = bookDataList.get(position);
-            }
-        });
-    }
 
+    /**
+     * Refresh the listView when the user return the the HomeActivity in case an update to
+     * the BookCollection was made
+     */
     @Override
     public void onResume() {
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        getQuery.getMyBooks(view.getContext());
+        getQuery.getMyBooks();
     }
 }
