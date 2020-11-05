@@ -16,25 +16,25 @@ public class BookCollection {
     private ArrayList<Book> bookList;
     private ListView listView;
     private BookAdapter adapter;
+    private Context context;
     private String status;
     private String email;
 
     /**
-     * When instatiated it will change the displayed books
+     * When instantiated it will change the displayed books
      * @author Ivan Penales
      * @param argBookList array adapter responsible for the view of a single book in a list
      * @param parent xml to bind the book data to
-     * @param context
-     * @param userEmail
+     * @param argContext this context should always have list view
+     * @param userEmail email of the user currently loged in
      */
-    public BookCollection(ArrayList<Book> argBookList, ListView parent, String userEmail, Context context){
+    public BookCollection(ArrayList<Book> argBookList, ListView parent, String userEmail, Context argContext){
+        context = argContext;
         bookList = argBookList;
         email = userEmail;
         adapter = new BookAdapter(context,argBookList);
         status = "";
         listView = parent;
-        parent.setAdapter(adapter);//bind ui to adapter,if list View ui
-        System.out.println("adapter has been set");
         //already has a list then it will be overwritten by this
     }
     /**
@@ -47,7 +47,27 @@ public class BookCollection {
         query.addBook(newBook);//this might modify the adapter
         adapter.notifyDataSetChanged();
     }
+
+    /**
+     * Get a book in the book adapter
+     * @author Ivan Penales
+     * @param position
+     * @return
+     */
+    public Book getBook(int position){
+        return adapter.getItem(position);
+    }
     public String getStatus() {
         return status;
+    }
+    public void displayBooks(){
+        listView.setAdapter(adapter);//bind ui to adapter,if list View ui
+    }
+    public void setBookList( ArrayList<Book> argBookList){
+        adapter = new BookAdapter(context,argBookList);
+    }
+    public void deleteBook(Book book){
+        adapter.remove(book);
+        adapter.notifyDataSetChanged();
     }
 }

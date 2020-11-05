@@ -1,26 +1,20 @@
 package com.example.booktracker.ui;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.AddBookQuery;
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.IsbnReq;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
@@ -41,6 +35,9 @@ public class AddBookActivity extends AppCompatActivity {
     private String email;
     private AddBookQuery addQuery;
     private ImageView imageView;
+    private static int SCAN_RQ = 69;
+    private IsbnReq req;
+    private ArrayList<Book> bookArray;
 
     EditText titleView;
     EditText authorView;
@@ -55,17 +52,18 @@ public class AddBookActivity extends AppCompatActivity {
         authorView = findViewById(R.id.addbook_author);
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
-
         imageView = findViewById(R.id.addbook_image);
 
         //============Ivan===============
+
         Button scanBtn = findViewById(R.id.scan_btn);
         scanBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(view.getContext(), ScanActivity.class));
+                startActivityForResult(new Intent(view.getContext(), ScanActivity.class),SCAN_RQ);
             }
         });
+        bookArray = new ArrayList<Book>();
         email = ((Email) this.getApplication()).getEmail();
         addQuery = new AddBookQuery(email);
         //===============================
@@ -129,7 +127,6 @@ public class AddBookActivity extends AppCompatActivity {
                 .setAspectRatio(1200, 1200)
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(AddBookActivity.this);
-
     }
 
     @Override
@@ -144,29 +141,12 @@ public class AddBookActivity extends AppCompatActivity {
                 imageUri = result.getUri();
                 imageView.setImageURI(imageUri);
             }
-
         }
-        if (requestCode == 69){
+        if (requestCode == SCAN_RQ){
             if (resultCode == RESULT_OK){
                 String isbn = data.getData().toString();
-                ArrayList<Book> result = addQuery.isbnQuery(isbn);
-                if (result.size() > 0){
-                    Book newBook = result.get(0);//get first book of the query
-                    titleView.setText(newBook.getTitle());
-                    authorView.setText(newBook.getAuthor().get(0));
-                    isbnView.setText(newBook.getIsbn());
-                    descView.setText(newBook.getDescription());
-                    //====Ivan: made it so that the activity automatically exits==
-                    try{
-                        Thread.sleep(2000);
-                    }catch (InterruptedException e){
-                        Thread.currentThread().interrupt();
-                    }
-                    finish();
-                    //============================================================
-                }else{
-                    Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
-                }
+                req = new IsbnReq(isbn,bookArray,AddBookActivity.this);
+                req.execute();
             }
         }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -174,7 +154,18 @@ public class AddBookActivity extends AppCompatActivity {
             }
         }
 
+    public void updateUI(ArrayList<Book> argList){
+        if (argList.size() > 0){
+            Book newBook = argList.get(0);//get first book of the query
+            titleView.setText(newBook.getTitle());
+            authorView.setText(newBook.getAuthor().get(0));
+            isbnView.setText(newBook.getIsbn());
+            descView.setText(newBook.getDescription());
+        }else{
+            Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
+        }
     }
+}
 
 
 

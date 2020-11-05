@@ -10,11 +10,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class MyBooksFragment extends Fragment implements View.OnClickListener {
+public class MyBooksFragment extends Fragment{
 
 
     ListView bookList;
@@ -34,20 +37,28 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
     private GetBookQuery getQuery;
     private String userEmail;
     private View view;
+    private DeleteBookQuery del;
+    private BookCollection collection;
 //    CustomList customBookList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        //=============set attributes=======================
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
-
-        //=============execute async operation===============
+        bookList = view.findViewById(R.id.my_book_list);
         userEmail = ((HomeActivity)activity).getUserEmail();
+        collection = new BookCollection(new ArrayList<Book>(),bookList,userEmail,view.getContext());
+        del = new DeleteBookQuery(userEmail);
+        getQuery = (new GetBookQuery(userEmail,collection,view.getContext()));
+        //======================================================
+
+        setSelectListener();
+        setDeleteListener();
+        //=============execute async operation=======
         //books will be displayed after async operation is done
-        getQuery = (new GetBookQuery(userEmail));
-        getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
-        //===================================================
+        getQuery.getMyBooks();
+        //===========================================
         Button addBookBtn = (Button) view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,30 +82,48 @@ public class MyBooksFragment extends Fragment implements View.OnClickListener {
                 //filter fragment
             }
         });
+        return view;
+    }
+    /**
+     * Set the callback function to be executed when a book need to be deleted
+     */
+    private void setDeleteListener(){
         Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete frag (confirm)
+                if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
+                    del.deleteBook(selected_book);//remove book from database
+                    collection.deleteBook(selected_book);//remove book from listview
+                }else{
+                    Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
-
-        return view;
     }
-
-    // know what book is referenced when view profile option selected
-    @Override
-    public void onClick(View v) {
+    /**
+     * Set the callback function to keep track of the selected books
+     */
+    private void setSelectListener(){
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                selected_book = bookDataList.get(position);
+                selected_book = collection.getBook(position);
+
             }
         });
     }
 
+    /**
+     * Refresh the listView when the user return the the HomeActivity in case an update to
+     * the BookCollection was made
+     */
     @Override
     public void onResume() {
+        //this is needed to refresh the list of books displayed when the user goes back to the
+        //home activity
         super.onResume();
-        getQuery.getMyBooks((ListView) view.findViewById(R.id.my_book_list),view.getContext());
+        getQuery.getMyBooks();
     }
 }

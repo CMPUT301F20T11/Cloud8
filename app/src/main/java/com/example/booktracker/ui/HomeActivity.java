@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
         }else{
             userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
         }
-        //====================================================================
+        //=====================================================================
 
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

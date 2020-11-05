@@ -16,11 +16,15 @@ import com.example.booktracker.ui.ScanActivity;
  * Placeholder fragment to navigate to Scan activity from Nav drawer
  */
 public class ScanFragment extends Fragment {
+    private static int SCAN_RQ = 69;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
-        startActivity(new Intent(view.getContext(), ScanActivity.class));
+        startActivityForResult(new Intent(view.getContext(), ScanActivity.class),SCAN_RQ);
         return view;
+    }
+    public void displayDescription(){
+        //description shoud be displayed when the view book displays
     }
 }

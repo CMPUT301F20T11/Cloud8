@@ -64,5 +64,4 @@ public class BookAdapter extends ArrayAdapter<Book> {
         imageView.setImageURI(book.getUri());
         return view;
     }
-
 }
