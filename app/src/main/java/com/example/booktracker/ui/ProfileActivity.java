@@ -17,36 +17,35 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity implements ProfileEditDialog.onEditListener {
     private static final String TAG = ProfileActivity.class.getName();
-    private Button editButton, logoutButton;
-    private TextView uName, uID, email, phone;
+    private TextView nameText, idText, emailText, phoneText;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
     private DocumentReference docRef;
-    private String userName, userID, userEmail, currentEmail, userPhone;
+    private String userName, userID, userEmail, loginEmail, userPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        uName = findViewById(R.id.username);
-        uID = findViewById(R.id.uid);
-        email = findViewById(R.id.email);
-        phone = findViewById(R.id.phone);
+        nameText = findViewById(R.id.username);
+        idText = findViewById(R.id.uid);
+        emailText = findViewById(R.id.email);
+        phoneText = findViewById(R.id.phone);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         if (user != null) {
             userID = user.getUid();
-            currentEmail = user.getEmail();
+            loginEmail = user.getEmail();
         }
 
         db = FirebaseFirestore.getInstance();
-        docRef = db.collection("users").document(currentEmail);
+        docRef = db.collection("users").document(loginEmail);
 
-        editButton = findViewById(R.id.edit_profile_btn);
-        logoutButton = findViewById(R.id.logout_btn);
+        Button editButton = findViewById(R.id.edit_profile_btn);
+        Button logoutButton = findViewById(R.id.logout_btn);
 
         editButton.setOnClickListener(view -> new ProfileEditDialog().show(getSupportFragmentManager(), "EDIT PROFILE"));
         logoutButton.setOnClickListener(view -> {
@@ -57,10 +56,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileEditDia
             startActivity(intent);
         });
 
-        loadProfile();
+        loadProfile(loginEmail);
     }
 
-    private void loadProfile() {
+    private void loadProfile(String loginEmail) {
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
@@ -68,26 +67,33 @@ public class ProfileActivity extends AppCompatActivity implements ProfileEditDia
                     userName = doc.getString("username");
                     userEmail = doc.getString("email");
                     userPhone = doc.getString("phone");
-                    uName.setText(userName);
-                    uID.setText(userID);
-                    email.setText(userEmail);
-                    phone.setText(userPhone);
+
+                    nameText.setText(userName);
+                    idText.setText(userID);
+                    if (userEmail != null) {
+                        emailText.setText(userEmail);
+                    } else {
+                        docRef = db.collection("users").document(loginEmail);
+                        docRef.update("email", loginEmail);
+                        emailText.setText(loginEmail);
+                    }
+                    phoneText.setText(userPhone);
                 }
             }
         });
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getProfileEmail() {
+        return emailText.getText().toString();
     }
 
-    public String getUserPhone() {
-        return userPhone;
+    public String getProfilePhone() {
+        return phoneText.getText().toString();
     }
 
     @Override
     public void onEditOk(String email, String phone) {
-        docRef = db.collection("users").document(currentEmail);
+        loginEmail = user.getEmail();
         docRef
                 .update("phone", phone,
                         "email", email)
@@ -95,6 +101,12 @@ public class ProfileActivity extends AppCompatActivity implements ProfileEditDia
                         "successfully changed!"))
                 .addOnFailureListener(e -> Log.d(TAG, "Phone number failed to" +
                         " change!" + e.toString()));
-        loadProfile();
+        loadProfile(loginEmail);
     }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
 }

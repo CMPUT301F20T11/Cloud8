@@ -17,8 +17,9 @@ import androidx.fragment.app.DialogFragment;
 import com.example.booktracker.R;
 
 public class ProfileEditDialog extends DialogFragment {
-    private EditText email, phone;
+    private EditText emailText, phoneText;
     private onEditListener listener;
+    private String profileEmail = null, profilePhone = null;
 
     public interface onEditListener {
         void onEditOk(String email, String phone);
@@ -41,15 +42,17 @@ public class ProfileEditDialog extends DialogFragment {
         final View view =
                 LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_profile, null);
         final ProfileActivity activity = (ProfileActivity) getActivity();
-        String profileEmail = activity.getUserEmail();
-        String profilePhone = activity.getUserPhone();
+        if (activity != null) {
+            profileEmail = activity.getProfileEmail();
+            profilePhone = activity.getProfilePhone();
+        }
 
         // Displays the user's info in the input fields for editing
-        email = view.findViewById(R.id.edit_email);
-        email.setText(profileEmail);
+        emailText = view.findViewById(R.id.edit_email);
+        emailText.setText(profileEmail);
 
-        phone = view.findViewById(R.id.edit_phone);
-        phone.setText(profilePhone);
+        phoneText = view.findViewById(R.id.edit_phone);
+        phoneText.setText(profilePhone);
 
         final AlertDialog.Builder builder =
                 new AlertDialog.Builder(getActivity());
@@ -69,30 +72,30 @@ public class ProfileEditDialog extends DialogFragment {
         if (dialog != null) {
             Button okButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(view -> {
-                String newEmail = email.getText().toString().trim();
-                String newPhone = phone.getText().toString().trim();
+                String newEmail = emailText.getText().toString().trim();
+                String newPhone = phoneText.getText().toString().trim();
 
                 boolean closeDialog = false;
                 boolean allValid = true;
 
                 if (newEmail.isEmpty()) {
                     allValid = false;
-                    email.setError("This field cannot be left empty!");
-                    email.requestFocus();
+                    emailText.setError("This field cannot be left empty!");
+                    emailText.requestFocus();
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
                     allValid = false;
-                    email.setError("Please enter a valid email!");
-                    email.requestFocus();
+                    emailText.setError("Please enter a valid email!");
+                    emailText.requestFocus();
                 }
 
                 if (newPhone.isEmpty()) {
                     allValid = false;
-                    phone.setError("This field cannot be left empty.");
-                    phone.requestFocus();
+                    phoneText.setError("This field cannot be left empty.");
+                    phoneText.requestFocus();
                 } else if (!Patterns.PHONE.matcher(newPhone).matches()) {
                     allValid = false;
-                    email.setError("Please enter a valid email!");
-                    email.requestFocus();
+                    phoneText.setError("Please enter a valid email!");
+                    phoneText.requestFocus();
                 }
 
                 if (allValid) {
