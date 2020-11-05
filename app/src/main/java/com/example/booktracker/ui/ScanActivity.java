@@ -24,7 +24,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-
         scanButton = findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
     }
@@ -33,7 +32,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         scanCode();
-
     }
 
     /**
@@ -44,7 +42,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     private void scanCode(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(CaptureAct.class);
-
         integrator.setOrientationLocked(false);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Scanning Code");
@@ -76,9 +73,10 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //==========code to pass data back to parent activity======
-                        Intent data = new Intent();
-                        data.setData(Uri.parse(result.getContents()));
-                        setResult(RESULT_OK,data);
+                        String isbnResult = result.getContents();       //isbn text
+                        Intent intent = new Intent();
+                        intent.putExtra("isbn", isbnResult);
+                        setResult(RESULT_OK, intent);
                         //=========================================================
                         finish();
                     }
@@ -95,11 +93,11 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * onBackPressed will handle
+     * onBackPressed will trigger after back is pressed, killing the scan activity
+     * @author
      */
     @Override
     public void onBackPressed(){
-        // code here to show dialog
         finish();
     }
 }
