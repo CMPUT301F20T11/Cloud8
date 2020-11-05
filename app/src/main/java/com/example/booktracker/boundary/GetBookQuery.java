@@ -128,6 +128,10 @@ public class GetBookQuery extends BookQuery{
                         if (task.isSuccessful()){
                             DocumentSnapshot res = task.getResult();
                             if (res != null){
+                                if (res.get("image uri") != null){
+                                    Uri imageUri = Uri.parse((String) res.get("image_uri"));
+                                    emptyBook.setUri(imageUri);
+                                }
                                 List<String> authors = ( List<String>) res.get("author");
                                 emptyBook.setAuthor(authors);
                                 emptyBook.setIsbn(isbn);
