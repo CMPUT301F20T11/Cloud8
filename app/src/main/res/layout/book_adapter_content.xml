@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:foreground="@drawable/ic_stock_book_photo_foreground"/>
+        app:srcCompat="@drawable/ic_stock_book_photo_foreground"/>
 
 
 
