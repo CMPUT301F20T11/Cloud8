@@ -58,9 +58,9 @@ public class GetBookQuery extends BookQuery{
                                 //Book(String argOwner, List<String>argAuthor, String argTitle, int argIsbn, String argDesc)
                                 List<String> authors = ( List<String>) document.get("author");
                                 Book book = new Book((String) document.get("owner"),authors, (String) document.get("title"),document.getId(),(String) document.get("description"));
-                                if (document.get("image uri") != null){
+                                if (document.get("image_uri") != null){
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
-                                    book.setUri(imageUri);
+                                    book.setUri(imageUri.toString());
                                 }
                                 outputBooks.add(book);
                             }
@@ -96,7 +96,7 @@ public class GetBookQuery extends BookQuery{
                                 Book book = new Book((String) document.get("owner"),authors, (String) document.get("title"),document.getId(),(String) document.get("description"));
                                 if (document.get("image uri") != null){
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
-                                    book.setUri(imageUri);
+                                    book.setUri(imageUri.toString());
                                 }
                                 outputBooks.add(book);
                             }
@@ -128,9 +128,9 @@ public class GetBookQuery extends BookQuery{
                         if (task.isSuccessful()){
                             DocumentSnapshot res = task.getResult();
                             if (res != null){
-                                if (res.get("image uri") != null){
+                                if (res.get("image_uri") != null){
                                     Uri imageUri = Uri.parse((String) res.get("image_uri"));
-                                    emptyBook.setUri(imageUri);
+                                    emptyBook.setUri(imageUri.toString());
                                 }
                                 List<String> authors = ( List<String>) res.get("author");
                                 emptyBook.setAuthor(authors);

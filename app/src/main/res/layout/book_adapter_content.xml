@@ -10,7 +10,7 @@
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:foreground="@drawable/ic_stock_book_photo_foreground"/>
 
 
 
@@ -18,9 +18,10 @@
         <TextView
             android:id="@+id/all_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:text="Title"
             android:textSize="24sp"
+            android:paddingLeft="5dp"
             android:lines="4"/>
 
 

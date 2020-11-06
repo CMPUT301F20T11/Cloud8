@@ -72,7 +72,14 @@ public class MyBooksFragment extends Fragment{
         editBookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //edit book frag
+                if (selected_book != null) {
+                    Intent intent = new Intent(view.getContext(), EditBookActivity.class);
+                    intent.putExtra("USER_EMAIL", userEmail);
+                    intent.putExtra("BOOK", selected_book);
+                    startActivity(intent); }
+                else {
+                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);

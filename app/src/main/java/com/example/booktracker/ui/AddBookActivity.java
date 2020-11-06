@@ -33,6 +33,7 @@ public class AddBookActivity extends AppCompatActivity {
     private Uri imageUri;
     private BookCollection bookList;
     private String email;
+    private Book book;
     private AddBookQuery addQuery;
     private ImageView imageView;
     private static int SCAN_RQ = 69;
@@ -82,7 +83,7 @@ public class AddBookActivity extends AppCompatActivity {
                     authors.add(author);
                     Book newBook = new Book(email,authors,title,isbn,desc);
                     if (imageUri != null) {
-                        newBook.setUri(imageUri);
+                        newBook.setUri(imageUri.toString());
                     }
                     Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
                     //====Ivan: made it so that the activity automatically exits==
