@@ -53,8 +53,9 @@ public class EditBookActivity extends AppCompatActivity {
         titleView.setText(book.getTitle());
         authorView.setText(TextUtils.join(",", book.getAuthor()));
         descView.setText(book.getDescription());
-        imageView.setImageURI(Uri.parse(book.getUri()));
-
+        if (book.getUri() != null) {
+            imageView.setImageURI(Uri.parse(book.getUri()));
+        }
         bookArray = new ArrayList<Book>();
         email = ((Email) this.getApplication()).getEmail();
         addQuery = new AddBookQuery(email);
