@@ -55,6 +55,7 @@ public class AddBookQuery extends BookQuery{
      */
     private HashMap<String,Object> getData(Book newBook){
         HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("isbn",newBook.getIsbn());
         data.put("title",newBook.getTitle());
         data.put("owner",newBook.getOwner());
         data.put("borrower",newBook.getBorrower());
