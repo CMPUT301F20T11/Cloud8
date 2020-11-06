@@ -62,7 +62,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
             authors.append(", ");
         }
         mainView.setText(book.getTitle()+"\n"+authors.toString()+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
-        imageView.setImageURI(Uri.parse(book.getUri()));
+        if (book.getUri() != null) {
+            imageView.setImageURI(Uri.parse(book.getUri()));
+        }
         return view;
     }
 }
