@@ -31,13 +31,11 @@
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
-        <activity android:name=".ui.ScanActivity"></activity>
+        <activity android:name=".ui.ScanActivity"/>
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.SetGeoActivity" />
         <activity android:name=".ui.HomeActivity" />
 
-
-        <activity android:name=".ui.ProfileActivity" />
         <activity
             android:name=".ui.AddBookActivity"
             android:parentActivityName=".ui.HomeActivity" />
