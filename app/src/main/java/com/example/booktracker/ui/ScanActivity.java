@@ -16,24 +16,16 @@ import com.example.booktracker.boundary.CaptureAct;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class ScanActivity extends AppCompatActivity implements View.OnClickListener {
+public class ScanActivity extends AppCompatActivity {
 
-    Button scanButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan);
-
-        scanButton = findViewById(R.id.scanButton);
-        scanButton.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View view) {
+        //setContentView(R.layout.activity_scan);
         scanCode();
-
+        finish();
     }
 
     /**
@@ -93,14 +85,5 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    /**
-     * onBackPressed will handle
-     */
-    @Override
-    public void onBackPressed(){
-        // code here to show dialog
-        finish();
     }
 }

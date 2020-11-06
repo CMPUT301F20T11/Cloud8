@@ -25,27 +25,17 @@ public class ProfileEditDialog extends DialogFragment {
         void onEditOk(String email, String phone);
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof onEditListener) {
-            listener = (onEditListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement onEditListener");
-        }
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        final ProfileFragment fragment = (ProfileFragment) getTargetFragment();
         final View view =
                 LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_profile, null);
-        final ProfileActivity activity = (ProfileActivity) getActivity();
-        if (activity != null) {
-            profileEmail = activity.getProfileEmail();
-            profilePhone = activity.getProfilePhone();
+        if (fragment != null) {
+            profileEmail = fragment.getProfileEmail();
+            profilePhone = fragment.getProfilePhone();
         }
+        listener = (onEditListener) getTargetFragment();
 
         // Displays the user's info in the input fields for editing
         emailText = view.findViewById(R.id.edit_email);
