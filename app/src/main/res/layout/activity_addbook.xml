@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="ISBN"
+        android:maxLength="13"
         android:inputType="textPersonName" />
 
     <EditText

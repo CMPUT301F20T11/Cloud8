@@ -2,6 +2,7 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             authors.append(", ");
         }
         mainView.setText(book.getTitle()+"\n"+authors.toString()+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
-        imageView.setImageURI(book.getUri());
+        imageView.setImageURI(Uri.parse(book.getUri()));
         return view;
     }
 }

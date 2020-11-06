@@ -61,7 +61,7 @@ public class AddBookQuery extends BookQuery{
         data.put("description",newBook.getDescription());
         data.put("author",newBook.getAuthor());
         if (newBook.getUri() != null){
-            data.put("image_uri", newBook.getUri().toString());
+            data.put("image_uri", newBook.getUri());
         }
         return data;
     }

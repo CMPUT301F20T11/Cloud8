@@ -15,7 +15,7 @@ public class Book implements Serializable {
     private String title;
     private String isbn;
     private String description;
-    private Uri uri;
+    private String uri;
     //=======These will be emails=========
     private String owner;
     private String borrower;
@@ -184,7 +184,7 @@ public class Book implements Serializable {
      * Return the book's URI
      * @return
      */
-    public Uri getUri() {
+    public String getUri() {
         return uri;
     }
 
@@ -192,7 +192,7 @@ public class Book implements Serializable {
      * Set the book's URI
      * @param uri
      */
-    public void setUri(Uri uri) {
+    public void setUri(String uri) {
         this.uri = uri;
     }
 
