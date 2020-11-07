@@ -13,8 +13,8 @@ public abstract class BookQuery {
      * @author Ivan Penales
      * @param userEmail this must be a valid email that is in the database
      */
-    public BookQuery(String userEmail){
-        email =userEmail;
+    public BookQuery(String userEmail) {
+        email = userEmail;
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
     }

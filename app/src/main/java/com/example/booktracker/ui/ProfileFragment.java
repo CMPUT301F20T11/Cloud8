@@ -24,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 /**
  * Placeholder fragment to navigate to Profile activity from Nav drawer
  */
-public class ProfileFragment extends Fragment implements ProfileEditDialog.onEditListener{
+public class ProfileFragment extends Fragment implements ProfileEditDialog.onEditListener {
     private static final String TAG = ProfileFragment.class.getName();
     private TextView nameText, idText, emailText, phoneText;
     private FirebaseAuth mAuth;
@@ -32,11 +32,12 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
     private FirebaseFirestore db;
     private DocumentReference docRef;
     private String userName, userID, userEmail, loginEmail, userPhone;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
         setHasOptionsMenu(true);
-        //startActivity(new Intent(view.getContext(), ProfileActivity.class));
+
         nameText = profileView.findViewById(R.id.username);
         idText = profileView.findViewById(R.id.uid);
         emailText = profileView.findViewById(R.id.email);
@@ -56,9 +57,9 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         Button logoutButton = profileView.findViewById(R.id.logout_btn);
 
         editButton.setOnClickListener(view -> {
-            ProfileEditDialog profEdit = new ProfileEditDialog();
-            profEdit.setTargetFragment(ProfileFragment.this, 1337);
-            profEdit.show(getFragmentManager(), "EDIT PROFILE");
+            ProfileEditDialog editDialog = new ProfileEditDialog();
+            editDialog.setTargetFragment(ProfileFragment.this, 1337);
+            editDialog.show(getParentFragmentManager(), "EDIT PROFILE");
         });
         logoutButton.setOnClickListener(view -> {
             mAuth.signOut();
@@ -86,7 +87,8 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
                     if (userEmail != null) {
                         emailText.setText(userEmail);
                     } else {
-                        docRef = db.collection("users").document(loginEmail);
+                        docRef =
+                                db.collection("users").document(loginEmail);
                         docRef.update("email", loginEmail);
                         emailText.setText(loginEmail);
                     }

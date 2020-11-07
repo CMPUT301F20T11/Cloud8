@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString("email",userEmail);
+        outState.putString("email", userEmail);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class GetBookQuery extends BookQuery {
      * This will call its parent constructore from BookQuery
      *
      * @param userEmail
-     * @param argBookList Book collectoin containing listView
+     * @param argBookList Book collection containing listView
      */
     public GetBookQuery(String userEmail, BookCollection argBookList, Context argContext) {
         super(userEmail);

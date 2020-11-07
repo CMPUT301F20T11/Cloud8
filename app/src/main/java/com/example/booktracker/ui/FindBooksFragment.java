@@ -22,7 +22,7 @@ import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
 
-public class FindBooksFragment extends Fragment implements View.OnClickListener{
+public class FindBooksFragment extends Fragment implements View.OnClickListener {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
