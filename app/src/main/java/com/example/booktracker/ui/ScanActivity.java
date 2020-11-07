@@ -25,7 +25,6 @@ public class ScanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_scan);
         scanCode();
-        finish();
     }
 
     /**

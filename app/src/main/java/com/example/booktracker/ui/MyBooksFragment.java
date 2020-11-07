@@ -55,6 +55,8 @@ public class MyBooksFragment extends Fragment{
 
         setSelectListener();
         setDeleteListener();
+        setViewListener();
+
         //=============execute async operation=======
         //books will be displayed after async operation is done
         getQuery.getMyBooks();
@@ -90,6 +92,19 @@ public class MyBooksFragment extends Fragment{
             }
         });
         return view;
+    }
+    private void setViewListener(){
+        Button viewBookBtn = (Button) view.findViewById(R.id.view_book_button);
+        viewBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null){
+                    Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                    startActivity(intent);
+                }
+            }
+        });
     }
     /**
      * Set the callback function to be executed when a book need to be deleted

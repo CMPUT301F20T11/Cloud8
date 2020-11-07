@@ -21,6 +21,18 @@ public class Book implements Serializable {
     private String borrower;
     //======================
     private String status;
+
+    /**
+     * contructor for initializing an empty book
+     */
+    public Book(){
+        this.title = "";
+        this.isbn = "";
+        this.description = "";
+        this.owner = "";
+        this.status = "";
+        this.borrower = null;
+    }
     /**
      * Constructor for books with a description
      * @param argOwner

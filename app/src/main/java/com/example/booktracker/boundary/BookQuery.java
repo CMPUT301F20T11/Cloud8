@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public abstract class BookQuery {
     protected DocumentReference userDoc;
-    private FirebaseFirestore db;
+    protected FirebaseFirestore db;
     protected String email;
     /**
      * constructor will connect to database and initialized document pertaining to user
@@ -17,5 +17,8 @@ public abstract class BookQuery {
         email =userEmail;
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
+    }
+    public BookQuery(){
+        db = FirebaseFirestore.getInstance();
     }
 }
