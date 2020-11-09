@@ -75,7 +75,7 @@ public class EditBookActivity extends AppCompatActivity {
                     newBook.setUri(imageUri.toString());
                 }
                 else {
-                    newBook.setUri(book.getUri());
+                    newBook.setUri(null);
                 }
                 Toast.makeText(EditBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
                 //====Ivan: made it so that the activity automatically exits==
@@ -103,6 +103,15 @@ public class EditBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pickFromGallery(v);
+            }
+        });
+
+        Button clearPhoto_btn = findViewById(R.id.editbook_rmPhoto_btn);
+        clearPhoto_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imageView.setImageURI(null);
+                imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+                imageUri = null;
             }
         });
 

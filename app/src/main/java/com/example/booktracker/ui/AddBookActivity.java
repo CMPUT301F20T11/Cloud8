@@ -114,6 +114,15 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
+        Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
+        clearPhotoBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imageView.setImageURI(null);
+                imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+                imageUri = null;
+            }
+        });
+
     }
 
     /**
