@@ -21,5 +21,4 @@ public class DeleteBookQuery extends BookQuery{
                 .document(book.getIsbn())
                 .delete();
     }
-
 }

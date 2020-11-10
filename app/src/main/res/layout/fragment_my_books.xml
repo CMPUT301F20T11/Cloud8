@@ -8,8 +8,10 @@
 
     <ListView
         android:id="@+id/my_book_list"
-        android:layout_width="fill_parent"
-        android:layout_height="650dp"
+        android:layout_width="match_parent"
+        android:layout_height="683dp"
+        android:layout_above="@+id/btns"
+        android:layout_marginBottom="0dp"
         android:choiceMode="singleChoice"
         android:divider="#000"
         android:dividerHeight="1dp"

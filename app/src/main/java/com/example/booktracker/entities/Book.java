@@ -47,7 +47,7 @@ public class Book implements Serializable {
         this.isbn = argIsbn;
         this.description = argDesc;
         this.owner = argOwner;
-        this.status = "";
+        this.status = "available";
         this.borrower = null;
 
     }

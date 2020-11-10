@@ -17,7 +17,7 @@ import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.IsbnReq;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
+import com.example.booktracker.boundary.BookCollection;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 

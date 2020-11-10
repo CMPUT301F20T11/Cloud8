@@ -9,15 +9,28 @@
 
 
     <TextView
+        android:id="@+id/viewbook_status"
+        android:layout_width="405dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="436dp"
+        android:gravity="center"
+        android:text="Status"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/viewbook_isbn"
         android:layout_width="411dp"
         android:layout_height="36dp"
-        android:layout_marginTop="540dp"
+        android:layout_marginTop="584dp"
         android:gravity="center"
         android:text="Isbn"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,12 +38,12 @@
         android:id="@+id/viewbook_owner"
         android:layout_width="401dp"
         android:layout_height="37dp"
-        android:layout_marginTop="492dp"
+        android:layout_marginTop="540dp"
         android:gravity="center"
         android:text="Owner"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,12 +51,12 @@
         android:id="@+id/viewbook_borrower"
         android:layout_width="405dp"
         android:layout_height="43dp"
-        android:layout_marginTop="440dp"
+        android:layout_marginTop="488dp"
         android:gravity="center"
         android:text="Borrower"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -75,10 +88,11 @@
 
     <ImageView
         android:id="@+id/viewbook_image"
-        android:layout_width="0dp"
+        android:layout_width="108dp"
         android:layout_height="100dp"
-        android:layout_marginStart="148dp"
         android:layout_marginTop="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_stock_book_photo_foreground" />
