@@ -65,14 +65,23 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         //========================nav buttons============================================
     }
+
     public String getUserEmail() {
         return userEmail;
     }
+
     /**
-     * This method will be used to save user email in case this activity gets killed
-     * @param outState
-     * @param outPersistentState
+     * View user selected from incoming fragment call
+     * @param email
      */
+    public void viewUser(String email){
+        ViewUserDialog dialog = new ViewUserDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("user_email", email);
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "ViewUserDialog");
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);

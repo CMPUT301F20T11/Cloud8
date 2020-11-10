@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,13 +42,17 @@ public class MyBooksFragment extends Fragment{
     private BookCollection collection;
 //    CustomList customBookList;
 
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //=============set attributes=======================
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
-        HomeActivity activity = (HomeActivity) getActivity();
+
+        setHasOptionsMenu(true);
         bookList = view.findViewById(R.id.my_book_list);
-        userEmail = ((HomeActivity)activity).getUserEmail();
+        HomeActivity activity = (HomeActivity) getActivity();
+        userEmail = activity.getUserEmail();
         collection = new BookCollection(new ArrayList<Book>(),bookList,userEmail,view.getContext());
         del = new DeleteBookQuery(userEmail);
         getQuery = (new GetBookQuery(userEmail,collection,view.getContext()));
@@ -147,5 +152,27 @@ public class MyBooksFragment extends Fragment{
         //home activity
         super.onResume();
         getQuery.getMyBooks();
+    }
+
+    /**
+     * View user listed as current borrower to selected book in MyBooks
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(selected_book != null){
+            // CHANGE TO  GET BORROWER
+            String borrower = selected_book.getOwner();
+            int id = item.getItemId();
+            HomeActivity activity = (HomeActivity) getActivity();
+            if (id == R.id.action_view_user) {
+                if(borrower != null) {
+                    activity.viewUser(borrower);
+                }
+                else{
+                    Toast.makeText(getContext(), "This book does not have a borrower", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
