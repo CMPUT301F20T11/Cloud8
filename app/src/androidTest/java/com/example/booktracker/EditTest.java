@@ -123,7 +123,7 @@ public class EditTest {
         mockEdit();
         solo.clickOnButton("Save");
         assertTrue(solo.waitForActivity(HomeActivity.class));
-        solo.clickOnText("The Communist ManifestoFail");
+        solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("View");
         checkEdit();
         deleteBook();
