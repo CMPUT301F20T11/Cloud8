@@ -1,5 +1,6 @@
 package com.example.booktracker.boundary;
 
+import android.net.Uri;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -62,6 +64,8 @@ public class AddBookQuery extends BookQuery{
         data.put("description",newBook.getDescription());
         data.put("author",newBook.getAuthor());
         data.put("image_uri", newBook.getUri());
+        data.put("local_image_uri", newBook.getLocalUri());
+
         return data;
     }
 
