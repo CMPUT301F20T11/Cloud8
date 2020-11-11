@@ -68,6 +68,10 @@ public class getBookQuery extends BookQuery {
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
                                     book.setUri(imageUri.toString());
                                 }
+                                if (document.get("local_image_uri") != null) {
+                                    Uri localImageUri = Uri.parse((String) document.get("local_image_uri"));
+                                    book.setLocalUri(localImageUri.toString());
+                                }
                                 outputBooks.add(book);
                             }
                             if (outputBooks.size() > 0) {
@@ -106,6 +110,10 @@ public class getBookQuery extends BookQuery {
                                 if (document.get("image uri") != null) {
                                     Uri imageUri = Uri.parse((String) document.get("image_uri"));
                                     book.setUri(imageUri.toString());
+                                }
+                                if (document.get("local_image_uri") != null) {
+                                    Uri localImageUri = Uri.parse((String) document.get("local_image_uri"));
+                                    book.setLocalUri(localImageUri.toString());
                                 }
                                 outputBooks.add(book);
                             }
@@ -149,6 +157,10 @@ public class getBookQuery extends BookQuery {
                                     if (res.get("image_uri") != null) {
                                         Uri imageUri = Uri.parse((String) res.get("image_uri"));
                                         emptyBook.setUri(imageUri.toString());
+                                    }
+                                    if (res.get("local_image_uri") != null) {
+                                        Uri localImageUri = Uri.parse((String) res.get("local_image_uri"));
+                                        emptyBook.setLocalUri(localImageUri.toString());
                                     }
                                     List<String> authors = (List<String>) res.get("author");
                                     emptyBook.setAuthor(authors);

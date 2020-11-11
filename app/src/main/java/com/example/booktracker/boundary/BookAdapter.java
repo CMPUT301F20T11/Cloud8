@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
 
@@ -62,7 +63,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
         }
         mainView.setText(book.getTitle()+"\n"+ TextUtils.join(",", book.getAuthor())+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
         if (book.getUri()!= null) {
-            imageView.setImageURI(Uri.parse(book.getUri()));
+            Glide.with(view).load(book.getUri()).into(imageView);
+        } else {
+            Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
         }
         return view;
     }

@@ -121,7 +121,7 @@ public class EditTest {
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("Edit");
         mockEdit();
-        solo.clickOnButton("Finish");
+        solo.clickOnButton("Save");
         assertTrue(solo.waitForActivity(HomeActivity.class));
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("View");

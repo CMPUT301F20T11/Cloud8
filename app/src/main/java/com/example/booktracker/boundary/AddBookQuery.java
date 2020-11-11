@@ -1,10 +1,12 @@
 package com.example.booktracker.boundary;
 
+
 import androidx.annotation.NonNull;
 
 import com.example.booktracker.entities.Book;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 
 
 import java.util.HashMap;
@@ -47,6 +49,8 @@ public class AddBookQuery extends BookQuery{
         data.put("description",newBook.getDescription());
         data.put("author",newBook.getAuthor());
         data.put("image_uri", newBook.getUri());
+        data.put("local_image_uri", newBook.getLocalUri());
+
         return data;
     }
 

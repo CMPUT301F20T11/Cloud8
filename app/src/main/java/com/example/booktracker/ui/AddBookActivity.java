@@ -1,6 +1,7 @@
 package com.example.booktracker.ui;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
@@ -18,12 +20,23 @@ import com.example.booktracker.boundary.IsbnReq;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.boundary.BookCollection;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 /**
  * Activity for adding book's to the user's book collection
  * @author Edlee Ducay
@@ -44,17 +57,29 @@ public class AddBookActivity extends AppCompatActivity {
     EditText authorView;
     EditText isbnView;
     EditText descView;
+
+    private StorageReference storageReference;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String uid;
+    private String toast_output;
+    private String downloadUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addbook);
+
+        auth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        user = auth.getCurrentUser();
+        uid = user.getUid();
 
         titleView = findViewById(R.id.addbook_title);
         authorView = findViewById(R.id.addbook_author);
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
         imageView = findViewById(R.id.addbook_image);
-
         //============Ivan===============
 
         Button scanBtn = findViewById(R.id.scan_btn);
@@ -82,10 +107,8 @@ public class AddBookActivity extends AppCompatActivity {
                 }else{
                     authors.add(author);
                     Book newBook = new Book(email,authors,title,isbn,desc);
-                    if (imageUri != null) {
-                        newBook.setUri(imageUri.toString());
-                    }
-                    Toast.makeText(AddBookActivity.this, addQuery.addBook(newBook), Toast.LENGTH_LONG).show();
+                    upload(newBook);
+
                     //====Ivan: made it so that the activity automatically exits==
                     try{
                         Thread.sleep(2000);
@@ -111,6 +134,15 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pickFromGallery(v);
+            }
+        });
+
+        Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
+        clearPhotoBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                imageView.setImageURI(null);
+                imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+                imageUri = null;
             }
         });
 
@@ -166,6 +198,57 @@ public class AddBookActivity extends AppCompatActivity {
             Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
         }
     }
+
+    /**
+     * Uploads the book to the Cloud Firestore and
+     * Uploads the photo to the Cloud Storage
+     * @param newBook
+     */
+    public void upload(Book newBook) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Uploading");
+        progressDialog.show();
+
+        if (imageUri != null) {
+            StorageReference ref = storageReference.child("images/users/" + uid + "/" + imageUri.getLastPathSegment());
+            UploadTask uploadTask = ref.putFile(imageUri);
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toast_output = "Upload failed";
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadUrl = uri.toString();
+                            toast_output = "Upload successful";
+                            newBook.setUri(downloadUrl);
+                            newBook.setLocalUri(imageUri.toString());
+                            addQuery.addBook(newBook);
+                            Toast.makeText(AddBookActivity.this, "Book Added Successfully" , Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+
+                        }
+                    });
+                }
+            });
+        } else {
+            newBook.setUri(null);
+            addQuery.addBook(newBook);
+            Toast.makeText(AddBookActivity.this, "Book Added Successfully", Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
+        }
+
+
+
+
+    }
+
 }
 
 
