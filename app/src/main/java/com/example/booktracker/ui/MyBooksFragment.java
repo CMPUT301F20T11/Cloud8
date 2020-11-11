@@ -117,6 +117,7 @@ public class MyBooksFragment extends Fragment{
                 if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
                     del.deleteBook(selected_book);//remove book from database
                     collection.deleteBook(selected_book);//remove book from listview
+                    //remove photo from cloud storage
                 }else{
                     Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
                 }
