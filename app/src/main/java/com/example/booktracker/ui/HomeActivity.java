@@ -1,17 +1,12 @@
 package com.example.booktracker.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Email;
-import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
+import com.example.booktracker.boundary.BookCollection;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -24,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.booktracker.R;
 
-import java.util.ArrayList;
-
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomeActivity extends AppCompatActivity {
@@ -34,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
     private String userEmail;
     private BookCollection bookList;
     private String email;
-    private GetBookQuery getQuery;
+    private getBookQuery getQuery;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

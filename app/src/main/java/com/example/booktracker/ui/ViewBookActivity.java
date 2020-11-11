@@ -1,15 +1,14 @@
 package com.example.booktracker.ui;
 
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.BookQuery;
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 
@@ -26,19 +25,24 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
     private TextView descView;
     private TextView titleView;
     private TextView authorView;
+    private TextView statusView;
+    private ImageView imageView;
     //===================================
+
+    /**
+     * query database for book data
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewbook);
-        //need to pass the isbn to this activity in order to display a book
         isbn = getIntent().getStringExtra(EXTRA_MESSAGE);
-        System.out.println(isbn);
         emptyBook = new Book();
         setTextViews();
 
         //==============query database for a book==============
-        GetBookQuery query = new GetBookQuery(this);
+        getBookQuery query = new getBookQuery(this);
         query.getABook(isbn,emptyBook,this);
         //=====================================================
     }
@@ -53,6 +57,9 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         descView = findViewById(R.id.viewbook_desc);
         titleView = findViewById(R.id.viewbook_title);
         authorView = findViewById(R.id.viewbook_author);
+        statusView = findViewById(R.id.viewbook_status);
+        imageView = findViewById(R.id.viewbook_image);
+
     }
 
     /**
@@ -67,6 +74,10 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));
+        statusView.setText(book.getStatus());
+        if (book.getUri()!= null) {
+            imageView.setImageURI(Uri.parse(book.getUri()));
+        }
     }
 
     /**

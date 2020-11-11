@@ -19,7 +19,7 @@ import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.IsbnReq;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
+import com.example.booktracker.boundary.BookCollection;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 /**
  * Activity for adding book's to the user's book collection
  * @author Edlee Ducay

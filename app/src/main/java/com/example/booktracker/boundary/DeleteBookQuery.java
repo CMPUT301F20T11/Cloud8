@@ -44,5 +44,4 @@ public class DeleteBookQuery extends BookQuery{
             });
         }
     }
-
 }

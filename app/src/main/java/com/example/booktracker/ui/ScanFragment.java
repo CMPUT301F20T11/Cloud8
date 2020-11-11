@@ -19,7 +19,6 @@ import com.example.booktracker.ui.ScanActivity;
  * Placeholder fragment to navigate to Scan activity from Nav drawer
  */
 public class ScanFragment extends Fragment implements View.OnClickListener {
-    private static int SCAN_RQ = 69;
     Button scanButton;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,7 +37,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        startActivityForResult(new Intent(getContext(), ScanActivity.class),SCAN_RQ);
+        startActivity(new Intent(getContext(), ScanActivity.class));
     }
 
     @Override

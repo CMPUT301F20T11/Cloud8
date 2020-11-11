@@ -1,6 +1,5 @@
 package com.example.booktracker.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,10 +16,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.DeleteBookQuery;
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
-import com.example.booktracker.ui.AddBookActivity;
+import com.example.booktracker.boundary.BookCollection;
 
 import java.util.ArrayList;
 
@@ -34,11 +31,13 @@ public class MyBooksFragment extends Fragment{
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
-    private GetBookQuery getQuery;
+    private getBookQuery getQuery;
     private String userEmail;
     private View view;
     private DeleteBookQuery del;
     private BookCollection collection;
+    private String lastStatus;
+    private MyBooksFragment instance;
 //    CustomList customBookList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,13 +49,14 @@ public class MyBooksFragment extends Fragment{
         userEmail = ((HomeActivity)activity).getUserEmail();
         collection = new BookCollection(new ArrayList<Book>(),bookList,userEmail,view.getContext());
         del = new DeleteBookQuery(userEmail);
-        getQuery = (new GetBookQuery(userEmail,collection,view.getContext()));
+        getQuery = (new getBookQuery(userEmail,collection,view.getContext()));
+        lastStatus = "";
+        instance = this;
         //======================================================
-
         setSelectListener();
         setDeleteListener();
         setViewListener();
-
+        setFilterListener();
         //=============execute async operation=======
         //books will be displayed after async operation is done
         getQuery.getMyBooks();
@@ -82,13 +82,6 @@ public class MyBooksFragment extends Fragment{
                 else {
                     Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-        Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);
-        filterBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //filter fragment
             }
         });
         return view;
@@ -137,6 +130,15 @@ public class MyBooksFragment extends Fragment{
             }
         });
     }
+    private void setFilterListener(){
+        Button filterBtn = view.findViewById(R.id.filter_button);
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FilterFragment(instance).show(getParentFragmentManager(),"Filter");
+            }
+        });
+    }
 
     /**
      * Refresh the listView when the user return the the HomeActivity in case an update to
@@ -147,6 +149,16 @@ public class MyBooksFragment extends Fragment{
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        getQuery.getMyBooks();
+        if (lastStatus == ""){
+            getQuery.getMyBooks();
+        }else{
+            getQuery.getMyBooks(lastStatus);
+        }
+    }
+    public void setStatus(String newStatus){
+        lastStatus = newStatus;
+    }
+    public getBookQuery getQuery(){
+        return getQuery;
     }
 }

@@ -1,0 +1,30 @@
+name: Android Build
+
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set Up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version:1.8
+      -name: Run Test
+       run: ./gradlew test
+      -name: Build Project
+       run: ./gradlew assemble
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2.12.0
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+            script: ./gradlew connectedCheck
