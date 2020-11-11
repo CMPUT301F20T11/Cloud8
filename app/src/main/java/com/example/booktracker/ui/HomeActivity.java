@@ -12,6 +12,9 @@ import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
+import com.example.booktracker.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +26,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.example.booktracker.R;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -70,17 +76,7 @@ public class HomeActivity extends AppCompatActivity {
         return userEmail;
     }
 
-    /**
-     * View user selected from incoming fragment call
-     * @param email
-     */
-    public void viewUser(String email){
-        ViewUserDialog dialog = new ViewUserDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString("user_email", email);
-        dialog.setArguments(bundle);
-        dialog.show(getSupportFragmentManager(), "ViewUserDialog");
-    }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {

@@ -23,6 +23,7 @@ import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
 import com.example.booktracker.ui.AddBookActivity;
+import com.example.booktracker.boundary.GetUserQuery;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ public class MyBooksFragment extends Fragment{
     ArrayList<Book> bookDataList;
     Book selected_book = null;
     private GetBookQuery getQuery;
+    private GetUserQuery getUserQuery;
     private String userEmail;
     private View view;
     private DeleteBookQuery del;
@@ -56,6 +58,7 @@ public class MyBooksFragment extends Fragment{
         collection = new BookCollection(new ArrayList<Book>(),bookList,userEmail,view.getContext());
         del = new DeleteBookQuery(userEmail);
         getQuery = (new GetBookQuery(userEmail,collection,view.getContext()));
+
         //======================================================
 
         setSelectListener();
@@ -166,7 +169,8 @@ public class MyBooksFragment extends Fragment{
             HomeActivity activity = (HomeActivity) getActivity();
             if (id == R.id.action_view_user) {
                 if(borrower != null) {
-                    activity.viewUser(borrower);
+                    getUserQuery = (new GetUserQuery(borrower, view.getContext()));
+                    getUserQuery.ViewUser();
                 }
                 else{
                     Toast.makeText(getContext(), "This book does not have a borrower", Toast.LENGTH_SHORT).show();

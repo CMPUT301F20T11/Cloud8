@@ -21,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ViewUserDialog extends DialogFragment {
     private String profileUsername, profileEmail = null, profilePhone = null;
-    private User user;
     protected DocumentReference userDoc;
     protected FirebaseFirestore db;
 
@@ -29,26 +28,14 @@ public class ViewUserDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-        profileEmail = getArguments().getString("user_email");
-        db = FirebaseFirestore.getInstance();
-        userDoc = db.collection("users").document(profileEmail);
-
-        userDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    profileUsername = document.getString("username");
-                    profileEmail = document.getString("email");
-                    profilePhone = document.getString("phone");
-                }
-            }
-        });
-
-
         final AlertDialog.Builder builder =
                 new AlertDialog.Builder(getActivity());
+
+        Bundle mArgs = getArguments();
+        profileUsername = mArgs.getString("username");
+        profileEmail = mArgs.getString("email");
+        profilePhone = mArgs.getString("phone");;
+
         return builder
                 .setView(getView())
                 .setTitle("User Profile")
