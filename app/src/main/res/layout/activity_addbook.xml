@@ -23,6 +23,13 @@
             android:foreground="@drawable/addbook_photo_border"
             app:srcCompat="@drawable/ic_addbook_add_photo_foreground" />
 
+        <Button
+            android:id="@+id/addbook_rmPhoto_btn"
+            android:layout_width="150dp"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Remove Photo" />
+
         <EditText
         android:id="@+id/addbook_title"
         android:layout_width="match_parent"
@@ -84,6 +91,7 @@
                 android:text="Cancel" />
 
         </LinearLayout>
+
 
 
     </LinearLayout>

@@ -13,9 +13,11 @@ import com.example.booktracker.boundary.CaptureAct;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class ScanActivity extends AppCompatActivity {
 
-
+    private ScanActivity ref = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +65,19 @@ public class ScanActivity extends AppCompatActivity {
                 }).setNegativeButton("Finish", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println(result.getContents());
-                        //==========code to pass data back to parent activity======
-                        Intent data = new Intent();
-                        data.setData(Uri.parse(result.getContents()));
-                        setResult(RESULT_OK,data);
-                        //=========================================================
-                        finish();
+                        if (getCallingActivity() != null){
+                            //==========code to pass data back to parent activity======
+                            Intent data = new Intent();
+                            data.setData(Uri.parse(result.getContents()));
+                            setResult(RESULT_OK,data);
+                            //=========================================================
+                            finish();
+                        }else{
+                            Intent intent = new Intent(ref,ViewBookActivity.class);
+                            intent.putExtra(EXTRA_MESSAGE,result.getContents());
+                            startActivity(intent);
+                        }
+
                     }
                 });
                 AlertDialog dialog = builder.create();

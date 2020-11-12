@@ -1,9 +1,9 @@
 package com.example.booktracker.boundary;
 
+
 import androidx.annotation.NonNull;
 
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -28,7 +28,6 @@ public class AddBookQuery extends BookQuery{
      * @param newBook book to be added
      */
     public String addBook(Book newBook){
-
         addToDb(newBook);// add book to database
         return queryOutput;
     }
@@ -40,6 +39,7 @@ public class AddBookQuery extends BookQuery{
      */
     private HashMap<String,Object> getData(Book newBook){
         HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("status",newBook.getStatus());
         data.put("isbn",newBook.getIsbn());
         data.put("title",newBook.getTitle());
         data.put("owner",newBook.getOwner());
@@ -47,6 +47,8 @@ public class AddBookQuery extends BookQuery{
         data.put("description",newBook.getDescription());
         data.put("author",newBook.getAuthor());
         data.put("image_uri", newBook.getUri());
+        data.put("local_image_uri", newBook.getLocalUri());
+
         return data;
     }
 
@@ -56,7 +58,6 @@ public class AddBookQuery extends BookQuery{
      * @param newBook book to add to firestore
      */
     private void addToDb(Book newBook){
-
         HashMap<String,Object> data = getData(newBook);
         if (newBook.getStatus() != ""){
             userDoc.collection(newBook.getStatus())
@@ -64,7 +65,8 @@ public class AddBookQuery extends BookQuery{
                     .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                   queryOutput =  "Added book succesfully";
+
+                    queryOutput =  "Added book succesfully";
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -79,6 +81,7 @@ public class AddBookQuery extends BookQuery{
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+
                 queryOutput =  "Added book succesfully";
             }
         }).addOnFailureListener(new OnFailureListener() {

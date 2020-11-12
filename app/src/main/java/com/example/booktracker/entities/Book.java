@@ -14,6 +14,7 @@ public class Book implements Serializable {
     private String isbn;
     private String description;
     private String uri;
+    private String localUri;
     //=======These will be emails=========
     private String owner;
     private String borrower;
@@ -45,7 +46,7 @@ public class Book implements Serializable {
         this.isbn = argIsbn;
         this.description = argDesc;
         this.owner = argOwner;
-        this.status = "";
+        this.status = "available";
         this.borrower = null;
 
     }
@@ -204,6 +205,22 @@ public class Book implements Serializable {
      */
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    /**
+     *  Get the book's local URI
+     * @return
+     */
+    public String getLocalUri() {
+        return localUri;
+    }
+
+    /**
+     * Set the books local URI
+     * @param localUri
+     */
+    public void setLocalUri(String localUri) {
+        this.localUri = localUri;
     }
 
 }

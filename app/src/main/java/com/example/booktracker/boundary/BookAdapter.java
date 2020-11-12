@@ -2,7 +2,7 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
-import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
 
@@ -46,11 +47,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
      */
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view = convertView;
-
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.book_adapter_content, parent, false);
         }
-
         Book book = bookList.get(position);
 
         TextView mainView = view.findViewById(R.id.all_text);
@@ -61,9 +60,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
             authors.append(s);
             authors.append(", ");
         }
-        mainView.setText(book.getTitle()+"\n"+authors.toString()+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
+        mainView.setText(book.getTitle()+"\n"+ TextUtils.join(",", book.getAuthor())+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
         if (book.getUri()!= null) {
-            imageView.setImageURI(Uri.parse(book.getUri()));
+            Glide.with(view).load(book.getUri()).into(imageView);
+        } else {
+            Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
         }
         return view;
     }

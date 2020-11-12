@@ -17,10 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.BookCollection;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,11 +35,13 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
-    private GetBookQuery getQuery;
+    private getBookQuery getQuery;
     private String userEmail, userSelected;
     private View view;
     private DeleteBookQuery del;
     private BookCollection collection;
+    private String lastStatus;
+    private MyBooksFragment instance;
     private FirebaseFirestore db;
     private DocumentReference docRef;
     private DocumentSnapshot userDoc;
@@ -54,14 +56,16 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         collection = new BookCollection(new ArrayList<>(), bookList,
                 userEmail, view.getContext());
         del = new DeleteBookQuery(userEmail);
-        getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
+        lastStatus = "";
+        instance = this;
+        getQuery = (new getBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
         //======================================================
 
         setSelectListener();
         setDeleteListener();
         setViewListener();
-
+        setFilterListener();
         //=============execute async operation=======
         //books will be displayed after async operation is done
         getQuery.getMyBooks();
@@ -87,39 +91,44 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
             }
         });
         Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);
-        filterBookBtn.setOnClickListener(view -> {
-            //filter fragment
+        filterBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //filter fragment
+            }
         });
-
         return view;
     }
-
-    private void setViewListener() {
+    private void setViewListener(){
         Button viewBookBtn = (Button) view.findViewById(R.id.view_book_button);
-        viewBookBtn.setOnClickListener(view -> {
-            if (selected_book != null) {
-                Intent intent = new Intent(view.getContext(),
-                        ViewBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                startActivity(intent);
+        viewBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null){
+                    Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                    startActivity(intent);
+                }
             }
         });
     }
-
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
-    private void setDeleteListener() {
-        Button deleteBookBtn =
-                (Button) view.findViewById(R.id.delete_book_button);
-        deleteBookBtn.setOnClickListener(view -> {
-            if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())) {
-                del.deleteBook(selected_book);//remove book from database
-                collection.deleteBook(selected_book);//remove book from
-                // listview
-            } else {
-                Toast.makeText(view.getContext(), "Book cant be deleted",
-                        Toast.LENGTH_LONG).show();
+    private void setDeleteListener(){
+        Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
+        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
+                    del.deleteBook(selected_book);//remove book from database
+                    collection.deleteBook(selected_book);//remove book from listview
+                    //remove photo from cloud storage
+                }else{
+                    Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
+                }
+
+
             }
         });
     }
@@ -156,19 +165,36 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         }
         return true;
     }
+    private void setFilterListener(){
+        Button filterBtn = view.findViewById(R.id.filter_button);
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FilterFragment(instance).show(getParentFragmentManager(),"Filter");
+            }
+        });
+    }
 
     /**
-     * Refresh the listView when the user return the the HomeActivity in case
-     * an update to
+     * Refresh the listView when the user return the the HomeActivity in case an update to
      * the BookCollection was made
      */
     @Override
     public void onResume() {
-        //this is needed to refresh the list of books displayed when the user
-        // goes back to the
+        //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        getQuery.getMyBooks();
+        if (lastStatus == ""){
+            getQuery.getMyBooks();
+        }else{
+            getQuery.getMyBooks(lastStatus);
+        }
+    }
+    public void setStatus(String newStatus){
+        lastStatus = newStatus;
+    }
+    public getBookQuery getQuery(){
+        return getQuery;
     }
 
     @Override
