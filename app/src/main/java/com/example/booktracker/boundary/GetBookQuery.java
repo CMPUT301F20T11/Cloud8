@@ -1,31 +1,23 @@
 package com.example.booktracker.boundary;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
-import com.example.booktracker.ui.ScanFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-
-import static android.content.ContentValues.TAG;
 
 public class GetBookQuery extends BookQuery {
     private ArrayList<Book> outputBooks = new ArrayList();

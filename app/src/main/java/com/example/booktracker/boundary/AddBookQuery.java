@@ -1,28 +1,13 @@
 package com.example.booktracker.boundary;
 
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.BookCollection;
-import com.example.booktracker.entities.User;
-import com.example.booktracker.ui.AddBookActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class AddBookQuery extends BookQuery{
     private BookCollection bookList;

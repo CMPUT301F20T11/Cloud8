@@ -7,7 +7,6 @@ import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.BookAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BookCollection {
     //the goal of this class is to add books to adapter and notify changes and just overall manage

@@ -1,8 +1,6 @@
 package com.example.booktracker.entities;
 
 
-import android.net.Uri;
-
 import java.io.Serializable;
 import java.util.List;
 

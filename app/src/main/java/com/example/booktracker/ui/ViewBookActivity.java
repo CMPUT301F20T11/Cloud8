@@ -1,14 +1,11 @@
 package com.example.booktracker.ui;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.BookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;

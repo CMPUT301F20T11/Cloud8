@@ -1,6 +1,5 @@
 package com.example.booktracker.boundary;
 
-import com.example.booktracker.entities.BookCollection;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
