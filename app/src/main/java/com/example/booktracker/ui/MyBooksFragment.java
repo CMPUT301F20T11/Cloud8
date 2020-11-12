@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
-public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragmentInteractionListener {
+public class MyBooksFragment extends Fragment {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
@@ -61,7 +61,6 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         getQuery = (new getBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
         //======================================================
-
         setSelectListener();
         setDeleteListener();
         setViewListener();
@@ -70,6 +69,7 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         //books will be displayed after async operation is done
         getQuery.getMyBooks();
         //===========================================
+
         Button addBookBtn = (Button) view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -77,6 +77,7 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
             intent.putExtra(EXTRA_MESSAGE, userEmail);
             startActivity(intent);
         });
+
         Button editBookBtn = (Button) view.findViewById(R.id.edit_book_button);
         editBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
@@ -90,46 +91,40 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
                         Toast.LENGTH_SHORT).show();
             }
         });
+
         Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);
-        filterBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //filter fragment
-            }
+        filterBookBtn.setOnClickListener(view -> {
+            //filter fragment
         });
         return view;
     }
+
     private void setViewListener(){
         Button viewBookBtn = (Button) view.findViewById(R.id.view_book_button);
-        viewBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null){
-                    Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
-                    startActivity(intent);
-                }
+        viewBookBtn.setOnClickListener(view -> {
+            if (selected_book != null){
+                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                startActivity(intent);
             }
         });
     }
+
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
     private void setDeleteListener(){
         Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
-        deleteBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
-                    del.deleteBook(selected_book);//remove book from database
-                    collection.deleteBook(selected_book);//remove book from listview
-                    //remove photo from cloud storage
-                }else{
-                    Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
-                }
-
-
+        deleteBookBtn.setOnClickListener(view -> {
+            if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
+                del.deleteBook(selected_book);//remove book from database
+                collection.deleteBook(selected_book);//remove book from listview
+                //remove photo from cloud storage
+            } else {
+                Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
             }
+
+
         });
     }
 
@@ -165,14 +160,10 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         }
         return true;
     }
+
     private void setFilterListener(){
         Button filterBtn = view.findViewById(R.id.filter_button);
-        filterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new FilterFragment(instance).show(getParentFragmentManager(),"Filter");
-            }
-        });
+        filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),"Filter"));
     }
 
     /**
@@ -184,16 +175,18 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        if (lastStatus == ""){
+        if (lastStatus.equals("")) {
             getQuery.getMyBooks();
-        }else{
+        } else {
             getQuery.getMyBooks(lastStatus);
         }
     }
-    public void setStatus(String newStatus){
+
+    public void setStatus(String newStatus) {
         lastStatus = newStatus;
     }
-    public getBookQuery getQuery(){
+
+    public getBookQuery getQuery() {
         return getQuery;
     }
 
@@ -220,9 +213,5 @@ public class MyBooksFragment extends Fragment implements ViewUserDialog.OnFragme
 
     public DocumentSnapshot getProfile() {
         return userDoc;
-    }
-
-    @Override
-    public void onOk() {
     }
 }
