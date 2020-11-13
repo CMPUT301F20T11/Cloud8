@@ -59,12 +59,25 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                 if (true){
                     selected_book.setStatus("available");
                     selected_book.setBorrower("none");
-                    authors.add("Andrew");
-                    selected_book.setAuthor(authors);
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Returned!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(view.getContext(), "Return Failed!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // Set on click for receiving button
+        Button receiveButton = (Button) view.findViewById(R.id.receive_book_button);
+        receiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //check: is user.email == book.owner AND book.status == "available" AND book.borrower == "none
+                if ((selected_book.getStatus() == "available") && (selected_book.getBorrower() == "none")) {
+                    Toast.makeText(view.getContext(), "Book Successfully Received!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(view.getContext(), "Failed to receive book!", Toast.LENGTH_LONG).show();
                 }
             }
         });
