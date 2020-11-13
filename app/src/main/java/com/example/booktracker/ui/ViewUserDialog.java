@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.booktracker.R;
@@ -18,21 +17,31 @@ import com.example.booktracker.R;
 public class ViewUserDialog extends DialogFragment {
     private String profileName, profileEmail, profilePhone;
 
+    public static ViewUserDialog newInstance(String user, String email, String phone) {
+        ViewUserDialog userDialog = new ViewUserDialog();
+        Bundle args = new Bundle();
+        args.putString("user", user);
+        args.putString("email", email);
+        args.putString("phone", phone);
+        userDialog.setArguments(args);
+        return userDialog;
+    }
+
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        final MyBooksFragment booksFragment = (MyBooksFragment) getTargetFragment();
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        super.onCreateDialog(savedInstanceState);
         final View view =
                 LayoutInflater.from(getActivity()).inflate(R.layout.fragment_view_user, null);
 
-        if (booksFragment != null) {
-            profileName = booksFragment.getProfile().getString("username");
-            profileEmail = booksFragment.getProfile().getString("email");
-            profilePhone = booksFragment.getProfile().getString("phone");
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            profileName = bundle.getString("user");
+            profileEmail = bundle.getString("email");
+            profilePhone = bundle.getString("phone");
         }
 
         // Displays the user's info in the input fields for editing
-
         TextView title = view.findViewById(R.id.view_Title);
         title.setPaintFlags(title.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 

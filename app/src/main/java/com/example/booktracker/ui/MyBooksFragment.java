@@ -42,8 +42,6 @@ public class MyBooksFragment extends Fragment {
     private BookCollection collection;
     private String lastStatus;
     private MyBooksFragment instance;
-    private FirebaseFirestore db;
-    private DocumentReference docRef;
     private DocumentSnapshot userDoc;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -99,10 +97,10 @@ public class MyBooksFragment extends Fragment {
         return view;
     }
 
-    private void setViewListener(){
+    private void setViewListener() {
         Button viewBookBtn = (Button) view.findViewById(R.id.view_book_button);
         viewBookBtn.setOnClickListener(view -> {
-            if (selected_book != null){
+            if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
                 intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
                 startActivity(intent);
@@ -113,7 +111,7 @@ public class MyBooksFragment extends Fragment {
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
-    private void setDeleteListener(){
+    private void setDeleteListener() {
         Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(view -> {
             if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
@@ -123,8 +121,6 @@ public class MyBooksFragment extends Fragment {
             } else {
                 Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
             }
-
-
         });
     }
 
@@ -142,13 +138,11 @@ public class MyBooksFragment extends Fragment {
     }
 
     private Boolean getUserDoc(String owner) {
-        db = FirebaseFirestore.getInstance();
-        docRef = db.collection("users").document(userEmail);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         if (owner == null) {
             return false;
         } else {
-            docRef =
-                    db.collection("users").document(owner);
+            DocumentReference docRef = db.collection("users").document(owner);
             docRef.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
@@ -161,7 +155,7 @@ public class MyBooksFragment extends Fragment {
         return true;
     }
 
-    private void setFilterListener(){
+    private void setFilterListener() {
         Button filterBtn = view.findViewById(R.id.filter_button);
         filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),"Filter"));
     }
@@ -201,17 +195,19 @@ public class MyBooksFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
-                ViewUserDialog userDialog = new ViewUserDialog();
-                userDialog.setTargetFragment(MyBooksFragment.this, 420);
-                userDialog.setStyle(STYLE_NO_TITLE, 0);
-                userDialog.show(getParentFragmentManager(), "VIEW USER");
+                showUserDialog(userDoc);
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public DocumentSnapshot getProfile() {
-        return userDoc;
+    private void showUserDialog(DocumentSnapshot userDoc) {
+        String username = userDoc.getString("username");
+        String email = userDoc.getString("email");
+        String phone = userDoc.getString("phone");
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
+        userDialog.setStyle(STYLE_NO_TITLE, 0);
+        userDialog.show(getParentFragmentManager(), "VIEW USER");
     }
 }
