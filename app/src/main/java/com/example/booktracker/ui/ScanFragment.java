@@ -59,10 +59,22 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                 if (true){
                     selected_book.setStatus("available");
                     selected_book.setBorrower("none");
+                    authors.add("Andrew");
+                    selected_book.setAuthor(authors);
+                    bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Returned!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(view.getContext(), "Return Failed!", Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+
+        // Set on click listener for items in list, will select the position of gear
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int itemPosition = position;
+                selected_book = bookDataList.get(itemPosition);
             }
         });
 
