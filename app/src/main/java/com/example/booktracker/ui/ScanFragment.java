@@ -31,7 +31,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     ListView bookListView;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
-    Book selected_book = null;
+    Book selectedBook = null;
     ArrayList<String> authors;
     private static final int ACTIVITY_REQUEST_CODE = 0;
 
@@ -48,7 +48,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         bookListView.setAdapter(bookAdapter);
         authors = new ArrayList<String>();
 
-        // set on click for return button
+        // Set on click for return button
         Button returnButton = (Button) view.findViewById(R.id.return_book_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,8 +57,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                 //check if i am borrowing book in the first place, then make it available
                     // this if statement should check book.borrower == user.email AND book != null
                 if (true){
-                    selected_book.setStatus("available");
-                    selected_book.setBorrower("none");
+                    selectedBook.setStatus("available");
+                    selectedBook.setBorrower("none");
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Returned!", Toast.LENGTH_LONG).show();
                 } else {
@@ -74,7 +74,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
 
                 //check: is user.email == book.owner AND book.status == "available" AND book.borrower == "none
-                if ((selected_book.getStatus() == "available") && (selected_book.getBorrower() == "none")) {
+                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() == "none")) {
                     Toast.makeText(view.getContext(), "Book Successfully Received!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(view.getContext(), "Failed to receive book!", Toast.LENGTH_LONG).show();
@@ -87,7 +87,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int itemPosition = position;
-                selected_book = bookDataList.get(itemPosition);
+                selectedBook = bookDataList.get(itemPosition);
             }
         });
 
@@ -95,7 +95,14 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    // This method is called when the scan activity finishes
+    /**
+     * onActivityResult: When the scan result comes back, this function will be called and we will
+     * add the scanned book to a list where we can view the books scanned so far.
+     * @author Andrew Wood <awood@ualberta.ca>
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -113,12 +120,17 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    // know what book is referenced when view profile option selected
+    /**
+     * This method assigns an on click listener to each item in our list view such that when the
+     * user taps on an item, this function will assign a variable to track which book it is.
+     * @author Andrew Wood <awood@ualberta.ca>
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                selected_book = bookDataList.get(position);
+                selectedBook = bookDataList.get(position);
             }
         });
     }
