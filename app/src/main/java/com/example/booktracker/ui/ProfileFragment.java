@@ -21,9 +21,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-/**
- * Placeholder fragment to navigate to Profile activity from Nav drawer
- */
 public class ProfileFragment extends Fragment implements ProfileEditDialog.onEditListener {
     private static final String TAG = ProfileFragment.class.getName();
     private TextView nameText, idText, emailText, phoneText;

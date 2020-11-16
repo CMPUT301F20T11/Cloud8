@@ -23,6 +23,4 @@
             android:paddingLeft="5dp"
             android:lines="4"/>
 
-
-
 </LinearLayout>
