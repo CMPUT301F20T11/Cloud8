@@ -22,8 +22,11 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+
+
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.entities.QueryOutput;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -193,7 +196,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
         Toast.makeText(AddBookActivity.this, toast_output.getOutput(), Toast.LENGTH_LONG).show();
         if (result.equals("successful")){
             try{
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             }catch (InterruptedException e){
                 Thread.currentThread().interrupt();
             }
