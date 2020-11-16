@@ -49,13 +49,16 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         bookListView.setAdapter(bookAdapter);
         authors = new ArrayList<String>();
 
-        // Set on click for borrow button
+        // Set on click for borrow button (US 06.02.01)
         Button borrowButton = (Button) view.findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() == "none")) {
-                    selectedBook.setBorrower(selectedBook.getOwner());
+                // Since we are the borrower in this case, we need to check for book.borrower == none,
+                // book.status == available, book != null, and then book.setBorrower("user.email")
+                if ((selectedBook.getStatus() == "unavailable") && (selectedBook.getBorrower() == "none") && (selectedBook != null)) {
+                    //set borrower properly here later
+                    selectedBook.setBorrower("USER EMAIL HERE");
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Borrowed!", Toast.LENGTH_LONG).show();
                 } else {
@@ -64,12 +67,16 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        Button giveButton = (Button) view.findViewById(R.id.borrow_book_button);
-        borrowButton.setOnClickListener(new View.OnClickListener() {
+        // On click for give button (US 06.01.01)
+        Button giveButton = (Button) view.findViewById(R.id.give_book_button);
+        giveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() != "none")) {
-                    selectedBook.setStatus("borrowed");
+                // Since we are the owner in this case, we should check for book.owner == user.email
+                // and book.borrower == none, and book.status == available, and book != null
+                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() != "none") (selectedBook != null)) {
+                    selectedBook.setStatus("unavailable");
+                    bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully given!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(view.getContext(), "Failed to borrow book!", Toast.LENGTH_LONG).show();
@@ -77,16 +84,14 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        // Set on click for return button
+        // Set on click for return button (07.01.01)
         Button returnButton = (Button) view.findViewById(R.id.return_book_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //check if i am borrowing book in the first place, then make it available
-                // this if statement should check book.borrower == user.email AND book != null
-                if (true){
-                    selectedBook.setStatus("available");
+                // Here we are the borrower attempting to hand over the book, so we must check that
+                // borrower == user, status == unavailable, then set it to borrower == none
+                if (selectedBook != null){
                     selectedBook.setBorrower("none");
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Returned!", Toast.LENGTH_LONG).show();
@@ -96,14 +101,16 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        // Set on click for receiving button
+        // Set on click for receiving button (US 07.02.01)
         Button receiveButton = (Button) view.findViewById(R.id.receive_book_button);
         receiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //check: is user.email == book.owner AND book.status == "available" AND book.borrower == "none
-                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() != "none")) {
+                // Here we are the owner receiving a book that has been returned, so we must check
+                // that we own the book, no one is borrowing it, and then set status to available
+                if ((selectedBook.getBorrower() == "none") && (selectedBook != null)) {
+                    selectedBook.setStatus("available");
+                    bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Received!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(view.getContext(), "Failed to receive book!", Toast.LENGTH_LONG).show();
@@ -111,7 +118,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        // Set on click listener for items in list, will select the position of gear
+        // Set on click listener for items in list, will select the position of book
         bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
