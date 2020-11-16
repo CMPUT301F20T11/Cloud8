@@ -18,6 +18,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.DeleteBookQuery;
+import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
@@ -27,11 +30,27 @@ public class BorrowedBooksFragment extends Fragment implements View.OnClickListe
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
-
+    private getBookQuery getQuery;
+    private String ownerName;
+    private String bookDescription;
+    private View view;
+    private DeleteBookQuery del;
+    private BookCollection collection;
+    private String lastStatus;
+    private BorrowedBooksFragment instance;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_borrowed_books, container, false);
+        HomeActivity activity = (HomeActivity) getActivity();
+        bookList = view.findViewById(R.id.my_book_list);
+        ownerName = (selected_book.getOwner());
+        bookDescription = (selected_book.getDescription());
+        collection = new BookCollection(new ArrayList<Book>(),bookList,bookDescription,view.getContext());
+        getQuery = (new getBookQuery(ownerName,collection,view.getContext()));
+        //lastStatus = "";
+        instance = this;
+        getQuery.getMyBooks();
 
 
         return view;
