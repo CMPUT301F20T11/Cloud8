@@ -22,6 +22,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     private String isbn;
     private ArrayList<Book> output;
     private AddBookActivity instance;
+
     public IsbnReq(String argIsbn, ArrayList<Book> argOutput, AddBookActivity argInstance){
         super();
         isbn = argIsbn;
@@ -58,7 +59,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     }
 
     /**
-     * If the request was successful then UI will be udated
+     * If the request was successful then UI will be updated
      * @param s
      */
     @Override

@@ -38,7 +38,6 @@ public class ScanActivity extends AppCompatActivity {
     private void scanCode(){
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(CaptureAct.class);
-
         integrator.setOrientationLocked(false);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Scanning Code");
@@ -71,14 +70,15 @@ public class ScanActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (getCallingActivity() != null){
                             //==========code to pass data back to parent activity======
-                            Intent data = new Intent();
-                            data.setData(Uri.parse(result.getContents()));
-                            setResult(RESULT_OK,data);
+//                            String isbnResult = result.getContents();       //isbn text
+                            Intent intent = new Intent();
+                            intent.putExtra("isbn", result.getContents());
+                            setResult(RESULT_OK, intent);
                             //=========================================================
                             finish();
                         }else{
                             Intent intent = new Intent(ref,ViewBookActivity.class);
-                            intent.putExtra(EXTRA_MESSAGE,result.getContents());
+                            intent.putExtra("isbn",result.getContents());
                             startActivity(intent);
                         }
 
@@ -93,5 +93,9 @@ public class ScanActivity extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 }

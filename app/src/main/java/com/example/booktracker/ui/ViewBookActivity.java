@@ -17,6 +17,7 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 public class ViewBookActivity extends AppCompatActivity implements Callback {
     private String isbn;
     private Book emptyBook;
+    private static final int ACTIVITY_REQUEST_CODE = 0;
 
     //=========Text Views================
     private TextView isbnView;
@@ -37,7 +38,7 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewbook);
-        isbn = getIntent().getStringExtra(EXTRA_MESSAGE);
+        isbn = getIntent().getStringExtra("isbn");
         emptyBook = new Book();
         setTextViews();
 
@@ -45,6 +46,11 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         getBookQuery query = new getBookQuery(this);
         query.getABook(isbn,emptyBook,this);
         //=====================================================
+
+
+
+
+
     }
 
     /**
