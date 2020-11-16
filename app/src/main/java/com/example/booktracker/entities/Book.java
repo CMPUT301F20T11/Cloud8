@@ -22,9 +22,9 @@ public class Book implements Serializable {
     private String status;
 
     /**
-     * contructor for initializing an empty book
+     * constructor for initializing an empty book
      */
-    public Book(){
+    public Book() {
         this.title = "";
         this.isbn = "";
         this.description = "";
