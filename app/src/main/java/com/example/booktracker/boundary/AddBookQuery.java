@@ -7,8 +7,6 @@ import com.example.booktracker.entities.Book;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-
-
 import java.util.HashMap;
 
 public class AddBookQuery extends BookQuery{

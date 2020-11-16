@@ -3,12 +3,9 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.widget.ListView;
 
-import com.example.booktracker.boundary.AddBookQuery;
-import com.example.booktracker.boundary.BookAdapter;
 import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BookCollection {
     //the goal of this class is to add books to adapter and notify changes and just overall manage
@@ -58,10 +55,12 @@ public class BookCollection {
     public String getStatus() {
         return status;
     }
-    public void displayBooks(){
+
+    public void displayBooks() {
         listView.setAdapter(adapter);//bind ui to adapter,if list View ui
     }
-    public void setBookList( ArrayList<Book> argBookList){
+
+    public void setBookList(ArrayList<Book> argBookList) {
         adapter = new BookAdapter(context,argBookList);
     }
 
@@ -69,7 +68,7 @@ public class BookCollection {
      * delete a specific book from the adapter and the listView
      * @param book
      */
-    public void deleteBook(Book book){
+    public void deleteBook(Book book) {
         adapter.remove(book);
         adapter.notifyDataSetChanged();
     }
@@ -77,7 +76,7 @@ public class BookCollection {
     /**
      * delete all books in the adapter and all books in the listview
      */
-    public void clearList(){
+    public void clearList() {
         adapter.clear();
         adapter.notifyDataSetChanged();
     }

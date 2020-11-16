@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
-import com.example.booktracker.ui.ScanActivity;
 
 /**
  * Placeholder fragment to navigate to Scan activity from Nav drawer
