@@ -90,10 +90,6 @@ public class MyBooksFragment extends Fragment {
             }
         });
 
-        Button filterBookBtn = (Button) view.findViewById(R.id.filter_button);
-        filterBookBtn.setOnClickListener(view -> {
-            //filter fragment
-        });
         return view;
     }
 
@@ -104,6 +100,16 @@ public class MyBooksFragment extends Fragment {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
                 intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void setFilterListener() {
+        Button filterBtn = view.findViewById(R.id.filter_button);
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FilterFragment(instance).show(getParentFragmentManager(), "Filter");
             }
         });
     }
@@ -153,11 +159,6 @@ public class MyBooksFragment extends Fragment {
             });
         }
         return true;
-    }
-
-    private void setFilterListener() {
-        Button filterBtn = view.findViewById(R.id.filter_button);
-        filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),"Filter"));
     }
 
     /**

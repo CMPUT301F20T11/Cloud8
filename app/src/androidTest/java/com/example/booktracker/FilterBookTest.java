@@ -54,7 +54,7 @@ public class FilterBookTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login(){
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",SignInActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field),email);
         solo.enterText((EditText) solo.getView(R.id.password_field),pass);
         solo.clickOnButton("SIGN IN");
@@ -68,10 +68,10 @@ public class FilterBookTest {
     private void setBooks(){
         List<String> author = new ArrayList<String>();
         author.add("test");
-        borrowed = new Book(email,author, "borrowed Book","1234567890123", "test");
-        accepted = new Book(email,author, "accepted Book","1234567890125", "test");
-        requested = new Book(email,author, "requested Book","1234567890126", "test");
-        available = new Book(email,author, "available Book","1234567890127", "test");
+        borrowed = new Book(email,author, "borrowed Book","1000000000000", "test");
+        accepted = new Book(email,author, "accepted Book","2000000000000", "test");
+        requested = new Book(email,author, "requested Book","3000000000000", "test");
+        available = new Book(email,author, "available Book","4000000000000", "test");
         borrowed.setStatus("borrowed");
         accepted.setStatus("accepted");
         requested.setStatus("requested");

@@ -60,7 +60,7 @@ public class FilterFragment extends DialogFragment {
     }
 
     /**
-     * set listeners for all butons
+     * set listeners for all buttons
      */
     private void setAllListeners() {
         accepted_listener();
