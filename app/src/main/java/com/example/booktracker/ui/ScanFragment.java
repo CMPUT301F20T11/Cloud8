@@ -56,9 +56,9 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
                 // Since we are the borrower in this case, we need to check for book.borrower == none,
                 // book.status == available, book != null, and then book.setBorrower("user.email")
-                if ((selectedBook.getStatus() == "unavailable") && (selectedBook.getBorrower() == "none") && (selectedBook != null)) {
+                if ((selectedBook.getStatus() == "unavailable") && (selectedBook != null)) {
                     //set borrower properly here later
-                    selectedBook.setBorrower("USER EMAIL HERE");
+//                    selectedBook.setBorrower("USER EMAIL HERE");
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully Borrowed!", Toast.LENGTH_LONG).show();
                 } else {
@@ -79,7 +79,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully given!", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(view.getContext(), "Failed to borrow book!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(view.getContext(), "Failed to give book!", Toast.LENGTH_LONG).show();
                 }
             }
         });

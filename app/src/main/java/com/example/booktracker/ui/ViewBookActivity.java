@@ -48,9 +48,6 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         //=====================================================
 
 
-
-
-
     }
 
     /**
