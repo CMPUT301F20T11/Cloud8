@@ -17,8 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.AddBookQuery;
+import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Email;
+import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.QueryOutput;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,13 +35,14 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Activity for editing a user's book
  * @author Edlee Ducay
  */
-public class EditBookActivity extends AppCompatActivity {
+public class EditBookActivity extends AppCompatActivity implements QueryOutputCallback {
 
     private EditText titleView, authorView, descView;
     private ImageView imageView;
@@ -52,8 +56,10 @@ public class EditBookActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String uid;
-    private String toast_output;
+    private QueryOutput toast_output;
     private String downloadUrl;
+    private UpdateQuery updateQuery;
+    private EditBookActivity instance = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +83,9 @@ public class EditBookActivity extends AppCompatActivity {
         titleView.setText(book.getTitle());
         authorView.setText(TextUtils.join(",", book.getAuthor()));
         descView.setText(book.getDescription());
+        toast_output = new QueryOutput();
+        updateQuery = new UpdateQuery();
+
         if (book.getUri() != null) {
             Glide.with(this).load(book.getUri()).into(imageView);
             imageUri = Uri.parse(book.getUri());
@@ -158,7 +167,15 @@ public class EditBookActivity extends AppCompatActivity {
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(EditBookActivity.this);
     }
-
+    private HashMap<String,Object> createData(String title, List<String> author, String description, String imageUri, String local_image_uri){
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("title",title);
+        data.put("description",description);
+        data.put("author",author);
+        data.put("image_uri", null);
+        data.put("local_image_uri", null);
+        return data;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -178,17 +195,21 @@ public class EditBookActivity extends AppCompatActivity {
         }
     }
 
-    public void updateUI(ArrayList<Book> argList){
-        if (argList.size() > 0){
-            Book newBook = argList.get(0);//get first book of the query
-            titleView.setText(newBook.getTitle());
-            authorView.setText(newBook.getAuthor().get(0));
-            descView.setText(newBook.getDescription());
-        }else{
-            Toast.makeText(EditBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
+    @Override
+    public void displayQueryResult(String result){
+        String outputResult = toast_output.getOutput();
+        if (!outputResult.equals("")){
+            Toast.makeText(EditBookActivity.this, toast_output.getOutput(), Toast.LENGTH_LONG).show();
+        }
+        if (result.equals("successful")){
+            try{
+                Thread.sleep(2000);
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+            finish();
         }
     }
-
     /**
      * Uploads the book to the Cloud Firestore and
      * Uploads the photo to the Cloud Storage
@@ -219,7 +240,7 @@ public class EditBookActivity extends AppCompatActivity {
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    toast_output = "Upload failed";
+                    toast_output.setOutput("Upload failed");
                 }
             }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -229,8 +250,8 @@ public class EditBookActivity extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             downloadUrl = uri.toString();
                             newBook.setUri(downloadUrl);
-                            addQuery.addBook(newBook);
-                            Toast.makeText(EditBookActivity.this, "Book Saved", Toast.LENGTH_LONG).show();
+                            HashMap<String,Object> data = createData(newBook.getTitle(),newBook.getAuthor(),newBook.getDescription(),newBook.getUri(),newBook.getLocalUri());
+                            updateQuery.updateBook(newBook,instance,data,toast_output);
                             progressDialog.dismiss();
 
                         }
@@ -239,15 +260,9 @@ public class EditBookActivity extends AppCompatActivity {
             });
         } else {
             newBook.setUri(null);
-            addQuery.addBook(newBook);
-            Toast.makeText(EditBookActivity.this, "Book Saved" , Toast.LENGTH_LONG).show();
+            HashMap<String,Object> data = createData(newBook.getTitle(),newBook.getAuthor(),newBook.getDescription(),null,null);
+            updateQuery.updateBook(newBook,instance,data,toast_output);
             progressDialog.dismiss();
-
         }
-
-
-
     }
-
-
 }

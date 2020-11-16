@@ -2,7 +2,11 @@ package com.example.booktracker.boundary;
 
 import android.os.AsyncTask;
 
+import com.example.booktracker.control.Callback;
+import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.QueryOutput;
+import com.example.booktracker.entities.User;
 import com.example.booktracker.ui.AddBookActivity;
 
 import org.json.JSONArray;
@@ -18,14 +22,37 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     private boolean done = false;
     private String isbn;
     private ArrayList<Book> output;
-    private AddBookActivity instance;
-    public IsbnReq(String argIsbn, ArrayList<Book> argOutput, AddBookActivity argInstance){
+    private Callback instance;
+    private QueryOutputCallback outputCallback;
+    private QueryOutput queryOutput;
+
+    /**
+     * This class performs an http request on a thread that is not the main thread
+     * @param argIsbn isbn of the book being queried
+     * @param argList list of empty books initialized in the scope of the caller
+     * @param argInstance instance of the caller that implemented executeCallback
+     */
+    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance){
         super();
         isbn = argIsbn;
-        output = argOutput;
+        output = argList;
         instance = argInstance;
     }
 
+    /**
+     * This class performs an http request on a thread that is not the main thread
+     * @param argIsbn isbn of the book being queried
+     * @param argList list of empty books initialized in the scope of the caller
+     * @param argInstance instance of the caller that implemented executeCallback
+     */
+    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance,QueryOutput argQueryOutput,QueryOutputCallback argOutputCallback){
+        super();
+        isbn = argIsbn;
+        output = argList;
+        instance = argInstance;
+        outputCallback = argOutputCallback;
+        queryOutput = argQueryOutput;
+    }
     /**
      * This method will use getJson to make a HTTP request to GoogleBooks api and parse the result
      * @param strings
@@ -55,14 +82,14 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     }
 
     /**
-     * If the request was successful then UI will be udated
+     * If the request was successful then UI will be updated
      * @param s
      */
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         if (s.equals("COMPLETED")){
-            instance.updateUI(output);
+            instance.executeCallback();
         }
 
     }

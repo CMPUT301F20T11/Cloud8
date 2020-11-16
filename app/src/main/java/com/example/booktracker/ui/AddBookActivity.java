@@ -18,8 +18,12 @@ import com.example.booktracker.R;
 import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.IsbnReq;
+import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
+import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.entities.QueryOutput;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,12 +42,11 @@ import java.util.List;
  * Activity for adding book's to the user's book collection
  * @author Edlee Ducay
  */
-public class AddBookActivity extends AppCompatActivity {
+public class AddBookActivity extends AppCompatActivity implements Callback, QueryOutputCallback {
 
     private Uri imageUri;
     private BookCollection bookList;
     private String email;
-    private Book book;
     private AddBookQuery addQuery;
     private ImageView imageView;
     private static int SCAN_RQ = 69;
@@ -59,7 +62,7 @@ public class AddBookActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String uid;
-    private String toast_output;
+    private QueryOutput toast_output;
     private String downloadUrl;
 
     @Override
@@ -88,7 +91,8 @@ public class AddBookActivity extends AppCompatActivity {
         });
         bookArray = new ArrayList<Book>();
         email = ((Email) this.getApplication()).getEmail();
-        addQuery = new AddBookQuery(email);
+        toast_output = new QueryOutput();
+        addQuery = new AddBookQuery(email,toast_output,this);
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
@@ -105,17 +109,6 @@ public class AddBookActivity extends AppCompatActivity {
                     authors.add(author);
                     Book newBook = new Book(email,authors,title,isbn,desc);
                     upload(newBook);
-
-                    //====Ivan: made it so that the activity automatically exits==
-                    try{
-                        Thread.sleep(2000);
-                    }catch (InterruptedException e){
-                        Thread.currentThread().interrupt();
-                    }
-
-                    finish();
-                    //============================================================
-
                 }
             }
         });
@@ -183,10 +176,10 @@ public class AddBookActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
         }
-
-    public void updateUI(ArrayList<Book> argList){
-        if (argList.size() > 0){
-            Book newBook = argList.get(0);//get first book of the query
+    @Override
+    public void executeCallback(){
+        if (bookArray.size() > 0){
+            Book newBook = bookArray.get(0);//get first book of the query
             titleView.setText(newBook.getTitle());
             authorView.setText(newBook.getAuthor().get(0));
             isbnView.setText(newBook.getIsbn());
@@ -195,7 +188,19 @@ public class AddBookActivity extends AppCompatActivity {
             Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
         }
     }
+    @Override
+    public void displayQueryResult(String result){
+        Toast.makeText(AddBookActivity.this, toast_output.getOutput(), Toast.LENGTH_LONG).show();
+        if (result.equals("successful")){
+            try{
+                Thread.sleep(2000);
+            }catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+            finish();
+        }
 
+    }
     /**
      * Uploads the book to the Cloud Firestore and
      * Uploads the photo to the Cloud Storage
@@ -214,7 +219,7 @@ public class AddBookActivity extends AppCompatActivity {
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    toast_output = "Upload failed";
+                    toast_output.setOutput("Upload failed");
                 }
             }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -223,13 +228,11 @@ public class AddBookActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             downloadUrl = uri.toString();
-                            toast_output = "Upload successful";
+                            toast_output.setOutput("Upload successful");
                             newBook.setUri(downloadUrl);
                             newBook.setLocalUri(imageUri.toString());
                             addQuery.addBook(newBook);
-                            Toast.makeText(AddBookActivity.this, "Book Added Successfully" , Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
-
                         }
                     });
                 }
@@ -237,13 +240,8 @@ public class AddBookActivity extends AppCompatActivity {
         } else {
             newBook.setUri(null);
             addQuery.addBook(newBook);
-            Toast.makeText(AddBookActivity.this, "Book Added Successfully", Toast.LENGTH_LONG).show();
             progressDialog.dismiss();
         }
-
-
-
-
     }
 
 }
