@@ -1,7 +1,6 @@
 package com.example.booktracker.boundary;
 
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.example.booktracker.entities.Book;
 import com.google.android.gms.tasks.OnSuccessListener;

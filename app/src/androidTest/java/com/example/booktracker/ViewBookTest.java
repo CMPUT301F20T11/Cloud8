@@ -14,6 +14,7 @@ import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,21 +33,13 @@ public class ViewBookTest {
             new ActivityTestRule<>(SignInActivity.class,true,true);
 
     /**
-     * Initialize solo to be used by tests.
+     * Initialize solo to be used by tests. And add book to be tested in db.
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception{
+        addToDb();
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-    }
-
-    /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
     }
 
     /**
@@ -103,16 +96,22 @@ public class ViewBookTest {
         book = new Book(email,author, "The Communist Manifesto","9780671678814", "Test book");
         addBook.addBook(book);
     }
+
     /**
-     * Use helper functions mockBook,login,testView,deleteBook to test the ViewBook funcitonality
+     * Delete book form db
+     */
+    @After
+    public final void tearDown(){
+        deleteBook();
+    }
+    /**
+     * Use helper functions mockBook,login,testView,deleteBook to test the ViewBook functionality
      */
     @Test
     public void addBook(){
-        addToDb();
         login();
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("View");
         testView();
-        deleteBook();
     }
 }

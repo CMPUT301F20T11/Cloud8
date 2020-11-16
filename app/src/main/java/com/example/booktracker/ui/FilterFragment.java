@@ -10,7 +10,6 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.booktracker.R;
 
@@ -27,7 +26,7 @@ public class FilterFragment extends DialogFragment {
      * Set the parent activity which is MyBooksFragment to use its methods
      * @param argParent parent activity of type MyBooksFragment
      */
-    public FilterFragment(MyBooksFragment argParent){
+    public FilterFragment(MyBooksFragment argParent) {
         parentActivity = argParent;
     }
 
@@ -52,7 +51,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * This will bind the Button views in fragment_filter.xml to the attributes of FilterFragment
      */
-    private void bindViews(){
+    private void bindViews() {
         accepted = view.findViewById(R.id.accepted);
         requested  = view.findViewById(R.id.requested);
         myBooks = view.findViewById(R.id.my_books);
@@ -61,9 +60,9 @@ public class FilterFragment extends DialogFragment {
     }
 
     /**
-     * set listeners for all butons
+     * set listeners for all buttons
      */
-    private void setAllListeners(){
+    private void setAllListeners() {
         accepted_listener();
         requested_listener();
         my_books_listener();
@@ -73,7 +72,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for accepted books filter
      */
-    private void accepted_listener(){
+    private void accepted_listener() {
         accepted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +84,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for requested books filter
      */
-    private void requested_listener(){
+    private void requested_listener() {
         requested.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +96,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for no filter books filter
      */
-    private void my_books_listener(){
+    private void my_books_listener() {
         myBooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +108,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for borrowed books filter
      */
-    private void borrowed_listener(){
+    private void borrowed_listener() {
         borrowed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +120,7 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for available books filter
      */
-    private void available_listener(){
+    private void available_listener() {
         available.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

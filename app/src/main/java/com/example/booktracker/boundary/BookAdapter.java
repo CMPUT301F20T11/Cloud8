@@ -2,7 +2,6 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;

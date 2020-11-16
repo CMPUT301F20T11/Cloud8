@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface Callback {
     /**
-     * updateUi will udpate the ui of the the activity that requested a query
+     * updateUi will update the ui of the the activity that requested a query
      */
     void executeCallback();
 }

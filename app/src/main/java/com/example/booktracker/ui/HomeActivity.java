@@ -4,20 +4,20 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
 
-import com.example.booktracker.boundary.getBookQuery;
-import com.example.booktracker.control.Email;
-import com.example.booktracker.boundary.BookCollection;
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.control.Email;
+import com.google.android.material.navigation.NavigationView;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 

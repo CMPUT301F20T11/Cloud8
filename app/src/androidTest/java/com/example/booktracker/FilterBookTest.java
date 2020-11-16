@@ -13,6 +13,7 @@ import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,16 +40,8 @@ public class FilterBookTest {
      */
     @Before
     public void setUp() throws Exception{
+        addToDb();//this will add books to db with the filters to be tested
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-    }
-
-    /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
     }
     /**
      * Sign in and set the current activity to HomeActivity.
@@ -68,10 +61,10 @@ public class FilterBookTest {
     private void setBooks(){
         List<String> author = new ArrayList<String>();
         author.add("test");
-        borrowed = new Book(email,author, "borrowed Book","0000000000003", "test");
-        accepted = new Book(email,author, "accepted Book","0000000000005", "test");
-        requested = new Book(email,author, "requested Book","0000000000006", "test");
-        available = new Book(email,author, "available Book","0000000000007", "test");
+        borrowed = new Book(email,author, "borrowed Book","1000000000000", "test");
+        accepted = new Book(email,author, "accepted Book","2000000000000", "test");
+        requested = new Book(email,author, "requested Book","3000000000000", "test");
+        available = new Book(email,author, "available Book","4000000000000", "test");
         borrowed.setStatus("borrowed");
         accepted.setStatus("accepted");
         requested.setStatus("requested");
@@ -141,22 +134,22 @@ public class FilterBookTest {
      * Delete all the books that were created for the sake of testing from the database.
      */
     private void deleteBook(){
-        //delete book
         DeleteBookQuery del = new DeleteBookQuery(email);
         del.deleteBook(borrowed);
         del.deleteBook(accepted);
         del.deleteBook(available);
         del.deleteBook(requested);
     }
-
     /**
      *Test if the correct books are displayed when a filter is selected.
      */
     @Test
     public void testBookFilters(){
         login();
-        addToDb();//this will add books to db with the filters to be tested
         testFilters();
+    }
+    @After
+    public final void tearDown(){
         deleteBook();
     }
 }
