@@ -74,7 +74,7 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
                 // Since we are the owner in this case, we should check for book.owner == user.email
                 // and book.borrower == none, and book.status == available, and book != null
-                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() != "none") (selectedBook != null)) {
+                if ((selectedBook.getStatus() == "available") && (selectedBook.getBorrower() != "none") && (selectedBook != null)) {
                     selectedBook.setStatus("unavailable");
                     bookAdapter.notifyDataSetChanged();
                     Toast.makeText(view.getContext(), "Book Successfully given!", Toast.LENGTH_LONG).show();
