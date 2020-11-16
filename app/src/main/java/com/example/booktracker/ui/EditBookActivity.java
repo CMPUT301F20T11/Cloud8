@@ -23,7 +23,6 @@ import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
 
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
