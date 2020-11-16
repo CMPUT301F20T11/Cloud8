@@ -6,6 +6,8 @@ import android.widget.EditText;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.booktracker.boundary.AddBookQuery;
+import com.example.booktracker.entities.Book;
 import com.example.booktracker.ui.AddBookActivity;
 import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
@@ -15,12 +17,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertTrue;
 
 public class DeleteTest {
     private Solo solo;
     private String email = "test@gmail.com";
     private String pass = "password";
+    private Book book;
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class,true,true);
@@ -43,13 +48,14 @@ public class DeleteTest {
     }
 
     /**
-     * Initialize entries in the AddBookActivity edit text.
+     * Add test book to db
      */
-    private void mockBook(){
-        solo.enterText((EditText) solo.getView(R.id.addbook_title),"The Communist Manifesto");
-        solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Marx");
-        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"9780671678814");
-        solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
+    private void addToDb(){
+        AddBookQuery addBook = new AddBookQuery(email);
+        ArrayList<String> author = new ArrayList<>();
+        author.add("Karl Marx");
+        book = new Book(email,author, "The Communist Manifesto","9780671678814", "Test book");
+        addBook.addBook(book);
     }
 
     /**
@@ -69,15 +75,8 @@ public class DeleteTest {
      */
     @Test
     public void deleteBook(){
-        //=======================add a book to be deleted===========================================
+        addToDb();
         login();
-        solo.clickOnButton("Add");
-        solo.assertCurrentActivity("Wrong activity should be AddBookActivity", AddBookActivity.class);
-        mockBook();
-        solo.clickOnButton("Add");
-        assertTrue(solo.waitForActivity(HomeActivity.class));
-        assertTrue("book was not added",solo.searchText("The Communist Manifesto"));
-        //=======================done===============================================================
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("Delete");
         assertTrue("book was not deleted",!solo.searchText("The Communist Manifesto"));

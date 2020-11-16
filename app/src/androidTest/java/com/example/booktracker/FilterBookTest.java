@@ -68,10 +68,10 @@ public class FilterBookTest {
     private void setBooks(){
         List<String> author = new ArrayList<String>();
         author.add("test");
-        borrowed = new Book(email,author, "borrowed Book","1234567890123", "test");
-        accepted = new Book(email,author, "accepted Book","1234567890125", "test");
-        requested = new Book(email,author, "requested Book","1234567890126", "test");
-        available = new Book(email,author, "available Book","1234567890127", "test");
+        borrowed = new Book(email,author, "borrowed Book","0000000000003", "test");
+        accepted = new Book(email,author, "accepted Book","0000000000005", "test");
+        requested = new Book(email,author, "requested Book","0000000000006", "test");
+        available = new Book(email,author, "available Book","0000000000007", "test");
         borrowed.setStatus("borrowed");
         accepted.setStatus("accepted");
         requested.setStatus("requested");

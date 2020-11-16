@@ -148,7 +148,6 @@ public class getBookQuery extends BookQuery {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        System.out.println(task.getResult().size());
                         if (task.isSuccessful()) {
                             List<DocumentSnapshot> list = Objects.requireNonNull(task.getResult()).getDocuments();
                             if (list.size() > 0) {
@@ -169,7 +168,7 @@ public class getBookQuery extends BookQuery {
                                     emptyBook.setOwner((String) res.get("owner"));
                                     emptyBook.setDescription((String) res.get("description"));
                                     emptyBook.setStatus((String) res.get("status"));
-                                    callback.updateUi();
+                                    callback.executeCallback();
                                 }
                             }
                         }

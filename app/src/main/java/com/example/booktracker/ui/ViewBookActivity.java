@@ -12,6 +12,8 @@ import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 
+import java.util.ArrayList;
+
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ViewBookActivity extends AppCompatActivity implements Callback {
@@ -83,7 +85,9 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
     /**
      * This method will be called by the query
      */
-    public void updateUi(){
+    @Override
+    public void executeCallback(){
         updateTextViews(emptyBook);
     }
+
 }

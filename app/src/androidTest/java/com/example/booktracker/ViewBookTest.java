@@ -6,6 +6,7 @@ import android.widget.EditText;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.ui.AddBookActivity;
@@ -17,12 +18,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertTrue;
 
 public class ViewBookTest {
     private Solo solo;
     private String email = "test@gmail.com";
     private String pass = "password";
+    private Book book;
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class,true,true);
@@ -89,21 +93,23 @@ public class ViewBookTest {
         book1.setStatus("available");
         del.deleteBook(book1);
     }
-
+    /**
+     * Add test book to db
+     */
+    private void addToDb(){
+        AddBookQuery addBook = new AddBookQuery(email);
+        ArrayList<String> author = new ArrayList<>();
+        author.add("Karl Marx");
+        book = new Book(email,author, "The Communist Manifesto","9780671678814", "Test book");
+        addBook.addBook(book);
+    }
     /**
      * Use helper functions mockBook,login,testView,deleteBook to test the ViewBook funcitonality
      */
     @Test
     public void addBook(){
-        //=======================add a book to be deleted===========================================
+        addToDb();
         login();
-        solo.clickOnButton("Add");
-        solo.assertCurrentActivity("Wrong activity should be AddBookActivity", AddBookActivity.class);
-        mockBook();
-        solo.clickOnButton("Add");
-        assertTrue(solo.waitForActivity(HomeActivity.class));
-        assertTrue("book was not added",solo.searchText("The Communist Manifesto"));
-        //=======================done===============================================================
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("View");
         testView();
