@@ -17,5 +17,10 @@
     <string name="request_text">Request</string>
     <string name="accept_text">Accept</string>
     <string name="decline_text">Decline</string>
+    <string name="add_book_text">Add Book</string>
+    <string name="return_book_text">Return Book</string>
+    <string name="receive_book_text">Receive Book</string>
+    <string name="borrow_book_text">Borrow Book</string>
+    <string name="give_book_text">Give Book</string>
 
 </resources>
