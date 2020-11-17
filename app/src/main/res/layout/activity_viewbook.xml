@@ -11,12 +11,13 @@
         android:id="@+id/viewbook_status"
         android:layout_width="405dp"
         android:layout_height="43dp"
-        android:layout_marginTop="436dp"
+        android:layout_marginTop="392dp"
         android:gravity="center"
         android:text="Status"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_borrower"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,10 +25,11 @@
         android:id="@+id/viewbook_isbn"
         android:layout_width="411dp"
         android:layout_height="36dp"
-        android:layout_marginTop="584dp"
+        android:layout_marginTop="560dp"
         android:gravity="center"
         android:text="Isbn"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,12 +39,13 @@
         android:id="@+id/viewbook_owner"
         android:layout_width="401dp"
         android:layout_height="37dp"
-        android:layout_marginTop="540dp"
+        android:layout_marginTop="508dp"
         android:gravity="center"
         android:text="Owner"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_isbn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,12 +53,13 @@
         android:id="@+id/viewbook_borrower"
         android:layout_width="405dp"
         android:layout_height="43dp"
-        android:layout_marginTop="488dp"
+        android:layout_marginTop="452dp"
         android:gravity="center"
         android:text="Borrower"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_owner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.166"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,12 +67,13 @@
         android:id="@+id/viewbook_desc"
         android:layout_width="405dp"
         android:layout_height="36dp"
-        android:layout_marginTop="396dp"
+        android:layout_marginTop="344dp"
         android:gravity="center"
         android:text="Description"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_status"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -76,12 +81,12 @@
         android:id="@+id/viewbook_title"
         android:layout_width="407dp"
         android:layout_height="32dp"
-        android:layout_marginTop="312dp"
+        android:layout_marginTop="248dp"
         android:gravity="center"
         android:text="Book Title"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_author"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -89,7 +94,7 @@
         android:id="@+id/viewbook_image"
         android:layout_width="108dp"
         android:layout_height="100dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="88dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -100,13 +105,57 @@
         android:id="@+id/viewbook_author"
         android:layout_width="406dp"
         android:layout_height="34dp"
-        android:layout_marginTop="352dp"
+        android:layout_marginTop="300dp"
         android:gravity="center"
         android:text="Book Author"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/viewbook_desc"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/add_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/add_book_text" />
+
+        <Button
+            android:id="@+id/return_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/return_book_text" />
+
+        <Button
+            android:id="@+id/receive_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/receive_book_text" />
+
+        <Button
+            android:id="@+id/borrow_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/borrow_book_text" />
+
+        <Button
+            android:id="@+id/give_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/give_book_text" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
