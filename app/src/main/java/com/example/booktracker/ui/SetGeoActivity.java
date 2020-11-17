@@ -77,18 +77,19 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         else{
             map.setMyLocationEnabled(true);
             getCurrentLocation(map);
-            map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng latLng) {
-                    map.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title("Pickup location"));
-                    //confirm/edit location with user
-                    //attach location LATLONG to accepted request
-                    //return to incoming requests
-                }
-            });
         }
+
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Pickup location"));
+                //confirm/edit location with user
+                //attach location LATLONG to accepted request
+                //return to incoming requests
+            }
+        });
 
     }
 
