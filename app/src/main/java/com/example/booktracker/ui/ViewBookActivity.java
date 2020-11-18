@@ -2,8 +2,11 @@ package com.example.booktracker.ui;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,7 +19,7 @@ import java.util.ArrayList;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class ViewBookActivity extends AppCompatActivity implements Callback {
+public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, Callback {
     private String isbn;
     private Book emptyBook;
 
@@ -42,6 +45,17 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         isbn = getIntent().getStringExtra(EXTRA_MESSAGE);
         emptyBook = new Book();
         setTextViews();
+
+        // Creating buttons
+        Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
+        borrowButton.setOnClickListener(this);
+        Button giveButton = (Button) findViewById(R.id.give_book_button);
+        giveButton.setOnClickListener(this);
+        Button returnButton = (Button) findViewById(R.id.return_book_button);
+        returnButton.setOnClickListener(this);
+        Button receiveButton = (Button) findViewById(R.id.receive_book_button);
+        receiveButton.setOnClickListener(this);
+
 
         //==============query database for a book==============
         getBookQuery query = new getBookQuery(this);
@@ -90,4 +104,61 @@ public class ViewBookActivity extends AppCompatActivity implements Callback {
         updateTextViews(emptyBook);
     }
 
+    /**
+     * This method decides which onClick functionality to execute according to the ID of the button
+     * which has been pressed.
+     * @param v
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.borrow_book_button:
+                // Since we are the borrower in this case, we need to check for book.borrower == none,
+                // book.status == available, book != null, and then book.setBorrower("user.email")
+                if ((emptyBook.getStatus() == "unavailable") && (emptyBook != null)) {
+                    //set borrower properly here later
+//                    emptyBook.setBorrower("USER EMAIL HERE");
+                    Toast.makeText(this, "Book Successfully Borrowed!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Failed to borrow book!", Toast.LENGTH_LONG).show();
+                }
+                updateTextViews(emptyBook);
+                break;
+            case R.id.give_book_button:
+                // Since we are the owner in this case, we should check for book.owner == user.email
+                // and book.borrower == none, and book.status == available, and book != null
+                if ((emptyBook.getStatus() == "available") && (emptyBook.getBorrower() != "none") && (emptyBook != null)) {
+                    emptyBook.setStatus("unavailable");
+                    Toast.makeText(this, "Book Successfully given!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Failed to give book!", Toast.LENGTH_LONG).show();
+                }
+                updateTextViews(emptyBook);
+                break;
+            case R.id.return_book_button:
+                // Here we are the borrower attempting to hand over the book, so we must check that
+                // borrower == user, status == unavailable, then set it to borrower == none
+                if (emptyBook != null){
+                    emptyBook.setBorrower("none");
+                    Toast.makeText(this, "Book Successfully Returned!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Return Failed!", Toast.LENGTH_LONG).show();
+                }
+                updateTextViews(emptyBook);
+                break;
+            case R.id.receive_book_button:
+                // Here we are the owner receiving a book that has been returned, so we must check
+                // that we own the book, no one is borrowing it, and then set status to available
+                if ((emptyBook.getBorrower() == "none") && (emptyBook != null)) {
+                    emptyBook.setStatus("available");
+                    Toast.makeText(this, "Book Successfully Received!", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "Failed to receive book!", Toast.LENGTH_LONG).show();
+                }
+                updateTextViews(emptyBook);
+                break;
+//            default:
+//                break;
+        }
+    }
 }
