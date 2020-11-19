@@ -82,7 +82,7 @@ public class AddBookQuery extends BookQuery{
         return data;
     }
     /**
-     * This will add a book to firestore
+     * This will add a book to firestore mybooks collection
      * @author Ivan Penales
      * @param newBook book to add to firestore
      */
@@ -119,6 +119,60 @@ public class AddBookQuery extends BookQuery{
 
                 if (queryOutput != null){
                     queryOutput.setOutput("Added book succesfully");
+                    outputCallback.displayQueryResult("successful");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (queryOutput != null){
+                    queryOutput.setOutput("couldn't add book");
+                    outputCallback.displayQueryResult("not successful");
+                }
+            }
+        });
+    }
+
+    /**
+     * This will add a book to firestore collection
+     * with 'category name
+     * @author Ivan Penales
+     * @param newBook book to add to firestore
+     * @param category
+     */
+    public void addToDb(Book newBook, String category){
+        HashMap<String,Object> data = getData(newBook);
+        if (newBook.getStatus() != ""){
+            userDoc.collection(newBook.getStatus())
+                    .document(newBook.getIsbn())
+                    .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    if (queryOutput != null){
+                        queryOutput.setOutput("Added book successfully");
+                        outputCallback.displayQueryResult("successful");
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (queryOutput != null){
+                        queryOutput.setOutput("couldn't add book");
+                        outputCallback.displayQueryResult("not successful");
+                    }
+                }
+            });
+        }
+        //book is always added to myBook list regardless of its status
+        userDoc.collection(category)
+                .document(newBook.getIsbn())
+                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                if (queryOutput != null){
+                    queryOutput.setOutput("Added book successfully");
                     outputCallback.displayQueryResult("successful");
                 }
             }
