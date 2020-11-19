@@ -16,13 +16,16 @@ public abstract class BookQuery {
     protected FirebaseAuth auth;
     protected FirebaseUser user;
     protected String uid;
+
     /**
-     * constructor will connect to database and initialized document pertaining to user
-     * @author Ivan Penales
+     * constructor will connect to database and initialized document
+     * pertaining to user
+     *
      * @param userEmail this must be a valid email that is in the database
+     * @author Ivan Penales
      */
-    public BookQuery(String userEmail){
-        email =userEmail;
+    public BookQuery(String userEmail) {
+        email = userEmail;
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -30,7 +33,8 @@ public abstract class BookQuery {
         user = auth.getCurrentUser();
         uid = user.getUid();
     }
-    public BookQuery(){
+
+    public BookQuery() {
         db = FirebaseFirestore.getInstance();
     }
 }

@@ -50,7 +50,7 @@ public class MyBooksFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         bookList = view.findViewById(R.id.my_book_list);
-        userEmail = ((HomeActivity) activity).getUserEmail();
+        userEmail = activity.getUserEmail();
         collection = new BookCollection(new ArrayList<>(), bookList,
                 userEmail, view.getContext());
         del = new DeleteBookQuery(userEmail);
@@ -68,7 +68,7 @@ public class MyBooksFragment extends Fragment {
         getQuery.getMyBooks();
         //===========================================
 
-        Button addBookBtn = (Button) view.findViewById(R.id.add_book_button);
+        Button addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
                     AddBookActivity.class);
@@ -76,7 +76,7 @@ public class MyBooksFragment extends Fragment {
             startActivity(intent);
         });
 
-        Button editBookBtn = (Button) view.findViewById(R.id.edit_book_button);
+        Button editBookBtn = view.findViewById(R.id.edit_book_button);
         editBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(),
@@ -94,11 +94,12 @@ public class MyBooksFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = (Button) view.findViewById(R.id.view_book_button);
+        Button viewBookBtn = view.findViewById(R.id.view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
-                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                Intent intent = new Intent(view.getContext(),
+                        ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
                 startActivity(intent);
             }
         });
@@ -106,26 +107,29 @@ public class MyBooksFragment extends Fragment {
 
     private void setFilterListener() {
         Button filterBtn = view.findViewById(R.id.filter_button);
-        filterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new FilterFragment(instance).show(getParentFragmentManager(), "Filter");
-            }
-        });
+        filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
+                "Filter"));
     }
 
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
     private void setDeleteListener() {
-        Button deleteBookBtn = (Button) view.findViewById(R.id.delete_book_button);
+        Button deleteBookBtn = view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(view -> {
-            if (selected_book != null && selected_book.getOwner().trim().equals(userEmail.trim())){
-                del.deleteBook(selected_book);//remove book from database
-                collection.deleteBook(selected_book);//remove book from listview
-                //remove photo from cloud storage
+            if (selected_book != null) {
+                if (selected_book.getOwner() != null && selected_book.getOwnerEmail().trim().equals(userEmail.trim())) {
+                    userSelected = selected_book.getOwnerEmail();
+                    del.deleteBook(selected_book);
+                    collection.deleteBook(selected_book);
+                } else if (selected_book.getStringOwner() != null && selected_book.getStringOwner().trim().equals(userEmail.trim())) {
+                    userSelected = selected_book.getStringOwner();
+                    del.deleteBook(selected_book);
+                    collection.deleteBook(selected_book);
+                }
             } else {
-                Toast.makeText(view.getContext(), "Book cant be deleted", Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(), "Book cant be deleted",
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -136,7 +140,11 @@ public class MyBooksFragment extends Fragment {
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = collection.getBook(position);
-            userSelected = selected_book.getOwner();
+            if (selected_book.getOwner() != null) {
+                userSelected = selected_book.getOwnerEmail();
+            } else {
+                userSelected = selected_book.getStringOwner();
+            }
             if (userSelected != null) {
                 getUserDoc(userSelected);
             }
@@ -162,12 +170,14 @@ public class MyBooksFragment extends Fragment {
     }
 
     /**
-     * Refresh the listView when the user return the the HomeActivity in case an update to
+     * Refresh the listView when the user return the the HomeActivity in case
+     * an update to
      * the BookCollection was made
      */
     @Override
     public void onResume() {
-        //this is needed to refresh the list of books displayed when the user goes back to the
+        //this is needed to refresh the list of books displayed when the user
+        // goes back to the
         //home activity
         super.onResume();
         if (lastStatus.equals("")) {
@@ -207,7 +217,8 @@ public class MyBooksFragment extends Fragment {
         String username = userDoc.getString("username");
         String email = userDoc.getString("email");
         String phone = userDoc.getString("phone");
-        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
+                email, phone);
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }
