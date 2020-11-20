@@ -8,7 +8,8 @@ import com.example.booktracker.entities.Book;
 import java.util.ArrayList;
 
 public class BookCollection {
-    //the goal of this class is to add books to adapter and notify changes and just overall manage
+    //the goal of this class is to add books to adapter and notify changes
+    // and just overall manage
     //the adapter
     //this needs to be loaded when the main screen is loaded
     private ArrayList<Book> bookList;
@@ -20,25 +21,30 @@ public class BookCollection {
 
     /**
      * When instantiated it will change the displayed books
-     * @param argBookList array adapter responsible for the view of a single book in a list
-     * @param parent xml to bind the book data to
-     * @param argContext this context should always have list view
-     * @param userEmail email of the user currently logged in
+     *
+     * @param argBookList array adapter responsible for the view of a single
+     *                    book in a list
+     * @param parent      xml to bind the book data to
+     * @param argContext  this context should always have list view
+     * @param userEmail   email of the user currently logged in
      */
-    public BookCollection(ArrayList<Book> argBookList, ListView parent, String userEmail, Context argContext){
+    public BookCollection(ArrayList<Book> argBookList, ListView parent,
+                          String userEmail, Context argContext) {
         context = argContext;
         bookList = argBookList;
         email = userEmail;
-        adapter = new BookAdapter(context,argBookList);
+        adapter = new BookAdapter(context, argBookList);
         status = "";
         listView = parent;
         //already has a list then it will be overwritten by this
     }
+
     /**
      * This will add the book to the database and the adapter
+     *
      * @param newBook
      */
-    public void addBook(Book newBook){
+    public void addBook(Book newBook) {
         AddBookQuery query = new AddBookQuery(email);
         query.addBook(newBook);//this might modify the adapter
         adapter.notifyDataSetChanged();
@@ -46,12 +52,14 @@ public class BookCollection {
 
     /**
      * Get a book in the book adapter
+     *
      * @param position
      * @return
      */
-    public Book getBook(int position){
+    public Book getBook(int position) {
         return adapter.getItem(position);
     }
+
     public String getStatus() {
         return status;
     }
@@ -61,11 +69,12 @@ public class BookCollection {
     }
 
     public void setBookList(ArrayList<Book> argBookList) {
-        adapter = new BookAdapter(context,argBookList);
+        adapter = new BookAdapter(context, argBookList);
     }
 
     /**
      * delete a specific book from the adapter and the listView
+     *
      * @param book
      */
     public void deleteBook(Book book) {
