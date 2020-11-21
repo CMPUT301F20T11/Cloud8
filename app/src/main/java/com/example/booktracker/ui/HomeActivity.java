@@ -34,9 +34,6 @@ public class HomeActivity extends AppCompatActivity {
     private BookCollection bookList;
     private String email;
     private getBookQuery getQuery;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +42,9 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //======================save the email if the activity gets killed
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             userEmail = savedInstanceState.getString("email");
-        }else{
+        } else {
             userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
         }
         //=====================================================================
@@ -58,27 +55,37 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_borrowed, R.id.nav_find, R.id.nav_scan, R.id.nav_incoming,
-                R.id.nav_accepted, R.id.nav_requested, R.id.nav_profile, R.id.nav_notifications)
+                R.id.nav_home, R.id.nav_borrowed, R.id.nav_find,
+                R.id.nav_scan, R.id.nav_incoming,
+                R.id.nav_accepted, R.id.nav_requested, R.id.nav_profile,
+                R.id.nav_notifications)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavController navController = Navigation.findNavController(this,
+                R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController,
+                mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        //========================nav buttons============================================
+        //========================nav
+        // buttons============================================
     }
+
     public String getUserEmail() {
         return userEmail;
     }
+
     /**
-     * This method will be used to save user email in case this activity gets killed
+     * This method will be used to save user email in case this activity gets
+     * killed
+     *
      * @param outState
      * @param outPersistentState
      */
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+    public void onSaveInstanceState(@NonNull Bundle outState,
+                                    @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putString("email",userEmail);
+        outState.putString("email", userEmail);
     }
 
     @Override
@@ -90,7 +97,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this,
+                R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

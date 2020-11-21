@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,10 +31,10 @@ import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class FindBooksFragment extends Fragment {
     private static final String TAG = FindBooksFragment.class.getName();
-    ListView bookList;
-    ArrayAdapter<Book> resAdapter;
-    ArrayList<Book> bookDataList;
-    Book selected_book = null;
+    private ListView bookList;
+    private ArrayAdapter<Book> resAdapter;
+    private ArrayList<Book> bookDataList;
+    private Book selected_book = null;
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
     private String userSelected;
@@ -72,7 +73,11 @@ public class FindBooksFragment extends Fragment {
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
-            userSelected = selected_book.getOwner();
+            if (selected_book.getOwner() != null) {
+                userSelected = selected_book.getOwnerEmail();
+            } else {
+                userSelected = selected_book.getStringOwner();
+            }
             if (userSelected != null) {
                 getUserDoc(userSelected);
             }
@@ -103,13 +108,35 @@ public class FindBooksFragment extends Fragment {
                         return;
                     } else {
                         bookDataList = new ArrayList<>();
-                        List<Book> books = queryDocumentSnapshots.toObjects(Book.class);
-                        bookDataList.addAll(books);
+                        List<DocumentSnapshot> booksDocs =
+                                queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot doc : booksDocs) {
+                            List<String> authors = (List<String>) doc.get(
+                                    "author");
+                            if (doc.get("owner") instanceof String) {
+                                String stringOwner = (String) doc.get("owner");
+                                Book ogBook = new Book(stringOwner, authors,
+                                        (String) doc.get("title"),
+                                        doc.getId(), (String) doc.get(
+                                        "description"));
+                                bookDataList.add(ogBook);
+                            } else {
+                                HashMap<String, String> owner =
+                                        (HashMap<String, String>) doc.get(
+                                                "owner");
+                                Book book = new Book(owner, authors,
+                                        (String) doc.get("title"),
+                                        doc.getId(), (String) doc.get(
+                                        "description"));
+                                bookDataList.add(book);
+                            }
+                        }
                     }
                     updateBookList(bookDataList);
                     bookList.setAdapter(null);
                 })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error getting books!",
+                .addOnFailureListener(e -> Toast.makeText(getContext(),
+                        "Error getting books!",
                         Toast.LENGTH_SHORT).show());
     }
 
@@ -120,7 +147,8 @@ public class FindBooksFragment extends Fragment {
     }
 
     private boolean containsKeyword(String source, String input) {
-        return Pattern.compile(Pattern.quote(input), Pattern.CASE_INSENSITIVE).matcher(source).find();
+        return Pattern.compile(Pattern.quote(input),
+                Pattern.CASE_INSENSITIVE).matcher(source).find();
     }
 
     private Boolean getUserDoc(String owner) {
@@ -162,7 +190,8 @@ public class FindBooksFragment extends Fragment {
         String username = userDoc.getString("username");
         String email = userDoc.getString("email");
         String phone = userDoc.getString("phone");
-        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
+                email, phone);
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW BOOK USER");
     }

@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
@@ -22,15 +21,7 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
-
-
-import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.entities.QueryOutput;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,12 +31,16 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 /**
  * Activity for adding book's to the user's book collection
+ *
  * @author Edlee Ducay
  */
-public class AddBookActivity extends AppCompatActivity implements Callback, QueryOutputCallback {
+public class AddBookActivity extends AppCompatActivity implements Callback,
+        QueryOutputCallback {
 
     private Uri imageUri;
     private BookCollection bookList;
@@ -67,6 +62,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
     private String uid;
     private QueryOutput toast_output;
     private String downloadUrl;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,65 +82,51 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
         //============Ivan===============
 
         Button scanBtn = findViewById(R.id.scan_btn);
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(view.getContext(), ScanActivity.class),SCAN_RQ);
-            }
-        });
-        bookArray = new ArrayList<Book>();
+        scanBtn.setOnClickListener(view -> startActivityForResult(new Intent(view.getContext(),
+                ScanActivity.class), SCAN_RQ));
+        bookArray = new ArrayList<>();
         email = ((Email) this.getApplication()).getEmail();
         toast_output = new QueryOutput();
-        addQuery = new AddBookQuery(email,toast_output,this);
+        addQuery = new AddBookQuery(email, toast_output, this);
         //===============================
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                List<String> authors = new ArrayList<String>();
-                String title = titleView.getText().toString();
-                String author = authorView.getText().toString();
-                String isbn = isbnView.getText().toString();
-                String desc = descView.getText().toString();
-                if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")){
-                    isbnView.setError("isbn must have 13 digits");
-                }else{
-                    authors.add(author);
-                    Book newBook = new Book(email,authors,title,isbn,desc);
-                    upload(newBook);
-                }
+        addBtn.setOnClickListener(v -> {
+            List<String> authors = new ArrayList<>();
+            String title = titleView.getText().toString();
+            String author = authorView.getText().toString();
+            String isbn = isbnView.getText().toString();
+            String desc = descView.getText().toString();
+            HashMap<String, String> owner = new HashMap<>();
+            owner.put(email, "");
+            if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")) {
+                isbnView.setError("ISBN must have 13 digits");
+            } else {
+                authors.add(author);
+                Book newBook = new Book(owner, authors, title, isbn, desc);
+                addQuery.loadUsername(newBook);
+                upload(newBook);
             }
         });
 
         Button cancelBtn = findViewById(R.id.addbook_cancelbtn);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickFromGallery(v);
-            }
-        });
+        imageView.setOnClickListener(v -> pickFromGallery(v));
 
         Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
-        clearPhotoBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                imageView.setImageURI(null);
-                imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
-                imageUri = null;
-            }
+        clearPhotoBtn.setOnClickListener(v -> {
+            imageView.setImageURI(null);
+            imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+            imageUri = null;
         });
-
     }
 
     /**
      * Launches the 3rd party AndroidImageCropper activity
      * Uses a fixed aspect ratio of 1200x1200
-     * Retrieved from: https://github.com/mitchtabian/AndroidImageCropper-Example
+     * Retrieved from: https://github
+     * .com/mitchtabian/AndroidImageCropper-Example
      * mitchtabian - 10/31/2020
      */
     private void pickFromGallery(View v) {
@@ -156,7 +138,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -168,45 +151,50 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
                 imageView.setImageURI(imageUri);
             }
         }
-        if (requestCode == SCAN_RQ){
-            if (resultCode == RESULT_OK){
+        if (requestCode == SCAN_RQ) {
+            if (resultCode == RESULT_OK) {
                 String isbn = data.getData().toString();
-                req = new IsbnReq(isbn,bookArray,AddBookActivity.this);
+                req = new IsbnReq(isbn, bookArray, AddBookActivity.this);
                 req.execute();
             }
+        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
         }
-            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-            }
-        }
+    }
+
     @Override
-    public void executeCallback(){
-        if (bookArray.size() > 0){
+    public void executeCallback() {
+        if (bookArray.size() > 0) {
             Book newBook = bookArray.get(0);//get first book of the query
             titleView.setText(newBook.getTitle());
             authorView.setText(newBook.getAuthor().get(0));
             isbnView.setText(newBook.getIsbn());
             descView.setText(newBook.getDescription());
-        }else{
-            Toast.makeText(AddBookActivity.this,"Book is not in GoogleBooks", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(AddBookActivity.this, "Book is not in GoogleBooks"
+                    , Toast.LENGTH_LONG).show();
         }
     }
+
     @Override
-    public void displayQueryResult(String result){
-        Toast.makeText(AddBookActivity.this, toast_output.getOutput(), Toast.LENGTH_LONG).show();
-        if (result.equals("successful")){
-            try{
+    public void displayQueryResult(String result) {
+        Toast.makeText(AddBookActivity.this, toast_output.getOutput(),
+                Toast.LENGTH_LONG).show();
+        if (result.equals("successful")) {
+            try {
                 Thread.sleep(1000);
-            }catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
             finish();
         }
 
     }
+
     /**
      * Uploads the book to the Cloud Firestore and
      * Uploads the photo to the Cloud Storage
+     *
      * @param newBook
      */
     public void upload(Book newBook) {
@@ -216,32 +204,23 @@ public class AddBookActivity extends AppCompatActivity implements Callback, Quer
         progressDialog.show();
 
         if (imageUri != null) {
-            StorageReference ref = storageReference.child("images/users/" + uid + "/" + imageUri.getLastPathSegment());
+            StorageReference ref =
+                    storageReference.child("images/users/" + uid + "/" + imageUri.getLastPathSegment());
             UploadTask uploadTask = ref.putFile(imageUri);
-            // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    toast_output.setOutput("Upload failed");
-                }
-            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            downloadUrl = uri.toString();
-                            toast_output.setOutput("Upload successful");
-                            newBook.setUri(downloadUrl);
-                            newBook.setLocalUri(imageUri.toString());
-                            addQuery.addBook(newBook);
-                            progressDialog.dismiss();
-                        }
-                    });
-                }
-            });
+            // Register observers to listen for when the download is done or
+            // if it fails
+            uploadTask.addOnFailureListener(exception -> toast_output.setOutput("Upload failed")).addOnCompleteListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                downloadUrl = uri.toString();
+                toast_output.setOutput("Upload successful");
+                newBook.setUri(downloadUrl);
+                newBook.setLocalUri(imageUri.toString());
+                addQuery.loadUsername(newBook);
+                addQuery.addBook(newBook);
+                progressDialog.dismiss();
+            }));
         } else {
             newBook.setUri(null);
+            addQuery.loadUsername(newBook);
             addQuery.addBook(newBook);
             progressDialog.dismiss();
         }
