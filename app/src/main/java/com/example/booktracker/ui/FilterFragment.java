@@ -52,7 +52,7 @@ public class FilterFragment extends DialogFragment {
      * This will bind the Button views in fragment_filter.xml to the attributes of FilterFragment
      */
     private void bindViews() {
-        accepted = view.findViewById(R.id.accepted);
+        accepted = view.findViewById(R.id.lent);
         requested  = view.findViewById(R.id.requested);
         myBooks = view.findViewById(R.id.my_books);
         available = view.findViewById(R.id.available);
