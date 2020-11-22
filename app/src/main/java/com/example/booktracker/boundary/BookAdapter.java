@@ -2,7 +2,6 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +20,16 @@ import java.util.ArrayList;
 
 /**
  * ArrayAdapter class for the Book entity
+ *
  * @author Edlee Ducay
  */
 public class BookAdapter extends ArrayAdapter<Book> {
-    private ArrayList<Book> bookList = new ArrayList<>();
+    private ArrayList<Book> bookList;
     private Context context;
 
     /**
      * Constructor for BookAdapter class
+     *
      * @param argContext
      * @param argBookList
      */
@@ -40,12 +41,14 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
     /**
      * Binds layout inflater to a list view
+     *
      * @param position
      * @param convertView
      * @param parent
      * @return the view for corresponding params
      */
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView,
+                        @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.book_adapter_content, parent, false);
@@ -56,16 +59,32 @@ public class BookAdapter extends ArrayAdapter<Book> {
         ImageView imageView = view.findViewById(R.id.imageView);
 
         StringBuilder authors = new StringBuilder();
-        for (String s: book.getAuthor()) {
+        for (String s : book.getAuthor()) {
             authors.append(s);
             authors.append(", ");
         }
-        mainView.setText(book.getTitle()+"\n"+ TextUtils.join(",", book.getAuthor())+"\n"+book.getOwner().toString()+"\n"+book.getStatus());
-        if (book.getUri()!= null) {
-            Glide.with(view).load(book.getUri()).into(imageView);
+        String title = book.getTitle();
+        String desc = book.getDescription();
+        String status = book.getStatus();
+
+        if (book.getOwner() != null) {
+            String owner = book.getOwnerName();
+            mainView.setText(title + "\n" + desc + "\n" + owner + "\n" + status);
+            if (book.getUri() != null) {
+                Glide.with(view).load(book.getUri()).into(imageView);
+            } else {
+                Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+            }
         } else {
-            Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+            String stringOwner = book.getStringOwner();
+            mainView.setText(title + "\n" + desc + "\n" + stringOwner + "\n" + status);
+            if (book.getUri() != null) {
+                Glide.with(view).load(book.getUri()).into(imageView);
+            } else {
+                Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+            }
         }
+
         return view;
     }
 }

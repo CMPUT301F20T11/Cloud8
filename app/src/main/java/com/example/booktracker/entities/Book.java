@@ -2,10 +2,13 @@ package com.example.booktracker.entities;
 
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base class for the book entity
+ *
  * @author Edlee Ducay
  */
 public class Book implements Serializable {
@@ -16,31 +19,38 @@ public class Book implements Serializable {
     private String uri;
     private String localUri;
     //=======These will be emails=========
-    private String owner;
+    private String stringOwner;
+    private Map<String, String> owner;
     private String borrower;
     //======================
     private String status;
 
     /**
-     * contructor for initializing an empty book
+     * constructor for initializing an empty book
      */
-    public Book(){
+    public Book() {
         this.title = "";
         this.isbn = "";
         this.description = "";
-        this.owner = "";
+        Map<String, String> nestedData = new HashMap<>();
+        nestedData.put("", "");
+        this.owner = nestedData;
+        owner.put("", "");
         this.status = "";
         this.borrower = null;
     }
+
     /**
      * Constructor for books with a description
+     *
      * @param argOwner
      * @param argAuthor
      * @param argTitle
      * @param argIsbn
      * @param argDesc
      */
-    public Book(String argOwner, List<String>argAuthor, String argTitle, String argIsbn, String argDesc) {
+    public Book(HashMap<String, String> argOwner, List<String> argAuthor,
+                String argTitle, String argIsbn, String argDesc) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
@@ -48,17 +58,29 @@ public class Book implements Serializable {
         this.owner = argOwner;
         this.status = "available";
         this.borrower = null;
+    }
 
+    public Book(String argOwner, List<String> argAuthor, String argTitle,
+                String argIsbn, String argDesc) {
+        this.author = argAuthor;
+        this.title = argTitle;
+        this.isbn = argIsbn;
+        this.description = argDesc;
+        this.stringOwner = argOwner;
+        this.status = "available";
+        this.borrower = null;
     }
 
     /**
      * Constructor for books without a description
+     *
      * @param argOwner
      * @param argAuthor
      * @param argTitle
      * @param argIsbn
      */
-    public Book(String argOwner, List<String>argAuthor, String argTitle, String argIsbn) {
+    public Book(HashMap<String, String> argOwner, List<String> argAuthor,
+                String argTitle, String argIsbn) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
@@ -66,21 +88,25 @@ public class Book implements Serializable {
         this.status = "";
         this.borrower = null;
     }
+
     /**
      * Constructor for books without a description without owner
+     *
      * @param argAuthor
      * @param argTitle
      * @param argIsbn
      */
-    public Book( List<String>argAuthor, String argTitle, String argIsbn) {
+    public Book(List<String> argAuthor, String argTitle, String argIsbn) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.status = "";
         this.borrower = null;
     }
+
     /**
      * Gets the book's author(s)
+     *
      * @return List of author(s)
      */
     public List<String> getAuthor() {
@@ -89,6 +115,7 @@ public class Book implements Serializable {
 
     /**
      * Sets the book's author(s)
+     *
      * @param author
      */
     public void setAuthor(List<String> author) {
@@ -97,6 +124,7 @@ public class Book implements Serializable {
 
     /**
      * Gets the book's title
+     *
      * @return string of the title
      */
     public String getTitle() {
@@ -105,6 +133,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's title
+     *
      * @param title
      */
     public void setTitle(String title) {
@@ -113,6 +142,7 @@ public class Book implements Serializable {
 
     /**
      * Get the book's ISBN
+     *
      * @return isbn as integer
      */
     public String getIsbn() {
@@ -121,6 +151,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's ISBN
+     *
      * @param isbn
      */
     public void setIsbn(String isbn) {
@@ -129,6 +160,7 @@ public class Book implements Serializable {
 
     /**
      * Get the book's description
+     *
      * @return String of the description
      */
     public String getDescription() {
@@ -137,6 +169,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's description
+     *
      * @param description
      */
     public void setDescription(String description) {
@@ -145,6 +178,7 @@ public class Book implements Serializable {
 
     /**
      * Get the book's current status
+     *
      * @return status ('available' / 'unavailable')
      */
     public String getStatus() {
@@ -153,6 +187,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's current status
+     *
      * @param status
      */
     public void setStatus(String status) {
@@ -161,22 +196,43 @@ public class Book implements Serializable {
 
     /**
      * Get the book's owner
+     *
      * @return owner
      */
-    public String getOwner() {
-        return owner;
+    public HashMap<String, String> getOwner() {
+        return (HashMap<String, String>) owner;
+    }
+
+    public String getStringOwner() {
+        return stringOwner;
+    }
+
+    public String getOwnerEmail() {
+        Map.Entry<String, String> entry = owner.entrySet().iterator().next();
+        return entry.getKey();
+    }
+
+    public String getOwnerName() {
+        Map.Entry<String, String> entry = owner.entrySet().iterator().next();
+        return entry.getValue();
     }
 
     /**
      * Set the book's owner
+     *
      * @param owner
      */
-    public void setOwner(String owner) {
+    public void setOwner(Map<String, String> owner) {
         this.owner = owner;
+    }
+
+    public void setStringOwner(String owner) {
+        this.stringOwner = owner;
     }
 
     /**
      * Get the book's current borrower
+     *
      * @return borrower (returns 'none' if no borrower)
      */
     public String getBorrower() {
@@ -185,6 +241,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's current borrower
+     *
      * @param borrower
      */
     public void setBorrower(String borrower) {
@@ -193,6 +250,7 @@ public class Book implements Serializable {
 
     /**
      * Return the book's URI
+     *
      * @return
      */
     public String getUri() {
@@ -201,6 +259,7 @@ public class Book implements Serializable {
 
     /**
      * Set the book's URI
+     *
      * @param uri
      */
     public void setUri(String uri) {
@@ -208,7 +267,8 @@ public class Book implements Serializable {
     }
 
     /**
-     *  Get the book's local URI
+     * Get the book's local URI
+     *
      * @return
      */
     public String getLocalUri() {
@@ -217,6 +277,7 @@ public class Book implements Serializable {
 
     /**
      * Set the books local URI
+     *
      * @param localUri
      */
     public void setLocalUri(String localUri) {
