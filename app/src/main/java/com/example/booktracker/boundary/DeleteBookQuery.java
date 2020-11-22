@@ -16,6 +16,9 @@ public class DeleteBookQuery extends BookQuery {
      * @param book book to be deleted
      */
     public void deleteBook(Book book) {
+        db.collection("books")
+                .document(book.getIsbn())
+                .delete();
         if (book.getStatus() != "" && book.getStatus() != null) {
             userDoc.collection(book.getStatus())
                     .document(book.getIsbn())
