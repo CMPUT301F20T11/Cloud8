@@ -28,7 +28,7 @@ public class FilterBookTest {
     private String email = "test@gmail.com";
     private String pass = "password";
     Book borrowed;
-    Book accepted;
+    Book lent;
     Book requested;
     Book available;
     @Rule
@@ -71,14 +71,14 @@ public class FilterBookTest {
         owner.put(email, "");
         borrowed = new Book(owner, author, "borrowed Book", "1000000000000",
                 "test");
-        accepted = new Book(owner, author, "accepted Book", "2000000000000",
+        lent = new Book(owner, author, "lent Book", "2000000000000",
                 "test");
         requested = new Book(owner, author, "requested Book", "3000000000000"
                 , "test");
         available = new Book(owner, author, "available Book", "4000000000000"
                 , "test");
         borrowed.setStatus("borrowed");
-        accepted.setStatus("accepted");
+        lent.setStatus("lent");
         requested.setStatus("requested");
         available.setStatus("available");
     }
@@ -93,8 +93,8 @@ public class FilterBookTest {
         query.loadUsername(borrowed);
         query.addBook(borrowed);
 
-        query.loadUsername(accepted);
-        query.addBook(accepted);
+        query.loadUsername(lent);
+        query.addBook(lent);
 
         query.loadUsername(requested);
         query.addBook(requested);
@@ -116,11 +116,11 @@ public class FilterBookTest {
     /**
      * Test if books with accepted status displays.
      */
-    private void testAccepted() {
+    private void testLent() {
         solo.clickOnButton("filter");
         assertTrue("fragment is not displayed", solo.searchText("Filters"));
-        solo.clickOnButton("Accepted");
-        assertTrue("book was not filtered", solo.searchText("accepted Book"));
+        solo.clickOnButton("Lent");
+        assertTrue("book was not filtered", solo.searchText("lent Book"));
     }
 
     /**
@@ -149,7 +149,7 @@ public class FilterBookTest {
     private void testFilters() {
         solo.assertCurrentActivity("Wrong activity should be AddBookActivity"
                 , HomeActivity.class);
-        testAccepted();
+        testLent();
         testAvailable();
         testBorrowed();
         testRequested();
@@ -162,7 +162,7 @@ public class FilterBookTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         del.deleteBook(borrowed);
-        del.deleteBook(accepted);
+        del.deleteBook(lent);
         del.deleteBook(available);
         del.deleteBook(requested);
     }

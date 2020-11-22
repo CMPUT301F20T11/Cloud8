@@ -3,10 +3,17 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +51,95 @@ public class getBookQuery extends BookQuery {
         super();
         context = argContext;
     }
+    /**
+     * get will get all contents of the specified collection reference and output it
+     * @param reference
+     */
+    private void get(CollectionReference reference){
+        reference.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        final int querySize = task.getResult().size();
+                        outputBooks = new ArrayList<>();
+                        for (QueryDocumentSnapshot document :
+                                Objects.requireNonNull(task.getResult())) {
+                            DocumentReference bookRef = (DocumentReference) document.get("bookReference");
+                            bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    List<String> authors =
+                                            (List<String>) document.get("author");
+                                    if (document.get("owner") instanceof String) {
+                                        String stringOwner =
+                                                (String) document.get("owner");
+                                        Book ogBook = new Book(stringOwner,
+                                                authors, (String) document.get(
+                                                "title"),
+                                                document.getId(),
+                                                (String) document.get(
+                                                        "description"));
+                                        if (document.get("image_uri") != null) {
+                                            Uri imageUri =
+                                                    Uri.parse((String) document.get(
+                                                            "image_uri"));
+                                            ogBook.setUri(imageUri.toString());
+                                        }
+                                        if (document.get("local_image_uri") != null) {
+                                            Uri localImageUri =
+                                                    Uri.parse((String) document.get(
+                                                            "local_image_uri"));
+                                            ogBook.setLocalUri(localImageUri.toString());
+                                        }
+                                        outputBooks.add(ogBook);
+                                    } else {
+                                        HashMap<String, String> owner =
+                                                (HashMap<String, String>) document.get("owner");
+                                        Book book = new Book(owner, authors,
+                                                (String) document.get("title"),
+                                                document.getId(),
+                                                (String) document.get(
+                                                        "description"));
+                                        if (document.get("image_uri") != null) {
+                                            Uri imageUri =
+                                                    Uri.parse((String) document.get(
+                                                            "image_uri"));
+                                            book.setUri(imageUri.toString());
+                                        }
+                                        if (document.get("local_image_uri") != null) {
+                                            Uri localImageUri =
+                                                    Uri.parse((String) document.get(
+                                                            "local_image_uri"));
+                                            book.setLocalUri(localImageUri.toString());
+                                        }
+                                        outputBooks.add(book);
+                                    }
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                //every step of the loop check if the list of books is full
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    System.out.println(querySize);
+                                    System.out.println(outputBooks.size());
+                                    if (querySize == outputBooks.size() && outputBooks.size() > 0) {
+                                        bookList.setBookList(outputBooks);
+                                        bookList.displayBooks();
+                                        outputBooks = new ArrayList();
+                                        //empty outputBooks to clear results from last query
+                                    } else {
+                                        //in case there no matches clear the current
+                                        // list
+                                        bookList.clearList();
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        throw new RuntimeException("Error getting books");
+                    }
 
+                });
+    }
     /**
      * This will query the data base and use Book Collection object to modify
      * the listView
@@ -52,76 +147,7 @@ public class getBookQuery extends BookQuery {
      * @throws RuntimeException
      */
     public void getMyBooks() throws RuntimeException {
-        userDoc.collection("myBooks")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        outputBooks = new ArrayList<>();
-                        for (QueryDocumentSnapshot document :
-                                Objects.requireNonNull(task.getResult())) {
-                            //Book(String argOwner,
-                            // List<String>argAuthor, String argTitle,
-                            // int argIsbn, String argDesc)
-                            List<String> authors =
-                                    (List<String>) document.get("author");
-                            if (document.get("owner") instanceof String) {
-                                String stringOwner =
-                                        (String) document.get("owner");
-                                Book ogBook = new Book(stringOwner,
-                                        authors, (String) document.get(
-                                        "title"),
-                                        document.getId(),
-                                        (String) document.get(
-                                                "description"));
-                                if (document.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) document.get(
-                                                    "image_uri"));
-                                    ogBook.setUri(imageUri.toString());
-                                }
-                                if (document.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) document.get(
-                                                    "local_image_uri"));
-                                    ogBook.setLocalUri(localImageUri.toString());
-                                }
-                                outputBooks.add(ogBook);
-                            } else {
-                                HashMap<String, String> owner =
-                                        (HashMap<String, String>) document.get("owner");
-                                Book book = new Book(owner, authors,
-                                        (String) document.get("title"),
-                                        document.getId(),
-                                        (String) document.get(
-                                                "description"));
-                                if (document.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) document.get(
-                                                    "image_uri"));
-                                    book.setUri(imageUri.toString());
-                                }
-                                if (document.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) document.get(
-                                                    "local_image_uri"));
-                                    book.setLocalUri(localImageUri.toString());
-                                }
-                                outputBooks.add(book);
-                            }
-                        }
-                        if (outputBooks.size() > 0) {
-                            bookList.setBookList(outputBooks);
-                            bookList.displayBooks();
-                        } else {
-                            //in case there no matches clear the current
-                            // list
-                            bookList.clearList();
-                        }
-                    } else {
-                        throw new RuntimeException("Error getting books");
-                    }
-
-                });
+        get(userDoc.collection("myBooks"));
     }
 
     /**
@@ -133,77 +159,7 @@ public class getBookQuery extends BookQuery {
      * @throws RuntimeException
      */
     public void getMyBooks(String category) throws RuntimeException {
-        userDoc.collection(category)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        outputBooks = new ArrayList<>();
-                        for (QueryDocumentSnapshot document :
-                                Objects.requireNonNull(task.getResult())) {
-                            //Book(String argOwner,
-                            // List<String>argAuthor, String argTitle,
-                            // int argIsbn, String argDesc)
-                            List<String> authors =
-                                    (List<String>) document.get("author");
-                            if (document.get("owner") instanceof String) {
-                                String stringOwner =
-                                        (String) document.get("owner");
-                                Book ogBook = new Book(stringOwner,
-                                        authors, (String) document.get(
-                                        "title"),
-                                        document.getId(),
-                                        (String) document.get(
-                                                "description"));
-                                if (document.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) document.get(
-                                                    "image_uri"));
-                                    ogBook.setUri(imageUri.toString());
-                                }
-                                if (document.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) document.get(
-                                                    "local_image_uri"));
-                                    ogBook.setLocalUri(localImageUri.toString());
-                                }
-                                outputBooks.add(ogBook);
-                            } else {
-                                HashMap<String, String> owner =
-                                        (HashMap<String, String>) document.get("owner");
-                                Book book = new Book(owner, authors,
-                                        (String) document.get("title"),
-                                        document.getId(),
-                                        (String) document.get(
-                                                "description"));
-                                if (document.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) document.get(
-                                                    "image_uri"));
-                                    book.setUri(imageUri.toString());
-                                }
-                                if (document.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) document.get(
-                                                    "local_image_uri"));
-                                    book.setLocalUri(localImageUri.toString());
-                                }
-                                outputBooks.add(book);
-                            }
-                        }
-                        if (outputBooks.size() > 0) {
-                            bookList.setBookList(outputBooks);
-                            bookList.displayBooks();
-                        } else {
-                            //in case there no matches clear the current
-                            // list
-                            bookList.clearList();
-                        }
-
-                    } else {
-                        throw new RuntimeException("Error getting books");
-                    }
-
-                });
+        get(userDoc.collection(category));
     }
 
     /**
@@ -216,17 +172,14 @@ public class getBookQuery extends BookQuery {
      *                  method. Callback must
      *                  contain the code that depends on the result of this
      *                  query.
-     * @author <ipenales@ualberta.ca>
      */
     public void getABook(String isbn, Book emptyBook, Callback callback) {
-        db.collectionGroup("myBooks").whereEqualTo("isbn", isbn.trim())
+        db.collection("books").document(isbn)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        List<DocumentSnapshot> list =
-                                Objects.requireNonNull(task.getResult()).getDocuments();
-                        if (list.size() > 0) {
-                            DocumentSnapshot res = list.get(0);
+                        DocumentSnapshot res = task.getResult();
+                        if (res.exists()) {
                             if (res != null) {
                                 if (res.get("image_uri") != null) {
                                     Uri imageUri =
