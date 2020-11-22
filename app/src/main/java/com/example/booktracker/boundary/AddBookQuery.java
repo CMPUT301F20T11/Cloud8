@@ -37,7 +37,9 @@ public class AddBookQuery extends BookQuery {
     public AddBookQuery(String userEmail) {
         super(userEmail);
     }
+    public AddBookQuery(){
 
+    }
     /**
      * This will add the book to the adapter and the database if its not
      * already there
@@ -109,7 +111,6 @@ public class AddBookQuery extends BookQuery {
                 final DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
                 HashMap<String,Object> userBook = new HashMap<String,Object>();
                 userBook.put("bookReference",bookReference);
-                userBook.put("borrowerStatus","available");
                 if (!newBook.getStatus().equals("")) {
                     userDoc.collection(newBook.getStatus())
                             .document(newBook.getIsbn())
@@ -133,7 +134,18 @@ public class AddBookQuery extends BookQuery {
         });
 
     }
-
+    /**
+     * This will add the reference to a book to the user's document
+     * @param newBook book to be added
+     * @param borrowerEmail email of the person who is receiving the book
+     */
+    public void addBookBorrower(Book newBook,String borrowerEmail){
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("bookReference",db.collection("books").document(newBook.getIsbn()));
+        db.collection("users").document(borrowerEmail).collection(newBook.getStatus())
+                .document(newBook.getIsbn())
+                .set(data);
+    }
     public void loadUsername(Book book) {
         userDoc.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
