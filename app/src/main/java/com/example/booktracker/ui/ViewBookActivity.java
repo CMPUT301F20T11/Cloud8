@@ -14,12 +14,21 @@ import com.example.booktracker.R;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, Callback {
     private String isbn;
     private Book emptyBook;
+    private StorageReference storageReference;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String uid;
+    private String loginEmail;
 
     //=========Text Views================
     private TextView isbnView;
@@ -45,6 +54,12 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         emptyBook = new Book();
         setTextViews();
 
+        auth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        user = auth.getCurrentUser();
+        uid = user.getUid();
+        loginEmail = user.getEmail();
+
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
@@ -54,6 +69,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         returnButton.setOnClickListener(this);
         Button receiveButton = (Button) findViewById(R.id.receive_book_button);
         receiveButton.setOnClickListener(this);
+        Button addButton = (Button) findViewById(R.id.add_book_button);
+        addButton.setOnClickListener(this);
 
 
         //==============query database for a book==============
@@ -119,19 +136,22 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.add_book_button:
+                Toast.makeText(this, loginEmail, Toast.LENGTH_SHORT).show();
+                break;
             case R.id.borrow_book_button:
                 // Since we are the borrower in this case, we need to check
                 // for book.borrower == none,
-                // book.status == available, book != null, and then book
+                // book.status == unavailable, book != null, and then book
                 // .setBorrower("user.email")
-                if ((emptyBook.getStatus().equals("unavailable")) && (emptyBook != null)) {
-                    //set borrower properly here later
-//                    emptyBook.setBorrower("USER EMAIL HERE");
+                if ((emptyBook != null) && (emptyBook.getStatus().equals("unavailable"))
+                        && emptyBook.getBorrower().equals("none")) {
+                    emptyBook.setBorrower(loginEmail);
                     Toast.makeText(this, "Book Successfully Borrowed!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Failed to borrow book!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
                 break;
@@ -140,13 +160,18 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // book.owner == user.email
                 // and book.borrower == none, and book.status == available,
                 // and book != null
-                if ((emptyBook.getStatus().equals("available")) && (!emptyBook.getBorrower().equals("none")) && (emptyBook != null)) {
+                System.out.println(emptyBook.getBorrower().equals("none"));
+                System.out.println((emptyBook.getStatus().equals("available")));
+                System.out.println((emptyBook.getOwner().equals(loginEmail)));
+
+                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none")) // owner is a hashmap
+                        && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
                     emptyBook.setStatus("unavailable");
                     Toast.makeText(this, "Book Successfully given!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Failed to give book!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
                 break;
@@ -155,12 +180,13 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // so we must check that
                 // borrower == user, status == unavailable, then set it to
                 // borrower == none
-                if (emptyBook != null) {
+                if ((emptyBook != null) && emptyBook.getBorrower().equals(loginEmail)
+                        && emptyBook.getStatus().equals("unavailable")) {
                     emptyBook.setBorrower("none");
                     Toast.makeText(this, "Book Successfully Returned!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(this, "Return Failed!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
                 break;
@@ -169,18 +195,18 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // returned, so we must check
                 // that we own the book, no one is borrowing it, and then set
                 // status to available
-                if ((emptyBook.getBorrower().equals("none")) && (emptyBook != null)) {
+                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none"))
+                        && emptyBook.getOwner().containsKey(loginEmail)) {
                     emptyBook.setStatus("available");
                     Toast.makeText(this, "Book Successfully Received!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Failed to receive book!",
-                            Toast.LENGTH_LONG).show();
+                            Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
                 break;
-//            default:
-//                break;
         }
     }
 }
+

@@ -254,6 +254,7 @@ public class getBookQuery extends BookQuery {
                                 }
                                 emptyBook.setAuthor(authors);
                                 emptyBook.setIsbn(isbn);
+                                emptyBook.setBorrower("none");
                                 emptyBook.setTitle((String) res.get(
                                         "title"));
                                 emptyBook.setDescription((String) res.get(
