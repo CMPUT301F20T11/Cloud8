@@ -56,12 +56,12 @@ public class FindBooksFragment extends Fragment implements Callback {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
+                bookDataList.clear();
                 query.getBooks(instance,bookDataList);
                 searchText = queryText;
                 searchView.clearFocus();
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
@@ -70,10 +70,8 @@ public class FindBooksFragment extends Fragment implements Callback {
                 return false;
             }
         });
-
         return view;
     }
-
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
