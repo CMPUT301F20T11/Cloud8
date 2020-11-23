@@ -16,8 +16,13 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -29,6 +34,9 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseUser user;
     private String uid;
     private String loginEmail;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
+    private Map<String, Object> hopperUpdates;
 
     //=========Text Views================
     private TextView isbnView;
@@ -59,6 +67,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         user = auth.getCurrentUser();
         uid = user.getUid();
         loginEmail = user.getEmail();
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("/books/" + isbn);
 
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
@@ -154,6 +164,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
+                setHopperUpdates();
                 break;
             case R.id.give_book_button:
                 // Since we are the owner in this case, we should check for
@@ -164,7 +175,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 System.out.println((emptyBook.getStatus().equals("available")));
                 System.out.println((emptyBook.getOwner().equals(loginEmail)));
 
-                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none")) // owner is a hashmap
+                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none"))
                         && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
                     emptyBook.setStatus("unavailable");
                     Toast.makeText(this, "Book Successfully given!",
@@ -174,6 +185,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
+                setHopperUpdates();
                 break;
             case R.id.return_book_button:
                 // Here we are the borrower attempting to hand over the book,
@@ -189,6 +201,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
+                setHopperUpdates();
                 break;
             case R.id.receive_book_button:
                 // Here we are the owner receiving a book that has been
@@ -205,8 +218,22 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
-                break;
+                setHopperUpdates();
+                break; 
         }
+    }
+
+
+    /**
+     * setHopperUpdates will be called after the user clicks one of the buttons to give, borrow,
+     * receive, or accept a book. After the button is pressed, it changes the book attributes and
+     * setHopperUpdates will save the changes to the database.
+     */
+    private void setHopperUpdates(){
+        hopperUpdates = new HashMap<>();
+        hopperUpdates.put("borrower", borrowerView.getText().toString());
+        hopperUpdates.put("status", statusView.getText().toString());
+        ref.updateChildren(hopperUpdates);
     }
 }
 
