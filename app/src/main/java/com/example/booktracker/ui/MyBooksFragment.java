@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
@@ -50,7 +51,7 @@ public class MyBooksFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         bookList = view.findViewById(R.id.my_book_list);
-        userEmail = activity.getUserEmail();
+        userEmail = Objects.requireNonNull(activity).getUserEmail();
         collection = new BookCollection(new ArrayList<>(), bookList,
                 userEmail, view.getContext());
         del = new DeleteBookQuery(userEmail);
@@ -122,10 +123,6 @@ public class MyBooksFragment extends Fragment {
                     userSelected = selected_book.getOwnerEmail();
                     del.deleteBook(selected_book);
                     collection.deleteBook(selected_book);
-                } else if (selected_book.getStringOwner() != null && selected_book.getStringOwner().trim().equals(userEmail.trim())) {
-                    userSelected = selected_book.getStringOwner();
-                    del.deleteBook(selected_book);
-                    collection.deleteBook(selected_book);
                 }
             } else {
                 Toast.makeText(view.getContext(), "Book cant be deleted",
@@ -142,8 +139,6 @@ public class MyBooksFragment extends Fragment {
             selected_book = collection.getBook(position);
             if (selected_book.getOwner() != null) {
                 userSelected = selected_book.getOwnerEmail();
-            } else {
-                userSelected = selected_book.getStringOwner();
             }
             if (userSelected != null) {
                 getUserDoc(userSelected);
@@ -217,8 +212,7 @@ public class MyBooksFragment extends Fragment {
         String username = userDoc.getString("username");
         String email = userDoc.getString("email");
         String phone = userDoc.getString("phone");
-        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
-                email, phone);
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }

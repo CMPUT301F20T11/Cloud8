@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -20,11 +21,13 @@ import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
@@ -37,10 +40,10 @@ public class FindBooksFragment extends Fragment implements Callback {
     private Book selected_book = null;
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
-    private String userSelected;
+    private String userEmail, userSelected;
     private getBookQuery query;
     private String searchText;
-    private FindBooksFragment instance = this;
+    private final FindBooksFragment instance = this;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_find_book, container,
@@ -48,15 +51,18 @@ public class FindBooksFragment extends Fragment implements Callback {
         setHasOptionsMenu(true);
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
+        HomeActivity activity = (HomeActivity) getActivity();
+        userEmail = Objects.requireNonNull(activity).getUserEmail();
         query = new getBookQuery();
-        bookDataList = new ArrayList<Book>();
+        bookDataList = new ArrayList<>();
         setSelectListener();
 
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
-                query.getBooks(instance,bookDataList);
+                bookDataList.clear();
+                query.getBooks(instance, bookDataList);
                 searchText = queryText;
                 searchView.clearFocus();
                 return false;
@@ -66,8 +72,21 @@ public class FindBooksFragment extends Fragment implements Callback {
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
                     bookList.setAdapter(null);
+                    searchView.clearFocus();
                 }
                 return false;
+            }
+        });
+
+        Button requestBtn = view.findViewById(R.id.request_book_button);
+        requestBtn.setOnClickListener(view1 -> {
+            if (selected_book != null) {
+                Request request = new Request(userEmail, userSelected ,selected_book, getContext());
+                request.sendRequest();
+
+            } else {
+                Toast.makeText(view1.getContext(), "No book selected",
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -79,8 +98,6 @@ public class FindBooksFragment extends Fragment implements Callback {
             selected_book = resAdapter.getItem(position);
             if (selected_book.getOwner() != null) {
                 userSelected = selected_book.getOwnerEmail();
-            } else {
-                userSelected = selected_book.getStringOwner();
             }
             if (userSelected != null) {
                 getUserDoc(userSelected);
@@ -101,7 +118,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         }
         updateBookList(results);
     }
-    public void executeCallback(){
+
+    public void executeCallback() {
         searchBooks(searchText);
     }
 

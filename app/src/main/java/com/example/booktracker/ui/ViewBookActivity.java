@@ -88,8 +88,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         isbnView.setText(isbn);
         if (book.getOwner() != null) {
             ownerView.setText(book.getOwnerEmail());
-        } else {
-            ownerView.setText(book.getStringOwner());
         }
         borrowerView.setText(book.getBorrower());
         descView.setText(book.getDescription());

@@ -24,12 +24,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class RequestedFragment extends Fragment {
-
     private ListView listView;
     private String userEmail, userSelected, lastStatus;
     private BookCollection bookCollection;
@@ -42,9 +42,10 @@ public class RequestedFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_requested, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
-        userEmail = activity.getUserEmail();
-        listView = view.findViewById(R.id.requested_booklist);
-        bookCollection = new BookCollection(new ArrayList<Book>(), listView, userEmail, view.getContext());
+        setHasOptionsMenu(true);
+        userEmail = Objects.requireNonNull(activity).getUserEmail();
+        listView = view.findViewById(R.id.requested_books);
+        bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
         getQuery = (new getBookQuery(userEmail, bookCollection,view.getContext()));
         getQuery.getMyBooks("requestedBooks");
         lastStatus = "";
@@ -52,12 +53,11 @@ public class RequestedFragment extends Fragment {
         setSelectListener();
         setViewListener();
 
-
         return view;
     }
 
     private void setViewListener() {
-        Button viewBookBtn = (Button) view.findViewById(R.id.requested_view_book_button);
+        Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
@@ -73,7 +73,9 @@ public class RequestedFragment extends Fragment {
     private void setSelectListener() {
         listView.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = bookCollection.getBook(position);
-            userSelected = selected_book.getOwner();
+            if (selected_book.getOwner() != null) {
+                userSelected = selected_book.getOwnerEmail();
+            }
             if (userSelected != null) {
                 getUserDoc(userSelected);
             }
@@ -126,7 +128,7 @@ public class RequestedFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return true;
+                return false;
             }
         }
         return super.onOptionsItemSelected(item);

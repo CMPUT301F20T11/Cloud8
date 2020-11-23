@@ -19,7 +19,6 @@ public class Book implements Serializable {
     private String uri;
     private String localUri;
     //=======These will be emails=========
-    private String stringOwner;
     private Map<String, String> owner;
     private String borrower;
     //======================
@@ -66,7 +65,6 @@ public class Book implements Serializable {
         this.title = argTitle;
         this.isbn = argIsbn;
         this.description = argDesc;
-        this.stringOwner = argOwner;
         this.status = "available";
         this.borrower = null;
     }
@@ -203,10 +201,6 @@ public class Book implements Serializable {
         return (HashMap<String, String>) owner;
     }
 
-    public String getStringOwner() {
-        return stringOwner;
-    }
-
     public String getOwnerEmail() {
         Map.Entry<String, String> entry = owner.entrySet().iterator().next();
         return entry.getKey();
@@ -224,10 +218,6 @@ public class Book implements Serializable {
      */
     public void setOwner(Map<String, String> owner) {
         this.owner = owner;
-    }
-
-    public void setStringOwner(String owner) {
-        this.stringOwner = owner;
     }
 
     /**

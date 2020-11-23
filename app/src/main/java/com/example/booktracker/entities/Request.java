@@ -2,31 +2,22 @@ package com.example.booktracker.entities;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
-import com.example.booktracker.boundary.AddBookQuery;
-import com.example.booktracker.boundary.BookCollection;
-import com.example.booktracker.boundary.MySingleton;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.rpc.context.AttributeContext;
+import com.android.volley.toolbox.Volley;
+import com.example.booktracker.boundary.AddBookQuery;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +55,7 @@ public class Request extends Notification {
      */
     public void sendRequest() {
         AddBookQuery fromAddBookQuery = new AddBookQuery(fromEmail);
-        fromAddBookQuery.addToDb(book, "requestedBooks");
+        fromAddBookQuery.addRequest(book, fromEmail);
         addRequestToBook();
         sendPushNotification();
 
@@ -83,7 +74,7 @@ public class Request extends Notification {
             notificationBody.put("title", title);
             notificationBody.put("message", body);
 
-            notification.put("to", "eE4jguDKTRex-6Fa5MGgIq:APA91bGnrml422Tu_WSe5tIHRc62FX4Jc6Jco1TP57tMSWqFs-BqwBLRT976XebiA5YvcC9VCBX5PxbS-SwMxqX8Nt2BmGRqSEEjsTXAlpEoTmeBwt61ALffVAQW-N_oorw0O7pv7i4L");
+            notification.put("to", "fK4g0F26Tx2ibHSXkJFmtz:APA91bESZ_TTn-66mGOKxkVLQOzocIPhHk26EkcYIVMmoWyGJL85ZTXYk7UX-OAGP9W0uaRuGf-MCtcbpqzpq09cJV1l1W0VmO9Zqq0TleC7OU6LiS1utpaq9n12NvAar0a0PPRKGl3n");
             notification.put("data", notificationBody);
         } catch (JSONException e) {
             Log.e("REQUEST TAG", "onCreate: " + e.getMessage());
@@ -115,16 +106,14 @@ public class Request extends Notification {
     }
 
     /**
-     * Add's a request to the book in the original owner's 'myBooks' collection
+     * Adds a request to the book in the original owner's 'myBooks' collection
      */
     private void addRequestToBook() {
-        HashMap<String,Object> data = new HashMap<String,Object>();
-        data.put("email", fromEmail);
-
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Request from", fromEmail);
 
         DocumentReference toDoc = db.collection("users").document(toEmail);
-        toDoc.collection("myBooks").document(book.getIsbn()).collection("requests")
-                .document(fromEmail)
+        toDoc.collection("requests").document(book.getIsbn())
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -156,10 +145,4 @@ public class Request extends Notification {
         data.put("local_image_uri", newBook.getLocalUri());
         return data;
     }
-
-
-
-
-
-
 }

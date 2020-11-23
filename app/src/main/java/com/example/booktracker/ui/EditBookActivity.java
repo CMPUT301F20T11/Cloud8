@@ -35,7 +35,6 @@ import java.util.List;
 
 /**
  * Activity for editing a user's book
- *
  * @author Edlee Ducay
  */
 public class EditBookActivity extends AppCompatActivity implements QueryOutputCallback {
@@ -120,7 +119,12 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         Button cancelBtn = findViewById(R.id.editbook_cancelbtn);
         cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(v -> pickFromGallery(v));
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditBookActivity.this.pickFromGallery(v);
+            }
+        });
 
         Button clearPhoto_btn = findViewById(R.id.editbook_rmPhoto_btn);
         clearPhoto_btn.setOnClickListener(v -> {
