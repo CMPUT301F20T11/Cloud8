@@ -112,8 +112,8 @@ public class AddBookQuery extends BookQuery {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 final DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
-                HashMap<String,Object> userBook = new HashMap<String,Object>();
-                userBook.put("bookReference",bookReference);
+                HashMap<String, Object> userBook = new HashMap<String, Object>();
+                userBook.put("bookReference", bookReference);
                 if (!newBook.getStatus().equals("")) {
                     userDoc.collection(newBook.getStatus())
                             .document(newBook.getIsbn())
@@ -135,49 +135,7 @@ public class AddBookQuery extends BookQuery {
                 });
             }
         });
-
-    /**
-     * This will add a book to firestore collection
-     * with 'category name
-     * @author Ivan Penales
-     * @param newBook book to add to firestore
-     * @param category
-     */
-    public void addToDb(Book newBook, String category){
-        HashMap<String,Object> data = getData(newBook);
-        if (newBook.getStatus() != ""){
-            userDoc.collection(newBook.getStatus())
-                    .document(newBook.getIsbn())
-                    .set(data).addOnSuccessListener(aVoid -> {
-                if (queryOutput != null) {
-                    queryOutput.setOutput("Added book successfully");
-                    outputCallback.displayQueryResult("successful");
-                }
-
-            }).addOnFailureListener(e -> {
-                if (queryOutput != null) {
-                    queryOutput.setOutput("couldn't add book");
-                    outputCallback.displayQueryResult("not successful");
-                }
-            });
-        }
-        //book is always added to myBook list regardless of its status
-        userDoc.collection(category)
-                .document(newBook.getIsbn())
-                .set(data).addOnSuccessListener(aVoid -> {
-            if (queryOutput != null) {
-                queryOutput.setOutput("Added book successfully");
-                outputCallback.displayQueryResult("successful");
-            }
-        }).addOnFailureListener(e -> {
-            if (queryOutput != null) {
-                queryOutput.setOutput("couldn't add book");
-                outputCallback.displayQueryResult("not successful");
-            }
-        });
-
     }
-        
     
     /**
      * This will add the reference to a book to the user's document

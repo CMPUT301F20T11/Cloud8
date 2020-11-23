@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.ResultAdapter;
+import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,13 +27,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
-public class FindBooksFragment extends Fragment {
+public class FindBooksFragment extends Fragment implements Callback {
     private static final String TAG = FindBooksFragment.class.getName();
     private ListView bookList;
     private ArrayAdapter<Book> resAdapter;
@@ -39,8 +39,9 @@ public class FindBooksFragment extends Fragment {
     private Book selected_book = null;
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
-    private String userSelected;
-    private String userEmail;
+    private String userSelected, searchText, userEmail;
+    private getBookQuery query;
+    private FindBooksFragment instance = this;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +50,8 @@ public class FindBooksFragment extends Fragment {
         setHasOptionsMenu(true);
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
-        getBooks();
+        query = new getBookQuery();
+        bookDataList = new ArrayList<Book>();
         setSelectListener();
         HomeActivity home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
@@ -58,8 +60,9 @@ public class FindBooksFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
+                query.getBooks(instance,bookDataList);
+                searchText = queryText;
                 searchView.clearFocus();
-                searchBooks(queryText);
                 return false;
             }
 
@@ -77,14 +80,11 @@ public class FindBooksFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (selected_book != null) {
-                    Request request = new Request(userEmail, userSelected ,selected_book, getContext());
+                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
                     request.sendRequest();
-
                 } else {
-                    Toast.makeText(view.getContext(), "No book selected",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -118,47 +118,8 @@ public class FindBooksFragment extends Fragment {
         }
         updateBookList(results);
     }
-
-    private void getBooks() {
-        db.collectionGroup("myBooks")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.isEmpty()) {
-                        Toast.makeText(getContext(), "No books found!",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        bookDataList = new ArrayList<>();
-                        List<DocumentSnapshot> booksDocs =
-                                queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot doc : booksDocs) {
-                            List<String> authors = (List<String>) doc.get(
-                                    "author");
-                            if (doc.get("owner") instanceof String) {
-                                String stringOwner = (String) doc.get("owner");
-                                Book ogBook = new Book(stringOwner, authors,
-                                        (String) doc.get("title"),
-                                        doc.getId(), (String) doc.get(
-                                        "description"));
-                                bookDataList.add(ogBook);
-                            } else {
-                                HashMap<String, String> owner =
-                                        (HashMap<String, String>) doc.get(
-                                                "owner");
-                                Book book = new Book(owner, authors,
-                                        (String) doc.get("title"),
-                                        doc.getId(), (String) doc.get(
-                                        "description"));
-                                bookDataList.add(book);
-                            }
-                        }
-                    }
-                    updateBookList(bookDataList);
-                    bookList.setAdapter(null);
-                })
-                .addOnFailureListener(e -> Toast.makeText(getContext(),
-                        "Error getting books!",
-                        Toast.LENGTH_SHORT).show());
+    public void executeCallback(){
+        searchBooks(searchText);
     }
 
     private void updateBookList(ArrayList<Book> newList) {

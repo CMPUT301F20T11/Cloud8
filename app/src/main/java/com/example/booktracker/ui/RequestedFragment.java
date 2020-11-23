@@ -73,7 +73,7 @@ public class RequestedFragment extends Fragment {
     private void setSelectListener() {
         listView.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = bookCollection.getBook(position);
-            userSelected = selected_book.getOwner();
+            userSelected = selected_book.getOwnerEmail();
             if (userSelected != null) {
                 getUserDoc(userSelected);
             }

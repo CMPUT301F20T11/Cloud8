@@ -8,17 +8,14 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.example.booktracker.boundary.AddBookQuery;
-import com.example.booktracker.boundary.BookCollection;
-import com.example.booktracker.boundary.MySingleton;
+import com.example.booktracker.boundary.UserQuery;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +23,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.rpc.context.AttributeContext;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +39,8 @@ public class Request extends Notification {
     private Book book;
     private Context context;
     private RequestQueue mQueue;
+    private String fromUsername;
+    private User from;
 
     /**
      * Constructor for the Request class
@@ -55,17 +54,19 @@ public class Request extends Notification {
         book = argBook;
         context = argContext;
         mQueue = Volley.newRequestQueue(argContext);
+        getSender();
     }
 
     /**
      * Main function for sending requests
-     * Add's the book into the 'requestedBooks' collection in the DB,
+     * Add's the book into the 'requestedBooks' collection for fromUser,
+     * Add's the request into the 'incomingRequests' collection for toUser,
+     * and sends the push notification
      *
      */
     public void sendRequest() {
-        AddBookQuery fromAddBookQuery = new AddBookQuery(fromEmail);
-        fromAddBookQuery.addToDb(book, "requestedBooks");
-        addRequestToBook();
+        addToRequestedBooks();
+        addToIncomingRequests();
         sendPushNotification();
 
     }
@@ -114,29 +115,49 @@ public class Request extends Notification {
         //MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    public void addToRequestedBooks() {
+        DocumentReference bookReference = db.collection("books").document(book.getIsbn());
+        HashMap<String, Object> userBook = new HashMap<String, Object>();
+        userBook.put("bookReference", bookReference);
+        userDoc.collection("requestedBooks")
+                .document(book.getIsbn())
+                .set(userBook);
+    }
+
     /**
      * Add's a request to the book in the original owner's 'myBooks' collection
      */
-    private void addRequestToBook() {
+    public void addToIncomingRequests() {
+        CollectionReference bookCollection = db.collection("books");
+        DocumentReference bookReference = bookCollection.document(book.getIsbn());
         HashMap<String,Object> data = new HashMap<String,Object>();
-        data.put("email", fromEmail);
-
+        data.put("from", userDoc);
+        data.put("bookReference", bookReference);
 
         DocumentReference toDoc = db.collection("users").document(toEmail);
-        toDoc.collection("myBooks").document(book.getIsbn()).collection("requests")
-                .document(fromEmail)
+        toDoc.collection("incomingRequests")
+                .document(book.getIsbn() + "-" + fromEmail)
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.i("Add Request to Book", "Request added successfully");
+                Toast.makeText(context, "Book requested", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i("Add Request to Book", "Request did not succeed");
+                Toast.makeText(context, "Book request failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+
+    public void getSender() {
+        UserQuery userQuery = new UserQuery(fromEmail, context);
+        from = userQuery.getUserObject();
+    }
+
 
     /**
      * TODO Set up getData but for users (or make user Query)
@@ -155,6 +176,23 @@ public class Request extends Notification {
         data.put("image_uri", newBook.getUri());
         data.put("local_image_uri", newBook.getLocalUri());
         return data;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+
+    public String getFromUsername() {
+        return fromUsername;
+    }
+
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
     }
 
 

@@ -2,8 +2,10 @@ package com.example.booktracker.ui;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,7 +16,7 @@ import com.example.booktracker.entities.Book;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class ViewBookActivity extends AppCompatActivity implements Callback {
+public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, Callback {
     private String isbn;
     private Book emptyBook;
 
