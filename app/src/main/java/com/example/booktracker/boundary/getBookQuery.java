@@ -30,7 +30,7 @@ public class getBookQuery extends BookQuery {
     private Context context;
 
     /**
-     * This will call its parent constructore from BookQuery
+     * This will call its parent constructor from BookQuery
      *
      * @param userEmail
      * @param argBookList Book collectoin containing listView
@@ -51,6 +51,32 @@ public class getBookQuery extends BookQuery {
         super();
         context = argContext;
     }
+
+    /**
+     * This constructor will be used for getting the books collection
+     */
+    public getBookQuery() {
+        super();
+    }
+    /**
+     * This will turn the document that resulted from a query to a Book object
+     * @param document Document from firestore query
+     * @return
+     */
+    private Book docToBook(DocumentSnapshot document){
+        List<String> authors = (List<String>) document.get("author");
+        HashMap<String, String> owner = (HashMap<String, String>) document.get("owner");
+        Book book = new Book(owner, authors, (String) document.get("title"), document.getId(), (String) document.get("description"));
+        if (document.get("image_uri") != null) {
+            Uri imageUri = Uri.parse((String) document.get("image_uri"));
+            book.setUri(imageUri.toString());
+        }
+        if (document.get("local_image_uri") != null) {
+            Uri localImageUri = Uri.parse((String) document.get("local_image_uri"));
+            book.setLocalUri(localImageUri.toString());
+        }
+        return book;
+    }
     /**
      * get will get all contents of the specified collection reference and output it
      * @param reference
@@ -68,59 +94,13 @@ public class getBookQuery extends BookQuery {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot document = task.getResult();
-                                    List<String> authors =
-                                            (List<String>) document.get("author");
-                                    if (document.get("owner") instanceof String) {
-                                        String stringOwner =
-                                                (String) document.get("owner");
-                                        Book ogBook = new Book(stringOwner,
-                                                authors, (String) document.get(
-                                                "title"),
-                                                document.getId(),
-                                                (String) document.get(
-                                                        "description"));
-                                        if (document.get("image_uri") != null) {
-                                            Uri imageUri =
-                                                    Uri.parse((String) document.get(
-                                                            "image_uri"));
-                                            ogBook.setUri(imageUri.toString());
-                                        }
-                                        if (document.get("local_image_uri") != null) {
-                                            Uri localImageUri =
-                                                    Uri.parse((String) document.get(
-                                                            "local_image_uri"));
-                                            ogBook.setLocalUri(localImageUri.toString());
-                                        }
-                                        outputBooks.add(ogBook);
-                                    } else {
-                                        HashMap<String, String> owner =
-                                                (HashMap<String, String>) document.get("owner");
-                                        Book book = new Book(owner, authors,
-                                                (String) document.get("title"),
-                                                document.getId(),
-                                                (String) document.get(
-                                                        "description"));
-                                        if (document.get("image_uri") != null) {
-                                            Uri imageUri =
-                                                    Uri.parse((String) document.get(
-                                                            "image_uri"));
-                                            book.setUri(imageUri.toString());
-                                        }
-                                        if (document.get("local_image_uri") != null) {
-                                            Uri localImageUri =
-                                                    Uri.parse((String) document.get(
-                                                            "local_image_uri"));
-                                            book.setLocalUri(localImageUri.toString());
-                                        }
-                                        outputBooks.add(book);
-                                    }
+                                        outputBooks.add(docToBook(document));
+
                                 }
                             }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 //every step of the loop check if the list of books is full
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    System.out.println(querySize);
-                                    System.out.println(outputBooks.size());
                                     if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                         bookList.setBookList(outputBooks);
                                         bookList.displayBooks();
@@ -216,6 +196,26 @@ public class getBookQuery extends BookQuery {
                                 callback.executeCallback();
                             }
                         }
+                    }
+                });
+    }
+
+    /**
+     * This will query the database to get a list of books
+     * @param callback Callback will be the instance of the class that called this method
+     * @param bookList This will be the list of books the will get populated with all
+     *                 the books in the database
+     */
+    public void getBooks(Callback callback,ArrayList<Book> bookList){
+        db.collection("books").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot res = task.getResult();
+                        for (DocumentSnapshot doc:res){
+                            bookList.add(docToBook(doc));
+                        }
+                        callback.executeCallback();
                     }
                 });
     }
