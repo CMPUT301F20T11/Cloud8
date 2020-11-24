@@ -154,7 +154,10 @@ public class getBookQuery extends BookQuery {
      *                  query.
      */
     public void getABook(String isbn, Book emptyBook, Callback callback) {
-        db.collection("books").document(isbn)
+
+        db
+                .collection("books")
+                .document(isbn)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

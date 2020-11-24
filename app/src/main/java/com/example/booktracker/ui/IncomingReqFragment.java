@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.RequestCollection;
 import com.example.booktracker.boundary.RequestQuery;
 import com.example.booktracker.boundary.getBookQuery;
@@ -42,6 +43,7 @@ public class IncomingReqFragment extends Fragment  {
     private View view;
     private Request selected_request = null;
     private DocumentSnapshot userDoc;
+    private DeleteBookQuery delQuery;
 
     //implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,7 +57,7 @@ public class IncomingReqFragment extends Fragment  {
         requestQuery = new RequestQuery(userEmail, requestCollection, view.getContext());
         requestQuery.getRequests();
         lastStatus = "";
-
+        delQuery = new DeleteBookQuery();
         setSelectListener();
 
         /**
@@ -78,6 +80,7 @@ public class IncomingReqFragment extends Fragment  {
             public void onClick(View view) {
                 // delete from request list
                 // update requester's requested books
+
             }
         });
 
