@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -37,6 +39,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private Map<String, Object> hopperUpdates;
+    private DocumentReference documentReference;
+    private FirebaseFirestore db;
 
     //=========Text Views================
     private TextView isbnView;
@@ -69,6 +73,9 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         loginEmail = user.getEmail();
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("/books/" + isbn);
+        db = FirebaseFirestore.getInstance();
+        documentReference = db.collection("books").document(isbn);
+
 
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
@@ -164,7 +171,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
-                setHopperUpdates();
+                updateFirebase();
                 break;
             case R.id.give_book_button:
                 // Since we are the owner in this case, we should check for
@@ -185,7 +192,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
-                setHopperUpdates();
+                updateFirebase();
                 break;
             case R.id.return_book_button:
                 // Here we are the borrower attempting to hand over the book,
@@ -201,7 +208,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
-                setHopperUpdates();
+                updateFirebase();
                 break;
             case R.id.receive_book_button:
                 // Here we are the owner receiving a book that has been
@@ -218,8 +225,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                             Toast.LENGTH_SHORT).show();
                 }
                 updateTextViews(emptyBook);
-                setHopperUpdates();
-                break; 
+                updateFirebase();
+                break;
         }
     }
 
@@ -234,6 +241,13 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         hopperUpdates.put("borrower", borrowerView.getText().toString());
         hopperUpdates.put("status", statusView.getText().toString());
         ref.updateChildren(hopperUpdates);
+    }
+
+    private void updateFirebase(){
+        hopperUpdates = new HashMap<>();
+        hopperUpdates.put("borrower", borrowerView.getText().toString());
+        hopperUpdates.put("status", statusView.getText().toString());
+        documentReference.update(hopperUpdates);
     }
 }
 
