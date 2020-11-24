@@ -58,6 +58,9 @@ public class RequestQuery implements Callback {
         db = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * This will get the list of books that is in the incomingRequests collection
+     */
     public void getRequests() {
         CollectionReference requestsCollection = userDoc.collection("incomingRequests");
         requestsCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -66,35 +69,40 @@ public class RequestQuery implements Callback {
                 if (task.isSuccessful()) {
                     outputRequests = new ArrayList<>();
                     outputSize = task.getResult().size();
-                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                        DocumentReference docRef = (DocumentReference) document.get("bookReference");
-                        DocumentReference userRef = (DocumentReference) document.get("from");
-                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                DocumentSnapshot doc = task.getResult();
-                                curIsbn = (String) doc.get("isbn");
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot userDoc = task.getResult();
-                                        curFromEmail = userDoc.getString("email");
-                                        curFromUsername = userDoc.getString("username");
-                                    }
-                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        book = new Book();
-                                        getBookQuery query = new getBookQuery(context);
-                                        query.getABook(curIsbn, book, instance);
-                                    }
-                                });
-                            }
-                        });
+                    if (task.getResult().size() > 0 ){
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            DocumentReference docRef = (DocumentReference) document.get("bookReference");
+                            DocumentReference userRef = (DocumentReference) document.get("from");
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    curIsbn = (String) doc.get("isbn");
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot userDoc = task.getResult();
+                                            curFromEmail = userDoc.getString("email");
+                                            curFromUsername = userDoc.getString("username");
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            book = new Book();
+                                            getBookQuery query = new getBookQuery(context);
+                                            query.getABook(curIsbn, book, instance);
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+                    }else{
+                        requestCollection.clearList();
                     }
                 }
             }
@@ -113,6 +121,7 @@ public class RequestQuery implements Callback {
             requestCollection.setRequestList(outputRequests);
             requestCollection.displayRequests();
         }
+
     }
 
 }

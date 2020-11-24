@@ -37,7 +37,6 @@ public class RequestCollection {
     public void displayRequests() {
         listView.setAdapter(adapter); //bind ui to adapter,if list View ui
     }
-
     public void clearList() {
         adapter.clear();
         adapter.notifyDataSetChanged();

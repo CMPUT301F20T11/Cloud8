@@ -46,7 +46,7 @@ public class RequestedFragment extends Fragment {
         listView = view.findViewById(R.id.requested_booklist);
         bookCollection = new BookCollection(new ArrayList<Book>(), listView, userEmail, view.getContext());
         getQuery = (new getBookQuery(userEmail, bookCollection,view.getContext()));
-        getQuery.getMyBooks("requestedBooks");
+        getQuery.getMyBooks("requested");
         lastStatus = "";
 
         setSelectListener();

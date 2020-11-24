@@ -119,7 +119,7 @@ public class Request extends Notification {
         DocumentReference bookReference = db.collection("books").document(book.getIsbn());
         HashMap<String, Object> userBook = new HashMap<String, Object>();
         userBook.put("bookReference", bookReference);
-        userDoc.collection("requestedBooks")
+        userDoc.collection("requested")
                 .document(book.getIsbn())
                 .set(userBook);
     }

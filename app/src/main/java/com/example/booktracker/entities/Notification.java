@@ -27,4 +27,11 @@ public abstract class Notification {
         userDoc = db.collection("users").document(fromEmail);
     }
 
+    public String getFromEmail() {
+        return fromEmail;
+    }
+
+    public String getToEmail() {
+        return toEmail;
+    }
 }
