@@ -55,7 +55,6 @@ public class IncomingReqFragment extends Fragment  {
         userEmail = activity.getUserEmail();
         requestCollection = new RequestCollection(new ArrayList<Request>(), listView, userEmail, view.getContext());
         requestQuery = new RequestQuery(userEmail, requestCollection, view.getContext());
-        requestQuery.getRequests();
         lastStatus = "";
         delQuery = new DeleteBookQuery();
         setSelectListener();
@@ -78,9 +77,10 @@ public class IncomingReqFragment extends Fragment  {
         declineReqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // delete from request list
-                // update requester's requested books
-
+                String isbn = selected_request.getBook().getIsbn();
+                delQuery.deleteBookRequested(isbn,selected_request.getFromEmail());
+                delQuery.deleteBookIncoming(isbn,selected_request.getFromEmail(),selected_request.getToEmail());
+                requestQuery.getRequests();
             }
         });
 

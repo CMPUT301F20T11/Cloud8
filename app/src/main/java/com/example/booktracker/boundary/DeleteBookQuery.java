@@ -45,17 +45,28 @@ public class DeleteBookQuery extends BookQuery {
             });
         }
     }
-
+    private void delBookRef(String status,String id,String userEmail){
+        db.collection("users")
+                .document(userEmail)
+                .collection(status)
+                .document(id)
+                .delete();
+    }
     /**
      * This will delete a book from the requested collection of the user
      * @param isbn isbn of the book to be deleted
      * @param email email of the user
      */
     public void deleteBookRequested(String isbn,String email){
-        db.collection("users")
-                .document(email)
-                .collection("requested")
-                .document(isbn)
-                .delete();
+        delBookRef("requested",isbn,email);
+    }
+    /**
+     * This will delete a book from the incoming request collection
+     * @param isbn isbn of the book to be deleted
+     * @param requesterEmail email of the user who made a request for the book
+     * @param ownerEmail email of the person who owns the book
+     */
+    public void deleteBookIncoming(String isbn,String requesterEmail,String ownerEmail){
+        delBookRef("incomingRequests",isbn+"-"+requesterEmail,ownerEmail);
     }
 }
