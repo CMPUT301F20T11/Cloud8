@@ -83,7 +83,7 @@ public class ProfileEditDialog extends DialogFragment {
                     phoneText.requestFocus();
                 } else if (!Patterns.PHONE.matcher(newPhone).matches()) {
                     allValid = false;
-                    phoneText.setError("Please enter a valid email!");
+                    phoneText.setError("Please enter a valid phone number!");
                     phoneText.requestFocus();
                 }
 
