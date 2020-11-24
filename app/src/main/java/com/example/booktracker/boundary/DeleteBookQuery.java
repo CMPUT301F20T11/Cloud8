@@ -9,6 +9,9 @@ public class DeleteBookQuery extends BookQuery {
     public DeleteBookQuery(String email) {
         super(email);
     }
+    public DeleteBookQuery() {
+
+    }
 
     /**
      * This will query the database and delete a book
@@ -41,5 +44,18 @@ public class DeleteBookQuery extends BookQuery {
                 String toast_output = "Delete Complete";
             });
         }
+    }
+
+    /**
+     * This will delete a book from the requested collection of the user
+     * @param isbn isbn of the book to be deleted
+     * @param email email of the user
+     */
+    public void deleteBookRequested(String isbn,String email){
+        db.collection("users")
+                .document(email)
+                .collection("requested")
+                .document(isbn)
+                .delete();
     }
 }

@@ -33,7 +33,6 @@ public abstract class BookQuery {
         user = auth.getCurrentUser();
         uid = user.getUid();
     }
-
     public BookQuery() {
         db = FirebaseFirestore.getInstance();
     }

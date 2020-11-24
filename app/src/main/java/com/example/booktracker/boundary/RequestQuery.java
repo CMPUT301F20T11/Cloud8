@@ -1,6 +1,7 @@
 package com.example.booktracker.boundary;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -34,6 +35,10 @@ public class RequestQuery implements Callback {
     protected Context context;
     protected RequestQuery instance = this;
     protected RequestCollection requestCollection;
+    private String curIsbn;
+    private String curFromEmail;
+    private String curFromUsername;
+    private int outputSize;
     /**
      * constructor will connect to database and initialized document
      * pertaining to user
@@ -60,29 +65,40 @@ public class RequestQuery implements Callback {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     outputRequests = new ArrayList<>();
+                    outputSize = task.getResult().size();
                     for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                        String fromEmail = document.getString("email");
-                        String fromUsername = document.getString("username");
-                        String isbn = document.getString("bookISBN");
-                        book = new Book();
-                        getBookQuery query = new getBookQuery(context);
-                        query.getABook(isbn, book, instance);
-
-                        Request request = new Request(fromEmail, toEmail, book, context);
-                        request.setFromUsername(fromUsername);
-                        outputRequests.add(request);
-                    }
-                    if (outputRequests.size() > 0) {
-                        requestCollection.setRequestList(outputRequests);
-                        requestCollection.displayRequests();
-
+                        DocumentReference docRef = (DocumentReference) document.get("bookReference");
+                        DocumentReference userRef = (DocumentReference) document.get("from");
+                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot doc = task.getResult();
+                                curIsbn = (String) doc.get("isbn");
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot userDoc = task.getResult();
+                                        curFromEmail = userDoc.getString("email");
+                                        curFromUsername = userDoc.getString("username");
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        book = new Book();
+                                        getBookQuery query = new getBookQuery(context);
+                                        query.getABook(curIsbn, book, instance);
+                                    }
+                                });
+                            }
+                        });
                     }
                 }
             }
-
         });
-
-
     }
 
     /**
@@ -90,7 +106,13 @@ public class RequestQuery implements Callback {
      */
     @Override
     public void executeCallback() {
-        //updateTextViews(emptyBook);
+        Request request = new Request(curFromEmail, toEmail, book, context);
+        request.setFromUsername(curFromUsername);
+        outputRequests.add(request);
+        if (outputRequests.size() == outputSize && outputRequests.size() > 0) {
+            requestCollection.setRequestList(outputRequests);
+            requestCollection.displayRequests();
+        }
     }
 
 }
