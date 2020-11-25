@@ -96,12 +96,6 @@ public class GetBookQuery extends BookQuery {
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot document = task.getResult();
                                     outputBooks.add(docToBook(document));
-
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                //every step of the loop check if the list of books is full
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                         bookList.setBookList(outputBooks);
                                         bookList.displayBooks();
@@ -112,6 +106,13 @@ public class GetBookQuery extends BookQuery {
                                         // list
                                         bookList.clearList();
                                     }
+
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                //every step of the loop check if the list of books is full
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                                 }
                             });
                         }

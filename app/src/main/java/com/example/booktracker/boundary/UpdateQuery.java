@@ -76,13 +76,11 @@ public class UpdateQuery {
     public void changeBookStatus(String oldId,String newId,String newStatus,String user,String oldStatus){
             DocumentReference userDoc =  db.collection("users").document(user);
             String isbn = oldId.length() == 13 ? oldId : newId;
-            DocumentReference bookRef = userDoc.collection("books").document(isbn);
+            DocumentReference bookRef = db.collection("books").document(isbn);
             HashMap<String, Object> data = new HashMap<String, Object>();
             data.put("bookReference",bookRef);
             userDoc.collection(newStatus).document(newId).set(data);
             userDoc.collection(oldStatus).document(oldId).delete();
-
-
     }
 
     /**

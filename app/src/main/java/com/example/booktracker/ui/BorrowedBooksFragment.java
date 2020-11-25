@@ -12,29 +12,56 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.RequestCollection;
+import com.example.booktracker.boundary.RequestQuery;
+import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
 
 public class BorrowedBooksFragment extends Fragment implements View.OnClickListener {
-    ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
+    private UpdateQuery updateQuery;
+    private ListView listView;
+    private ArrayList<Book> bookList;
+    private GetBookQuery getBookQuery;
+    private BookCollection book;
+    private View view;
+    private Request selected_request = null;
+    private String email;
+    private HomeActivity activity;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_borrowed_books, container, false);
+        activity = (HomeActivity) getActivity();
+        email = activity.getUserEmail();
+        bookList = new ArrayList<Book>();
+        listView = view.findViewById(R.id.my_book_list);
 
+        book = new BookCollection(bookList,listView,email,view.getContext());
+        getBookQuery = new GetBookQuery(activity.getUserEmail(), book,view.getContext());
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getBookQuery.getMyBooks("borrowed");
+        activity.notifRefresh();
     }
 
     // know what book is referenced when view profile option selected
     @Override
     public void onClick(View v) {
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
                 selected_book = bookDataList.get(position);
             }

@@ -50,7 +50,10 @@ public class RequestCollection {
     public void setRequestList(ArrayList<Request> argRequestList) {
         adapter = new RequestAdapter(context, argRequestList);
     }
-
+    public void deleteRequest(Request toRemove){
+        adapter.remove(toRemove);
+        adapter.notifyDataSetChanged();
+    }
     /**
      * Binds the ui to the adapter
      */

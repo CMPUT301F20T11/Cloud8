@@ -101,8 +101,8 @@ public class RequestQuery{
     /**
      * This will get the list of books that is in the incomingRequests collection
      */
-    public void getRequests() {
-        CollectionReference requestsCollection = userDoc.collection("incomingRequests");
+    public void getRequests(String requestCollectionId) {
+        CollectionReference requestsCollection = userDoc.collection(requestCollectionId);
         requestsCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {

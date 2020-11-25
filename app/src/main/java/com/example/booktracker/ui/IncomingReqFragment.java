@@ -73,6 +73,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         delQuery = new DeleteBookQuery();
         setSelectListener();
         query.emptyNotif(activity.getUserEmail(),"incomingCount");
+        activity.notifRefresh();
         /**
          * Accepting a book request prompts the option to attach a geo location where book can be picked up
          */
@@ -95,7 +96,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                     String isbn = selected_request.getBook().getIsbn();
                     delQuery.deleteBookRequested(isbn,selected_request.getFromEmail());
                     delQuery.deleteBookIncoming(isbn,selected_request.getFromEmail(),selected_request.getToEmail());
-                    requestQuery.getRequests();
+                    requestQuery.getRequests("incomingRequests");
                 }
 
             }
@@ -159,7 +160,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        requestQuery.getRequests();
+        requestQuery.getRequests("incomingRequests");
 
     }
 
@@ -207,10 +208,9 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 dataRes.put("lon",lon);
                 selected_book = selected_request.getBook();
                 query.updateBook(selected_book,instance,dataRes,queryOutput);
-                query.changeBookStatus(selected_book.getIsbn()+"-"+selected_request.getFromEmail(),selected_book.getIsbn(),"lent",selected_request.getToEmail(),"incomingRequests");
-                query.changeBookStatus(selected_book.getIsbn(),selected_book.getIsbn(),"borrowed",selected_request.getFromEmail(),"requested");
-                requestCollection.clearList();
-                requestQuery.getRequests();
+                query.changeBookStatus(selected_book.getIsbn()+"-"+selected_request.getFromEmail(),selected_book.getIsbn(),"accepted",selected_request.getToEmail(),"incomingRequests");
+                query.changeBookStatus(selected_book.getIsbn(),selected_book.getIsbn(),"accepted",selected_request.getFromEmail(),"requested");
+                requestCollection.deleteRequest(selected_request);
                 query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
             }
             if (resultCode == Activity.RESULT_CANCELED) {

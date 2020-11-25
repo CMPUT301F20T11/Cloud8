@@ -36,10 +36,16 @@ public class NotificationCircle implements Callback {
         view.setVisibility(View.VISIBLE);
         view.bringToFront();
     }
+    private void clearNotif(){
+        view.setVisibility(View.GONE);
+    }
     @Override
     public void executeCallback(){
         if (count.getAccepted() > 0 || count.getIncoming() > 0){
             raiseNotif();
+        }
+        if (count.getTotal() == 0){
+            clearNotif();
         }
     }
 }

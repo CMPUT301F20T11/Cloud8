@@ -45,6 +45,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private GetBookQuery query;
     private UpdateQuery updateQuery;
     private FindBooksFragment instance = this;
+    private HomeActivity home;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class FindBooksFragment extends Fragment implements Callback {
         query = new GetBookQuery();
         bookDataList = new ArrayList<Book>();
         setSelectListener();
-        HomeActivity home = (HomeActivity) getActivity();
+       home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
         updateQuery = new UpdateQuery();
         home.notifRefresh();
@@ -110,6 +111,12 @@ public class FindBooksFragment extends Fragment implements Callback {
                 getUserDoc(userSelected);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        home.notifRefresh();
     }
 
     private void searchBooks(String searchText) {
