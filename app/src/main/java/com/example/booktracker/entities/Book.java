@@ -24,6 +24,8 @@ public class Book implements Serializable {
     private String borrower;
     //======================
     private String status;
+    private Double lat;
+    private Double lon;
 
     /**
      * constructor for initializing an empty book
@@ -37,7 +39,7 @@ public class Book implements Serializable {
         this.owner = nestedData;
         owner.put("", "");
         this.status = "";
-        this.borrower = null;
+        this.borrower = "";
     }
 
     /**
@@ -284,4 +286,23 @@ public class Book implements Serializable {
         this.localUri = localUri;
     }
 
+    public Double getLat() {
+        return lat;
+    }
+
+    public Double getLon() {
+        return lon;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public void setLon(Double lon) {
+        this.lon = lon;
+    }
+    public void setLatLon(Double lon,Double lat){
+        this.lon = lon;
+        this.lat = lat;
+    }
 }
