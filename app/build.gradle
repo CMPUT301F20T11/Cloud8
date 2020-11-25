@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.booktracker"
-        minSdkVersion 17
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -77,6 +77,11 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
+
+    //maps dependancy
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 
     // Android-Image-Cropper
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'

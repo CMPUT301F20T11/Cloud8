@@ -17,6 +17,7 @@
     <string name="request_text">Request</string>
     <string name="accept_text">Accept</string>
     <string name="decline_text">Decline</string>
+    <string name="google_map_api_key">AIzaSyDaO4CGOZFx6dxeAmnon9dtg-_OWNHIfAY</string>
     <string name="add_book_text">Add Book</string>
     <string name="return_book_text">Return Book</string>
     <string name="receive_book_text">Receive Book</string>

@@ -16,7 +16,7 @@
         android:dividerHeight="1dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:listSelector="@android:color/darker_gray"></ListView>
+        android:listSelector="@android:color/darker_gray" />
 
     <LinearLayout android:layout_width="match_parent"
         android:id="@+id/btns"

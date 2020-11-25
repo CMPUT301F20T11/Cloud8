@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +36,15 @@ import java.util.ArrayList;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
-public class IncomingReqFragment extends Fragment  {
+public class IncomingReqFragment extends Fragment implements View.OnClickListener {
+    ListView bookList;
+    ArrayAdapter<Book> bookAdapter;
+    ArrayList<Book> bookDataList;
+    Book selected_book = null;
+    int LAUNCH_GEO = 523;
+    int LAUNCH_PERMISSIONS = 69;
+
+    private boolean userGPS = false;
     private String userEmail, userSelected, lastStatus;
     private ListView listView;
     private RequestQuery requestQuery;
@@ -92,11 +101,11 @@ public class IncomingReqFragment extends Fragment  {
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-                    startActivity(new Intent(getActivity(), SetGeoActivity.class));
+                    startActivityForResult(new Intent(getActivity(), SetGeoActivity.class), LAUNCH_GEO);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
-                    //No button clicked
+                    // .. request accepted .. dont attach location
                     break;
             }
         }
@@ -173,4 +182,28 @@ public class IncomingReqFragment extends Fragment  {
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LAUNCH_GEO) {
+            if(resultCode == Activity.RESULT_OK){
+                Double lat = data.getDoubleExtra("pickupLat", -1);
+                Double lon = data.getDoubleExtra("pickupLng", -1);
+                // attach to accepted request
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //set location cancelled
+                // .. request accepted .. dont attach location
+            }
+        }
+        if(requestCode == LAUNCH_PERMISSIONS){
+            userGPS = data.getBooleanExtra("userGPS", false);
+        }
+    }
+
+
+    @Override
+    public void onClick(View view) {
+
+    }
 }
