@@ -94,7 +94,7 @@ public class getBookQuery extends BookQuery {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot document = task.getResult();
-                                        outputBooks.add(docToBook(document));
+                                    outputBooks.add(docToBook(document));
 
                                 }
                             }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -154,7 +154,10 @@ public class getBookQuery extends BookQuery {
      *                  query.
      */
     public void getABook(String isbn, Book emptyBook, Callback callback) {
-        db.collection("books").document(isbn)
+
+        db
+                .collection("books")
+                .document(isbn)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

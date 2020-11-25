@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.NotificationService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -90,6 +91,10 @@ public class SignInActivity extends AppCompatActivity {
                     Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                     String email = emailEditText.getText().toString().trim();
                     intent.putExtra(EXTRA_MESSAGE,email);
+                    // Update user token for device
+                    NotificationService service = new NotificationService();
+                    service.updateToken();
+
                     startActivity(intent);
 
                 }else{

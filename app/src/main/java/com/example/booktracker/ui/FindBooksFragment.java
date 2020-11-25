@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,10 +39,10 @@ public class FindBooksFragment extends Fragment implements Callback {
     private Book selected_book = null;
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
-    private String userSelected;
+    private String userSelected, searchText, userEmail;
     private getBookQuery query;
-    private String searchText;
     private FindBooksFragment instance = this;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_find_book, container,
@@ -51,6 +53,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         query = new getBookQuery();
         bookDataList = new ArrayList<Book>();
         setSelectListener();
+        HomeActivity home = (HomeActivity) getActivity();
+        userEmail = home.getUserEmail();
 
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -70,6 +74,20 @@ public class FindBooksFragment extends Fragment implements Callback {
                 return false;
             }
         });
+
+        Button requestBtn = view.findViewById(R.id.request_book_button);
+        requestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null) {
+                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                    request.sendRequest();
+                } else {
+                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
     private void setSelectListener() {
