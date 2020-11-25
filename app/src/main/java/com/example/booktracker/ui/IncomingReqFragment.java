@@ -11,32 +11,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.RequestCollection;
 import com.example.booktracker.boundary.RequestQuery;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.UpdateQuery;
+import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotificationCircle;
+import com.example.booktracker.entities.QueryOutput;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
-public class IncomingReqFragment extends Fragment implements View.OnClickListener {
+public class IncomingReqFragment extends Fragment implements View.OnClickListener, QueryOutputCallback {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
@@ -53,6 +55,9 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
     private Request selected_request = null;
     private DocumentSnapshot userDoc;
     private DeleteBookQuery delQuery;
+    private IncomingReqFragment instance = this;
+    private QueryOutput queryOutput = new QueryOutput();
+    private UpdateQuery query = new UpdateQuery();
 
     //implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,7 +72,8 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         lastStatus = "";
         delQuery = new DeleteBookQuery();
         setSelectListener();
-
+        query.emptyNotif(activity.getUserEmail(),"incomingCount");
+        activity.notifRefresh();
         /**
          * Accepting a book request prompts the option to attach a geo location where book can be picked up
          */
@@ -86,10 +92,13 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         declineReqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String isbn = selected_request.getBook().getIsbn();
-                delQuery.deleteBookRequested(isbn,selected_request.getFromEmail());
-                delQuery.deleteBookIncoming(isbn,selected_request.getFromEmail(),selected_request.getToEmail());
-                requestQuery.getRequests();
+                if (selected_request != null){
+                    String isbn = selected_request.getBook().getIsbn();
+                    delQuery.deleteBookRequested(isbn,selected_request.getFromEmail());
+                    delQuery.deleteBookIncoming(isbn,selected_request.getFromEmail(),selected_request.getToEmail());
+                    requestQuery.getRequests("incomingRequests");
+                }
+
             }
         });
 
@@ -151,7 +160,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        requestQuery.getRequests();
+        requestQuery.getRequests("incomingRequests");
 
     }
 
@@ -181,15 +190,28 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }
-
+    @Override
+    public void displayQueryResult(String result){
+        Toast.makeText(instance.getContext(),queryOutput.getOutput(),Toast.LENGTH_LONG).show();
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LAUNCH_GEO) {
             if(resultCode == Activity.RESULT_OK){
                 Double lat = data.getDoubleExtra("pickupLat", -1);
                 Double lon = data.getDoubleExtra("pickupLng", -1);
-                // attach to accepted request
+                //need to change the status of the book to unavailable
 
+                HashMap<String, Object> dataRes = new HashMap<String, Object>();
+                dataRes.put("status","unavailable");
+                dataRes.put("lat",lat);
+                dataRes.put("lon",lon);
+                selected_book = selected_request.getBook();
+                query.updateBook(selected_book,instance,dataRes,queryOutput);
+                query.changeBookStatus(selected_book.getIsbn()+"-"+selected_request.getFromEmail(),selected_book.getIsbn(),"accepted",selected_request.getToEmail(),"incomingRequests");
+                query.changeBookStatus(selected_book.getIsbn(),selected_book.getIsbn(),"accepted",selected_request.getFromEmail(),"requested");
+                requestCollection.deleteRequest(selected_request);
+                query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //set location cancelled

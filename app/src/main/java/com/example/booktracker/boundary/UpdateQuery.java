@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class UpdateQuery {
     private FirebaseFirestore db;
-
+    private long count;
     public UpdateQuery() {
         db = FirebaseFirestore.getInstance();
     }
@@ -67,31 +67,54 @@ public class UpdateQuery {
     /**
      * This will change the status of the book by moving it to a different collection in the
      * user document
-     * @param book book to be changed
-     * @param status status to change too
+     * @param oldId id of old book this can be isbn or id for incomingRequest
+     * @param newId id of old book this can be isbn or id for incomingRequest
+     * @param oldStatus
+     * @param newStatus
      * @param user email of the user which contains the book
      */
-    public void changeBookStatus(Book book,String status,String user){
-        String bookStatus = book.getStatus();
-        String bookIsbn = book.getIsbn();
-        if (bookStatus != status){
+    public void changeBookStatus(String oldId,String newId,String newStatus,String user,String oldStatus){
             DocumentReference userDoc =  db.collection("users").document(user);
-            DocumentReference bookRef = db.collection("books").document(book.getIsbn());
-            HashMap<String,Object> data = new HashMap<String,Object>();
+            String isbn = oldId.length() == 13 ? oldId : newId;
+            DocumentReference bookRef = db.collection("books").document(isbn);
+            HashMap<String, Object> data = new HashMap<String, Object>();
             data.put("bookReference",bookRef);
-            //====================delete reference in old status collection================
-            userDoc
-                    .collection(bookStatus)
-                    .document(bookIsbn)
-                    .delete();
-            //==============================================================================
-            //==================add reference to the new status collection==================
-            userDoc
-                    .collection(status)
-                    .document(bookIsbn)
-                    .set(data);
-            //==============================================================================
-        }
+            userDoc.collection(newStatus).document(newId).set(data);
+            userDoc.collection(oldStatus).document(oldId).delete();
+    }
+
+    /**
+     * This will increment the counter for the notifications for Accepted Books
+     * @param user
+     */
+    public void incrementNotif(String user,String notifId){
+        count = 0;
+        DocumentReference userDoc =  db.collection("users").document(user);
+        userDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = (DocumentSnapshot) task.getResult();
+                count = (long) res.get(notifId);
+            }
+        }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                HashMap<String,Object> data = new HashMap<String,Object>();
+                count = count + 1 ;
+                data.put(notifId,count);
+                userDoc.update(data);
+            }
+        });
+    }
+    /**
+     * This will empty the counter for the notifications for Accepted Books
+     * @param user
+     */
+    public void emptyNotif(String user,String notifId){
+        DocumentReference userDoc =  db.collection("users").document(user);
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put(notifId,0);
+        userDoc.update(data);
     }
     private void deleteOldBook(CollectionReference colRef,String isbn){
         colRef.document(isbn).delete();

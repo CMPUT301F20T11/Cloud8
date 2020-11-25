@@ -18,9 +18,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.ResultAdapter;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotificationCircle;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,8 +42,10 @@ public class FindBooksFragment extends Fragment implements Callback {
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
     private String userSelected, searchText, userEmail;
-    private getBookQuery query;
+    private GetBookQuery query;
+    private UpdateQuery updateQuery;
     private FindBooksFragment instance = this;
+    private HomeActivity home;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,12 +54,13 @@ public class FindBooksFragment extends Fragment implements Callback {
         setHasOptionsMenu(true);
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
-        query = new getBookQuery();
+        query = new GetBookQuery();
         bookDataList = new ArrayList<Book>();
         setSelectListener();
-        HomeActivity home = (HomeActivity) getActivity();
+       home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
-
+        updateQuery = new UpdateQuery();
+        home.notifRefresh();
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -81,6 +86,7 @@ public class FindBooksFragment extends Fragment implements Callback {
             public void onClick(View view) {
                 if (selected_book != null) {
                     Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                    updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
                     request.sendRequest();
                 } else {
                     Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
@@ -90,6 +96,9 @@ public class FindBooksFragment extends Fragment implements Callback {
 
         return view;
     }
+
+
+
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
@@ -102,6 +111,12 @@ public class FindBooksFragment extends Fragment implements Callback {
                 getUserDoc(userSelected);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        home.notifRefresh();
     }
 
     private void searchBooks(String searchText) {

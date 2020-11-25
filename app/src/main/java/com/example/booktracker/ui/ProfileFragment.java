@@ -46,7 +46,8 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
             userID = user.getUid();
             loginEmail = user.getEmail();
         }
-
+        HomeActivity activity = (HomeActivity) getActivity();
+        activity.notifRefresh();
         db = FirebaseFirestore.getInstance();
         docRef = db.collection("users").document(loginEmail);
 
