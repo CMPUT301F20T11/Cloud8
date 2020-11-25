@@ -30,25 +30,6 @@ public class DeleteTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-<<<<<<< HEAD
-     * Initialize solo to be used by tests.
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-    }
-
-    /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
-    }
-
-=======
      * Initialize solo to be used by tests.And add book to be tested in db.
      *
      * @throws Exception
@@ -60,7 +41,6 @@ public class DeleteTest {
                 rule.getActivity());
     }
 
->>>>>>> master
     /**
      * Add test book to db
      */
@@ -94,12 +74,7 @@ public class DeleteTest {
      * Test the book deletion functionality
      */
     @Test
-<<<<<<< HEAD
-    public void deleteBook(){
-        addToDb();
-=======
     public void deleteBook() {
->>>>>>> master
         login();
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("Delete");

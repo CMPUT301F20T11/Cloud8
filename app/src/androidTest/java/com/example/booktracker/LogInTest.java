@@ -31,15 +31,6 @@ public class LogInTest {
     }
 
     /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
-    }
-
-    /**
      * Test if registered user is able to log in
      */
     @Test

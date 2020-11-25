@@ -13,6 +13,7 @@ import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,14 +33,6 @@ public class EditTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-<<<<<<< HEAD
-     * Initialize solo to be used by tests.
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-=======
      * Initialize solo to be used by tests. And add book to be tested in db.
      *
      * @throws Exception
@@ -49,16 +42,6 @@ public class EditTest {
         addToDb();
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),
                 rule.getActivity());
->>>>>>> master
-    }
-
-    /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
     }
     /**
      * Sign in and set the current activity to HomeActivity.
@@ -130,24 +113,16 @@ public class EditTest {
         del.deleteBook(book1);
     }
 
-<<<<<<< HEAD
-=======
     @After
     public final void tearDown() {
         deleteBook();
     }
 
->>>>>>> master
     /**
      * test the edit functionality of EditBookActivity
      */
     @Test
-<<<<<<< HEAD
-    public void editBook(){
-        addToDb();
-=======
     public void editBook() {
->>>>>>> master
         login();
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("Edit");
@@ -157,6 +132,5 @@ public class EditTest {
         solo.clickOnText("The Communist Manifesto");
         solo.clickOnButton("View");
         checkEdit();
-        deleteBook();
     }
 }

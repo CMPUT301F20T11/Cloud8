@@ -12,6 +12,7 @@ import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,27 +41,6 @@ public class FilterBookTest {
      * @throws Exception
      */
     @Before
-<<<<<<< HEAD
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
-    }
-
-    /**
-     * Test if activity starts.
-     * @throws Exception
-     */
-    @Test
-    public void start() throws Exception{
-        Activity activity = rule.getActivity();
-    }
-    /**
-     * Sign in and set the current activity to HomeActivity.
-     */
-    private void login(){
-        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",SignInActivity.class);
-        solo.enterText((EditText) solo.getView(R.id.email_field),email);
-        solo.enterText((EditText) solo.getView(R.id.password_field),pass);
-=======
     public void setUp() throws Exception {
         addToDb();//this will add books to db with the filters to be tested
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),
@@ -75,7 +55,6 @@ public class FilterBookTest {
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
->>>>>>> master
         solo.clickOnButton("SIGN IN");
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity should be HomeActivity",
@@ -88,12 +67,6 @@ public class FilterBookTest {
     private void setBooks() {
         List<String> author = new ArrayList<>();
         author.add("test");
-<<<<<<< HEAD
-        borrowed = new Book(email,author, "borrowed Book","0000000000003", "test");
-        accepted = new Book(email,author, "accepted Book","0000000000005", "test");
-        requested = new Book(email,author, "requested Book","0000000000006", "test");
-        available = new Book(email,author, "available Book","0000000000007", "test");
-=======
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         borrowed = new Book(owner, author, "borrowed Book", "1000000000000",
@@ -104,7 +77,6 @@ public class FilterBookTest {
                 , "test");
         available = new Book(owner, author, "available Book", "4000000000000"
                 , "test");
->>>>>>> master
         borrowed.setStatus("borrowed");
         lent.setStatus("lent");
         requested.setStatus("requested");
@@ -187,12 +159,7 @@ public class FilterBookTest {
      * Delete all the books that were created for the sake of testing from
      * the database.
      */
-<<<<<<< HEAD
-    private void deleteBook(){
-        //delete book
-=======
     private void deleteBook() {
->>>>>>> master
         DeleteBookQuery del = new DeleteBookQuery(email);
         del.deleteBook(borrowed);
         del.deleteBook(lent);
@@ -206,15 +173,11 @@ public class FilterBookTest {
     @Test
     public void testBookFilters() {
         login();
-        addToDb();//this will add books to db with the filters to be tested
         testFilters();
-<<<<<<< HEAD
-=======
     }
 
     @After
     public final void tearDown() {
->>>>>>> master
         deleteBook();
     }
 }
