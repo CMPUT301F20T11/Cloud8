@@ -28,10 +28,10 @@
         android:text="My books" />
 
     <Button
-        android:id="@+id/accepted"
+        android:id="@+id/lent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Accepted" />
+        android:text="Lent" />
 
     <Button
         android:id="@+id/requested"

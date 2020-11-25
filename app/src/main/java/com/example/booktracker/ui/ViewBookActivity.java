@@ -1,17 +1,17 @@
 package com.example.booktracker.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +66,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         emptyBook = new Book();
         setTextViews();
 
+
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         user = auth.getCurrentUser();
@@ -90,8 +91,9 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         addButton.setOnClickListener(this);
 
 
+
         //==============query database for a book==============
-        getBookQuery query = new getBookQuery(this);
+        GetBookQuery query = new GetBookQuery(this);
         query.getABook(isbn, emptyBook, this);
         //=====================================================
     }
@@ -131,7 +133,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
         if (book.getUri() != null) {
-            imageView.setImageURI(Uri.parse(book.getUri()));
+            Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
 

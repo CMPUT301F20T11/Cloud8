@@ -7,6 +7,10 @@ import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
 import com.google.android.gms.tasks.OnCompleteListener;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -109,8 +113,8 @@ public class AddBookQuery extends BookQuery {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 final DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
-                HashMap<String,Object> userBook = new HashMap<String,Object>();
-                userBook.put("bookReference",bookReference);
+                HashMap<String, Object> userBook = new HashMap<String, Object>();
+                userBook.put("bookReference", bookReference);
                 if (!newBook.getStatus().equals("")) {
                     userDoc.collection(newBook.getStatus())
                             .document(newBook.getIsbn())
@@ -132,8 +136,8 @@ public class AddBookQuery extends BookQuery {
                 });
             }
         });
-
     }
+
     /**
      * This will add the reference to a book to the user's document
      * @param newBook book to be added
@@ -165,3 +169,4 @@ public class AddBookQuery extends BookQuery {
         });
     }
 }
+            

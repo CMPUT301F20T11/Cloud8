@@ -19,8 +19,9 @@ import androidx.fragment.app.Fragment;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotificationCircle;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +36,7 @@ public class MyBooksFragment extends Fragment {
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
-    private getBookQuery getQuery;
+    private GetBookQuery getQuery;
     private String userEmail, userSelected;
     private View view;
     private DeleteBookQuery del;
@@ -43,6 +44,7 @@ public class MyBooksFragment extends Fragment {
     private String lastStatus;
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,18 +58,14 @@ public class MyBooksFragment extends Fragment {
         del = new DeleteBookQuery(userEmail);
         lastStatus = "";
         instance = this;
-        getQuery = (new getBookQuery(userEmail, collection, view.getContext()));
+        getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
+        activity.notifRefresh();
         //======================================================
         setSelectListener();
         setDeleteListener();
         setViewListener();
         setFilterListener();
-        //=============execute async operation=======
-        //books will be displayed after async operation is done
-        getQuery.getMyBooks();
-        //===========================================
-
         Button addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -191,7 +189,7 @@ public class MyBooksFragment extends Fragment {
         lastStatus = newStatus;
     }
 
-    public getBookQuery getQuery() {
+    public GetBookQuery getQuery() {
         return getQuery;
     }
 

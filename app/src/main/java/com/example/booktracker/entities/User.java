@@ -1,7 +1,10 @@
 package com.example.booktracker.entities;
 
 public class User {
-    public String name, email, phoneNumber;
+    public String name;
+    public String email;
+    public String phoneNumber;
+    public String token;
 
     public User() {
 
@@ -10,6 +13,13 @@ public class User {
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
+    }
+
+    public User(String name, String email, String phoneNumber, String argToken){
+        this.email = email;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.token = argToken;
     }
     //=========Ivan===============
 
@@ -24,5 +34,14 @@ public class User {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     //============================
 }

@@ -1,6 +1,7 @@
 package com.example.booktracker.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
@@ -104,35 +106,54 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 //======================store user data in firestore================================
-                                HashMap<String,String> data = new HashMap<String,String>();
-                                if (email.length() > 0){
-                                    data.put("username",username);
-                                    data.put("phone",phoneNumber);
-                                    collectionReference
-                                            .document(email)
-                                            .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(SignUpActivity.this, "User successfully registered!", Toast.LENGTH_LONG).show();
-                                            //====Ivan: made it so that the activity automatically exits==
-                                            try{
-                                                Thread.sleep(2000);
-                                            }catch (InterruptedException e){
-                                                Thread.currentThread().interrupt();
+                                HashMap<String, String> data = new HashMap<String, String>();
+
+
+                                FirebaseMessaging.getInstance().getToken()
+                                        .addOnCompleteListener(new OnCompleteListener<String>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<String> task) {
+                                                if (!task.isSuccessful()) {
+                                                    Log.w("FirebaseMsgService", "Fetching FCM registration token failed", task.getException());
+                                                    return;
+                                                }
+
+                                                // Get new FCM registration token
+                                                String token = task.getResult();
+                                                if (email.length() > 0) {
+                                                    data.put("username", username);
+                                                    data.put("phone", phoneNumber);
+                                                    data.put("token", token);
+                                                    collectionReference
+                                                            .document(email)
+                                                            .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Toast.makeText(SignUpActivity.this, "User successfully registered!", Toast.LENGTH_LONG).show();
+                                                            //====Ivan: made it so that the activity automatically exits==
+                                                            try {
+                                                                Thread.sleep(2000);
+                                                            } catch (InterruptedException e) {
+                                                                Thread.currentThread().interrupt();
+                                                            }
+                                                            finish();
+                                                            //============================================================
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+                                                }
+                                                //==========================================================
+                                                else {
+                                                    Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();
+                                                }
+
                                             }
-                                            finish();
-                                            //============================================================
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                }
-                                //==========================================================
-                            } else {
-                                Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();
+                                        });
+
                             }
                         }
                     });
