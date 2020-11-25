@@ -1,6 +1,5 @@
 package com.example.booktracker.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 
@@ -46,7 +45,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         setTextViews();
 
         //==============query database for a book==============
-        getBookQuery query = new getBookQuery(this);
+        GetBookQuery query = new GetBookQuery(this);
         query.getABook(isbn, emptyBook, this);
         //=====================================================
     }
