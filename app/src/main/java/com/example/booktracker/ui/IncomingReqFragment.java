@@ -39,12 +39,8 @@ import java.util.HashMap;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class IncomingReqFragment extends Fragment implements View.OnClickListener, QueryOutputCallback {
-    ListView bookList;
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
     Book selected_book = null;
     int LAUNCH_GEO = 523;
-    int LAUNCH_PERMISSIONS = 69;
 
     private boolean userGPS = false;
     private String userEmail, userSelected, lastStatus;
@@ -74,6 +70,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         setSelectListener();
         query.emptyNotif(activity.getUserEmail(),"incomingCount");
         activity.notifRefresh();
+
         /**
          * Accepting a book request prompts the option to attach a geo location where book can be picked up
          */
@@ -81,9 +78,15 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         acceptReqBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder geoPrompt = new AlertDialog.Builder(view.getContext());
-                geoPrompt.setMessage("Set location for book pickup?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                if(selected_request != null){
+                    AlertDialog.Builder geoPrompt = new AlertDialog.Builder(view.getContext());
+                    geoPrompt.setMessage("Set location for book pickup?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                }
+                else{
+                    Toast.makeText(getContext(), "No request selected", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -115,6 +118,14 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
 
                 case DialogInterface.BUTTON_NEGATIVE:
                     // .. request accepted .. dont attach location
+                    HashMap<String, Object> dataRes = new HashMap<String, Object>();
+                    dataRes.put("status","unavailable");
+                    selected_book = selected_request.getBook();
+                    query.updateBook(selected_book,instance,dataRes,queryOutput);
+                    query.changeBookStatus(selected_book.getIsbn()+"-"+selected_request.getFromEmail(),selected_book.getIsbn(),"accepted",selected_request.getToEmail(),"incomingRequests");
+                    query.changeBookStatus(selected_book.getIsbn(),selected_book.getIsbn(),"accepted",selected_request.getFromEmail(),"requested");
+                    requestCollection.deleteRequest(selected_request);
+                    query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
                     break;
             }
         }
@@ -214,12 +225,8 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //set location cancelled
-                // .. request accepted .. dont attach location
+                //set location cancelled .. do nothing
             }
-        }
-        if(requestCode == LAUNCH_PERMISSIONS){
-            userGPS = data.getBooleanExtra("userGPS", false);
         }
     }
 
