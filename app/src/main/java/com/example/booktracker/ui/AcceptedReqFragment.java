@@ -17,6 +17,9 @@ public class AcceptedReqFragment extends Fragment {
 
 
 
+        //view location button
+        //if location attached -- start activity
+        // lat lon - pass to viewGeoActivity
 
         return view;
     }
