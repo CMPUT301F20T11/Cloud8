@@ -1,15 +1,18 @@
 package com.example.booktracker.ui;
 
-import android.app.Dialog;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,13 +21,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Email;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.example.booktracker.entities.NotifCount;
+import com.example.booktracker.entities.Notification;
+import com.example.booktracker.entities.NotificationCircle;
 import com.google.android.material.navigation.NavigationView;
 
-import static android.content.ContentValues.TAG;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomeActivity extends AppCompatActivity {
@@ -33,7 +36,8 @@ public class HomeActivity extends AppCompatActivity {
     private String userEmail;
     private BookCollection bookList;
     private String email;
-    private getBookQuery getQuery;
+    private GetBookQuery getQuery;
+    private NotificationCircle notif;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +52,7 @@ public class HomeActivity extends AppCompatActivity {
             userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
         }
         //=====================================================================
+        notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count));
 
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -66,10 +71,11 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController,
                 mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        //========================nav
-        // buttons============================================
-    }
 
+    }
+    public void notifRefresh(){
+        notif.checkNotification();
+    }
     public String getUserEmail() {
         return userEmail;
     }
@@ -102,7 +108,6 @@ public class HomeActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
 
 
 }

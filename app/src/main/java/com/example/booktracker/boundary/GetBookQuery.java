@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotifCount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
-public class getBookQuery extends BookQuery {
+public class GetBookQuery extends BookQuery {
     private ArrayList<Book> outputBooks = new ArrayList();
     private Book output;
     private CountDownLatch done = new CountDownLatch(1);
@@ -35,7 +36,7 @@ public class getBookQuery extends BookQuery {
      * @param userEmail
      * @param argBookList Book collectoin containing listView
      */
-    public getBookQuery(String userEmail, BookCollection argBookList,
+    public GetBookQuery(String userEmail, BookCollection argBookList,
                         Context argContext) {
         super(userEmail);
         bookList = argBookList;
@@ -47,7 +48,7 @@ public class getBookQuery extends BookQuery {
      *
      * @param argContext
      */
-    public getBookQuery(Context argContext) {
+    public GetBookQuery(Context argContext) {
         super();
         context = argContext;
     }
@@ -55,7 +56,7 @@ public class getBookQuery extends BookQuery {
     /**
      * This constructor will be used for getting the books collection
      */
-    public getBookQuery() {
+    public GetBookQuery() {
         super();
     }
     /**
@@ -95,12 +96,6 @@ public class getBookQuery extends BookQuery {
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot document = task.getResult();
                                     outputBooks.add(docToBook(document));
-
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                //every step of the loop check if the list of books is full
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                         bookList.setBookList(outputBooks);
                                         bookList.displayBooks();
@@ -111,6 +106,13 @@ public class getBookQuery extends BookQuery {
                                         // list
                                         bookList.clearList();
                                     }
+
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                //every step of the loop check if the list of books is full
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                                 }
                             });
                         }
@@ -221,5 +223,21 @@ public class getBookQuery extends BookQuery {
                         callback.executeCallback();
                     }
                 });
+    }
+    public void getNotif(Callback callback, NotifCount count,String email){
+        db.collection("users").document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = task.getResult();
+                if (res.get("incomingCount") != null){
+                    count.setIncoming((long) res.get("incomingCount"));
+                }
+                if (res.get("acceptedCount") != null){
+                    count.setAccepted((long) res.get("acceptedCount"));
+                }
+
+                callback.executeCallback();
+            }
+        });
     }
 }

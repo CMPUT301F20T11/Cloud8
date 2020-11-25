@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,7 +33,7 @@ public class RequestedFragment extends Fragment {
     private ListView listView;
     private String userEmail, userSelected, lastStatus;
     private BookCollection bookCollection;
-    private getBookQuery getQuery;
+    private GetBookQuery getQuery;
     private View view;
     private Book selected_book = null;
     private DocumentSnapshot userDoc;
@@ -45,7 +45,7 @@ public class RequestedFragment extends Fragment {
         userEmail = activity.getUserEmail();
         listView = view.findViewById(R.id.requested_booklist);
         bookCollection = new BookCollection(new ArrayList<Book>(), listView, userEmail, view.getContext());
-        getQuery = (new getBookQuery(userEmail, bookCollection,view.getContext()));
+        getQuery = (new GetBookQuery(userEmail, bookCollection,view.getContext()));
         getQuery.getMyBooks("requested");
         lastStatus = "";
 
