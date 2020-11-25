@@ -43,21 +43,6 @@ public class EditTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),
                 rule.getActivity());
     }
-
-    /**
-     * Initialize entries in the AddBookActivity edit text.
-     */
-    private void mockBook() {
-        solo.enterText((EditText) solo.getView(R.id.addbook_title), "The " +
-                "Communist Manifesto");
-        solo.enterText((EditText) solo.getView(R.id.addbook_author), "Karl " +
-                "Marx");
-        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),
-                "9780671678814");
-        solo.enterText((EditText) solo.getView(R.id.addbook_description),
-                "Test book");
-    }
-
     /**
      * Sign in and set the current activity to HomeActivity.
      */

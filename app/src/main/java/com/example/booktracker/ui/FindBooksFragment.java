@@ -98,6 +98,8 @@ public class FindBooksFragment extends Fragment implements Callback {
             selected_book = resAdapter.getItem(position);
             if (selected_book.getOwner() != null) {
                 userSelected = selected_book.getOwnerEmail();
+            } else {
+                userSelected = selected_book.getStringOwner();
             }
             if (userSelected != null) {
                 getUserDoc(userSelected);
