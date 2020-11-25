@@ -57,9 +57,9 @@ public class UpdateQuery {
             @Override
             public void onFailure(@NonNull Exception e) {
                 queryOutput.setOutput("Book " +
-                        "successfully edited");
+                        "was  not edited");
                 callback.displayQueryResult(
-                        "successful");
+                        "not successful");
             }
         });
     }

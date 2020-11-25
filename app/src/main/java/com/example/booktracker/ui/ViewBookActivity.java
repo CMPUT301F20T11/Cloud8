@@ -3,13 +3,13 @@ package com.example.booktracker.ui;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
@@ -44,17 +44,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         isbn = getIntent().getStringExtra(EXTRA_MESSAGE);
         emptyBook = new Book();
         setTextViews();
-
-        // Creating buttons
-        Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
-        borrowButton.setOnClickListener(this);
-        Button giveButton = (Button) findViewById(R.id.give_book_button);
-        giveButton.setOnClickListener(this);
-        Button returnButton = (Button) findViewById(R.id.return_book_button);
-        returnButton.setOnClickListener(this);
-        Button receiveButton = (Button) findViewById(R.id.receive_book_button);
-        receiveButton.setOnClickListener(this);
-
 
         //==============query database for a book==============
         getBookQuery query = new getBookQuery(this);
@@ -97,7 +86,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
         if (book.getUri() != null) {
-            imageView.setImageURI(Uri.parse(book.getUri()));
+            Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
 
