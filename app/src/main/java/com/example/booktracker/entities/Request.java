@@ -115,6 +115,9 @@ public class Request extends Notification {
         //MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    /**
+     * Add's the request to 'requested' collection in the user document
+     */
     public void addToRequestedBooks() {
         DocumentReference bookReference = db.collection("books").document(book.getIsbn());
         HashMap<String, Object> userBook = new HashMap<String, Object>();
@@ -152,50 +155,45 @@ public class Request extends Notification {
         });
     }
 
-
+    /**
+     * Gets the current user object from the DB
+     */
     public void getSender() {
         UserQuery userQuery = new UserQuery(fromEmail, context);
         from = userQuery.getUserObject();
     }
 
-
     /**
-     * TODO Set up getData but for users (or make user Query)
-     * @param newBook
-     * @return
+     * Gets the book that has been requested by the user
+     * @return book object
      */
-    private HashMap<String,Object> getData(Book newBook){
-        HashMap<String,Object> data = new HashMap<String,Object>();
-        data.put("status",newBook.getStatus());
-        data.put("isbn",newBook.getIsbn());
-        data.put("title",newBook.getTitle());
-        data.put("owner",newBook.getOwner());
-        data.put("borrower",newBook.getBorrower());
-        data.put("description",newBook.getDescription());
-        data.put("author",newBook.getAuthor());
-        data.put("image_uri", newBook.getUri());
-        data.put("local_image_uri", newBook.getLocalUri());
-        return data;
-    }
-
     public Book getBook() {
         return book;
     }
 
+    /**
+     * Sets the book that has been requested by the user
+     * @param book
+     */
     public void setBook(Book book) {
         this.book = book;
     }
 
-
+    /**
+     * Gets the username of the user who requested the book
+     * @return fromUsername object
+     */
     public String getFromUsername() {
         return fromUsername;
     }
 
+    /**
+     * Sets the username of the user who requested the book
+     * @param fromUsername
+     */
     public void setFromUsername(String fromUsername) {
         this.fromUsername = fromUsername;
     }
-
-
 
 
 

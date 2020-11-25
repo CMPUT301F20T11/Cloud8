@@ -11,7 +11,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
+/**
+ * Handles interactions with the database
+ * @author Edlee Ducay
+ */
 public class UserQuery {
 
     protected DocumentReference userDoc;
@@ -20,6 +23,11 @@ public class UserQuery {
     private Context context;
     private User user;
 
+    /**
+     * Main constructor for the UserQuery class
+     * @param userEmail
+     * @param argContext
+     */
     public UserQuery(String userEmail, Context argContext) {
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
@@ -29,6 +37,9 @@ public class UserQuery {
         setUserObject();
     }
 
+    /**
+     * Grabs the user data from the database and sets it to user object
+     */
     private void setUserObject() {
         userDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -46,6 +57,10 @@ public class UserQuery {
         });
     }
 
+    /**
+     * Grabs the user
+     * @return user object
+     */
     public User getUserObject() {
         return user;
     }

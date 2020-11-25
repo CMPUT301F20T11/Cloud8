@@ -51,7 +51,6 @@ public class FindBooksFragment extends Fragment implements Callback {
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
         query = new getBookQuery();
-        bookDataList = new ArrayList<Book>();
         setSelectListener();
         HomeActivity home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
@@ -60,6 +59,7 @@ public class FindBooksFragment extends Fragment implements Callback {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
+                bookDataList = new ArrayList<Book>();
                 query.getBooks(instance,bookDataList);
                 searchText = queryText;
                 searchView.clearFocus();

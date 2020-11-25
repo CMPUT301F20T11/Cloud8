@@ -65,7 +65,7 @@ public class MyBooksFragment extends Fragment {
         setFilterListener();
         //=============execute async operation=======
         //books will be displayed after async operation is done
-        getQuery.getMyBooks();
+        //getQuery.getMyBooks();
         //===========================================
 
         Button addBookBtn = view.findViewById(R.id.add_book_button);

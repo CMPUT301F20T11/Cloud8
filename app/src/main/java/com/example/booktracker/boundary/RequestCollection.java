@@ -8,6 +8,7 @@ import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
 
+
 public class RequestCollection {
     private ArrayList<Request> requestList;
     private ListView listView;
@@ -16,6 +17,13 @@ public class RequestCollection {
     private String status;
     private String email;
 
+    /**
+     * Main constructor for the RequestCollection class
+     * @param argRequestList
+     * @param parent
+     * @param userEmail
+     * @param argContext
+     */
     public RequestCollection(ArrayList<Request> argRequestList, ListView parent,
                              String userEmail, Context argContext) {
         context = argContext;
@@ -26,17 +34,33 @@ public class RequestCollection {
         listView = parent;
     }
 
+    /**
+     * Gets the request from the adapter at position
+     * @param position
+     * @return Request
+     */
     public Request getRequest(int position){
         return adapter.getItem(position);
     }
 
+    /**
+     * Sets the adapter using the inputted request array
+     * @param argRequestList
+     */
     public void setRequestList(ArrayList<Request> argRequestList) {
         adapter = new RequestAdapter(context, argRequestList);
     }
 
+    /**
+     * Binds the ui to the adapter
+     */
     public void displayRequests() {
-        listView.setAdapter(adapter); //bind ui to adapter,if list View ui
+        listView.setAdapter(adapter);
     }
+
+    /**
+     * Clears all the requests in the adapter and the listview
+     */
     public void clearList() {
         adapter.clear();
         adapter.notifyDataSetChanged();

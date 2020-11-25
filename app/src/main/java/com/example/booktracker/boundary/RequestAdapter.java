@@ -19,6 +19,11 @@ import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
 
+/**
+ * ArrayAdapter class for the Request entity
+ *
+ * @author Edlee Ducay
+ */
 public class RequestAdapter extends ArrayAdapter<Request> {
     private ArrayList<Request> requestList;
     private Context context;

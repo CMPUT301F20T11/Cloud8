@@ -166,8 +166,8 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         data.put("title", title);
         data.put("description", description);
         data.put("author", author);
-        data.put("image_uri", null);
-        data.put("local_image_uri", null);
+        data.put("image_uri", imageUri);
+        data.put("local_image_uri", local_image_uri);
         return data;
     }
 

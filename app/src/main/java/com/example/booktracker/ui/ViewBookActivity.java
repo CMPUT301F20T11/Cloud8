@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Callback;
@@ -85,7 +86,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
         if (book.getUri() != null) {
-            imageView.setImageURI(Uri.parse(book.getUri()));
+            Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
 
