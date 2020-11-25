@@ -14,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import com.example.booktracker.R;
 
 public class FilterFragment extends DialogFragment {
-    Button accepted;
+    Button lent;
     Button requested;
     Button myBooks;
     Button available;
@@ -52,7 +52,7 @@ public class FilterFragment extends DialogFragment {
      * This will bind the Button views in fragment_filter.xml to the attributes of FilterFragment
      */
     private void bindViews() {
-        accepted = view.findViewById(R.id.accepted);
+        lent = view.findViewById(R.id.lent);
         requested  = view.findViewById(R.id.requested);
         myBooks = view.findViewById(R.id.my_books);
         available = view.findViewById(R.id.available);
@@ -63,7 +63,7 @@ public class FilterFragment extends DialogFragment {
      * set listeners for all buttons
      */
     private void setAllListeners() {
-        accepted_listener();
+        lent_listener();
         requested_listener();
         my_books_listener();
         borrowed_listener();
@@ -72,11 +72,11 @@ public class FilterFragment extends DialogFragment {
     /**
      * set listener for accepted books filter
      */
-    private void accepted_listener() {
-        accepted.setOnClickListener(new View.OnClickListener() {
+    private void lent_listener() {
+        lent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks("accepted");
+                parentActivity.getQuery().getMyBooks("lent");
                 getDialog().dismiss();
             }
         });

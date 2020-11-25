@@ -1,9 +1,15 @@
 package com.example.booktracker.boundary;
 
 
+import androidx.annotation.NonNull;
+
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
@@ -31,7 +37,9 @@ public class AddBookQuery extends BookQuery {
     public AddBookQuery(String userEmail) {
         super(userEmail);
     }
+    public AddBookQuery(){
 
+    }
     /**
      * This will add the book to the adapter and the database if its not
      * already there
@@ -39,14 +47,13 @@ public class AddBookQuery extends BookQuery {
      * @param newBook book to be checked if in db
      */
     public void addBook(Book newBook) {
-        db.collectionGroup("myBooks").whereEqualTo("isbn",
-                newBook.getIsbn().trim())
+        db.collection("books").
+                document(newBook.getIsbn())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        List<DocumentSnapshot> list =
-                                Objects.requireNonNull(task.getResult()).getDocuments();
-                        if (list.size() > 0) {
+                        DocumentSnapshot res = task.getResult();
+                        if (res.exists()) {
                             //book is already in the database
                             if (queryOutput != null) {
                                 queryOutput.setOutput("Book is already " +
@@ -94,38 +101,51 @@ public class AddBookQuery extends BookQuery {
      */
     private void addToDb(Book newBook) {
         HashMap<String, Object> data = getData(newBook);
-        if (!newBook.getStatus().equals("")) {
-            userDoc.collection(newBook.getStatus())
-                    .document(newBook.getIsbn())
-                    .set(data).addOnSuccessListener(aVoid -> {
-                if (queryOutput != null) {
-                    queryOutput.setOutput("Added book successfully");
-                    outputCallback.displayQueryResult("successful");
-                }
-
-            }).addOnFailureListener(e -> {
-                if (queryOutput != null) {
-                    queryOutput.setOutput("couldn't add book");
-                    outputCallback.displayQueryResult("not successful");
-                }
-            });
-        }
-        //book is always added to myBook list regardless of its status
-        userDoc.collection("myBooks")
+        DocumentReference bookReference;
+        final CollectionReference bookCollection = db.collection("books");
+        bookCollection
                 .document(newBook.getIsbn())
-                .set(data).addOnSuccessListener(aVoid -> {
-            if (queryOutput != null) {
-                queryOutput.setOutput("Added book successfully");
-                outputCallback.displayQueryResult("successful");
-            }
-        }).addOnFailureListener(e -> {
-            if (queryOutput != null) {
-                queryOutput.setOutput("couldn't add book");
-                outputCallback.displayQueryResult("not successful");
+                .set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                final DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
+                HashMap<String,Object> userBook = new HashMap<String,Object>();
+                userBook.put("bookReference",bookReference);
+                if (!newBook.getStatus().equals("")) {
+                    userDoc.collection(newBook.getStatus())
+                            .document(newBook.getIsbn())
+                            .set(userBook);
+                }
+                //book is always added to myBook list regardless of its status
+                userDoc.collection("myBooks")
+                        .document(newBook.getIsbn())
+                        .set(userBook).addOnSuccessListener(aVoid -> {
+                    if (queryOutput != null) {
+                        queryOutput.setOutput("Added book successfully");
+                        outputCallback.displayQueryResult("successful");
+                    }
+                }).addOnFailureListener(e -> {
+                    if (queryOutput != null) {
+                        queryOutput.setOutput("couldn't add book");
+                        outputCallback.displayQueryResult("not successful");
+                    }
+                });
             }
         });
-    }
 
+    }
+    /**
+     * This will add the reference to a book to the user's document
+     * @param newBook book to be added
+     * @param borrowerEmail email of the person who is receiving the book
+     */
+    public void addBookBorrower(Book newBook,String borrowerEmail){
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("bookReference",db.collection("books").document(newBook.getIsbn()));
+        db.collection("users").document(borrowerEmail).collection(newBook.getStatus())
+                .document(newBook.getIsbn())
+                .set(data);
+    }
     public void loadUsername(Book book) {
         userDoc.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
