@@ -3,6 +3,8 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.firestore.CollectionReference;
@@ -72,20 +74,17 @@ public class getBookQuery extends BookQuery {
             book.setUri(imageUri.toString());
         }
         if (document.get("local_image_uri") != null) {
-            Uri localImageUri = Uri.parse((String) document.get(
-                    "local_image_uri"));
+            Uri localImageUri = Uri.parse((String) document.get("local_image_uri"));
             book.setLocalUri(localImageUri.toString());
         }
         return book;
     }
 
     /**
-     * get will get all contents of the specified collection reference and
-     * output it
-     *
+     * get will get all contents of the specified collection reference and output it
      * @param reference
      */
-    private void get(CollectionReference reference) {
+    private void get(CollectionReference reference){
         reference.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -97,8 +96,8 @@ public class getBookQuery extends BookQuery {
                             DocumentReference bookRef =
                                     (DocumentReference) document.get(
                                             "bookReference");
-                            //every step of the loop check if the list of
-// books is full
+                            // every step of the loop check if the list of
+                            // books is full
                             Objects.requireNonNull(bookRef).get().addOnCompleteListener(task1 -> {
                                 DocumentSnapshot document1 = task1.getResult();
                                 outputBooks.add(docToBook(Objects.requireNonNull(document1)));
@@ -124,7 +123,6 @@ public class getBookQuery extends BookQuery {
 
                 });
     }
-
     /**
      * This will query the data base and use Book Collection object to modify
      * the listView
@@ -164,33 +162,42 @@ public class getBookQuery extends BookQuery {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot res = task.getResult();
-                        if (Objects.requireNonNull(res).exists()) {
-                            if (res.get("image_uri") != null) {
-                                Uri imageUri =
-                                        Uri.parse((String) res.get(
-                                                "image_uri"));
-                                emptyBook.setUri(imageUri.toString());
+                        if (res.exists()) {
+                            if (res != null) {
+                                if (res.get("image_uri") != null) {
+                                    Uri imageUri =
+                                            Uri.parse((String) res.get(
+                                                    "image_uri"));
+                                    emptyBook.setUri(imageUri.toString());
+                                }
+                                if (res.get("local_image_uri") != null) {
+                                    Uri localImageUri =
+                                            Uri.parse((String) res.get(
+                                                    "local_image_uri"));
+                                    emptyBook.setLocalUri(localImageUri.toString());
+                                }
+                                List<String> authors =
+                                        (List<String>) res.get("author");
+
+                                if (res.get("owner") instanceof String) {
+                                    String stringOwner =
+                                            (String) res.get("owner");
+                                    emptyBook.setStringOwner(stringOwner);
+                                } else {
+                                    HashMap<String, String> owner =
+                                            (HashMap<String, String>) res.get("owner");
+                                    emptyBook.setOwner(owner);
+                                }
+                                emptyBook.setAuthor(authors);
+                                emptyBook.setIsbn(isbn);
+                                emptyBook.setTitle((String) res.get(
+                                        "title"));
+                                emptyBook.setDescription((String) res.get(
+                                        "description"));
+                                emptyBook.setStatus((String) res.get(
+                                        "status"));
+                                callback.executeCallback();
                             }
-                            if (res.get("local_image_uri") != null) {
-                                Uri localImageUri =
-                                        Uri.parse((String) res.get(
-                                                "local_image_uri"));
-                                emptyBook.setLocalUri(localImageUri.toString());
-                            }
-                            List<String> authors =
-                                    (List<String>) res.get("author");
-                            HashMap<String, String> owner =
-                                    (HashMap<String, String>) res.get("owner");
-                            emptyBook.setOwner(owner);
-                            emptyBook.setAuthor(authors);
-                            emptyBook.setIsbn(isbn);
-                            emptyBook.setTitle((String) res.get(
-                                    "title"));
-                            emptyBook.setDescription((String) res.get(
-                                    "description"));
-                            emptyBook.setStatus((String) res.get(
-                                    "status"));
-                            callback.executeCallback();
                         }
                     }
                 });
@@ -198,11 +205,8 @@ public class getBookQuery extends BookQuery {
 
     /**
      * This will query the database to get a list of books
-     *
-     * @param callback Callback will be the instance of the class that called
-     *                this method
-     * @param bookList This will be the list of books the will get populated
-     *                 with all
+     * @param callback Callback will be the instance of the class that called this method
+     * @param bookList This will be the list of books the will get populated with all
      *                 the books in the database
      */
     public void getBooks(Callback callback, ArrayList<Book> bookList) {

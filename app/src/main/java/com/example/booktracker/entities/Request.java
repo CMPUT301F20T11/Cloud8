@@ -2,22 +2,28 @@ package com.example.booktracker.entities;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.booktracker.boundary.AddBookQuery;
+import com.example.booktracker.boundary.UserQuery;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +39,8 @@ public class Request extends Notification {
     private Book book;
     private Context context;
     private RequestQueue mQueue;
+    private String fromUsername;
+    private User from;
 
     /**
      * Constructor for the Request class
@@ -46,17 +54,19 @@ public class Request extends Notification {
         book = argBook;
         context = argContext;
         mQueue = Volley.newRequestQueue(argContext);
+        getSender();
     }
 
     /**
      * Main function for sending requests
-     * Add's the book into the 'requestedBooks' collection in the DB,
+     * Add's the book into the 'requestedBooks' collection for fromUser,
+     * Add's the request into the 'incomingRequests' collection for toUser,
+     * and sends the push notification
      *
      */
     public void sendRequest() {
-        AddBookQuery fromAddBookQuery = new AddBookQuery(fromEmail);
-        fromAddBookQuery.addRequest(book, fromEmail);
-        addRequestToBook();
+        addToRequestedBooks();
+        addToIncomingRequests();
         sendPushNotification();
 
     }
@@ -74,7 +84,7 @@ public class Request extends Notification {
             notificationBody.put("title", title);
             notificationBody.put("message", body);
 
-            notification.put("to", "fK4g0F26Tx2ibHSXkJFmtz:APA91bESZ_TTn-66mGOKxkVLQOzocIPhHk26EkcYIVMmoWyGJL85ZTXYk7UX-OAGP9W0uaRuGf-MCtcbpqzpq09cJV1l1W0VmO9Zqq0TleC7OU6LiS1utpaq9n12NvAar0a0PPRKGl3n");
+            notification.put("to", "eE4jguDKTRex-6Fa5MGgIq:APA91bGnrml422Tu_WSe5tIHRc62FX4Jc6Jco1TP57tMSWqFs-BqwBLRT976XebiA5YvcC9VCBX5PxbS-SwMxqX8Nt2BmGRqSEEjsTXAlpEoTmeBwt61ALffVAQW-N_oorw0O7pv7i4L");
             notification.put("data", notificationBody);
         } catch (JSONException e) {
             Log.e("REQUEST TAG", "onCreate: " + e.getMessage());
@@ -106,43 +116,86 @@ public class Request extends Notification {
     }
 
     /**
-     * Adds a request to the book in the original owner's 'myBooks' collection
+     * Add's the request to 'requested' collection in the user document
      */
-    private void addRequestToBook() {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("Request from", fromEmail);
+    public void addToRequestedBooks() {
+        DocumentReference bookReference = db.collection("books").document(book.getIsbn());
+        HashMap<String, Object> userBook = new HashMap<String, Object>();
+        userBook.put("bookReference", bookReference);
+        userDoc.collection("requested")
+                .document(book.getIsbn())
+                .set(userBook);
+    }
+
+    /**
+     * Add's a request to the book in the original owner's 'myBooks' collection
+     */
+    public void addToIncomingRequests() {
+        CollectionReference bookCollection = db.collection("books");
+        DocumentReference bookReference = bookCollection.document(book.getIsbn());
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("from", userDoc);
+        data.put("bookReference", bookReference);
 
         DocumentReference toDoc = db.collection("users").document(toEmail);
-        toDoc.collection("requests").document(book.getIsbn())
+        toDoc.collection("incomingRequests")
+                .document(book.getIsbn() + "-" + fromEmail)
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.i("Add Request to Book", "Request added successfully");
+                Toast.makeText(context, "Book requested", Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i("Add Request to Book", "Request did not succeed");
+                Toast.makeText(context, "Book request failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
-     * TODO Set up getData but for users (or make user Query)
-     * @param newBook
-     * @return
+     * Gets the current user object from the DB
      */
-    private HashMap<String,Object> getData(Book newBook){
-        HashMap<String,Object> data = new HashMap<String,Object>();
-        data.put("status",newBook.getStatus());
-        data.put("isbn",newBook.getIsbn());
-        data.put("title",newBook.getTitle());
-        data.put("owner",newBook.getOwner());
-        data.put("borrower",newBook.getBorrower());
-        data.put("description",newBook.getDescription());
-        data.put("author",newBook.getAuthor());
-        data.put("image_uri", newBook.getUri());
-        data.put("local_image_uri", newBook.getLocalUri());
-        return data;
+    public void getSender() {
+        UserQuery userQuery = new UserQuery(fromEmail, context);
+        from = userQuery.getUserObject();
     }
+
+    /**
+     * Gets the book that has been requested by the user
+     * @return book object
+     */
+    public Book getBook() {
+        return book;
+    }
+
+    /**
+     * Sets the book that has been requested by the user
+     * @param book
+     */
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    /**
+     * Gets the username of the user who requested the book
+     * @return fromUsername object
+     */
+    public String getFromUsername() {
+        return fromUsername;
+    }
+
+    /**
+     * Sets the username of the user who requested the book
+     * @param fromUsername
+     */
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
+    }
+
+
+
+
 }

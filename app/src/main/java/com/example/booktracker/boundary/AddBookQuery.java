@@ -124,6 +124,7 @@ public class AddBookQuery extends BookQuery {
                 });
 
     }
+
     /**
      * This will add the reference to a book to the user's document
      * @param newBook book to be added
@@ -164,3 +165,4 @@ public class AddBookQuery extends BookQuery {
         });
     }
 }
+

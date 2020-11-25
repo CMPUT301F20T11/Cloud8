@@ -40,10 +40,10 @@ public class FindBooksFragment extends Fragment implements Callback {
     private Book selected_book = null;
     private FirebaseFirestore db;
     private DocumentSnapshot userDoc;
-    private String userEmail, userSelected;
+    private String userSelected, searchText, userEmail;
     private getBookQuery query;
-    private String searchText;
-    private final FindBooksFragment instance = this;
+    private FindBooksFragment instance = this;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_find_book, container,
@@ -79,14 +79,15 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
 
         Button requestBtn = view.findViewById(R.id.request_book_button);
-        requestBtn.setOnClickListener(view1 -> {
-            if (selected_book != null) {
-                Request request = new Request(userEmail, userSelected ,selected_book, getContext());
-                request.sendRequest();
-
-            } else {
-                Toast.makeText(view1.getContext(), "No book selected",
-                        Toast.LENGTH_SHORT).show();
+        requestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null) {
+                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                    request.sendRequest();
+                } else {
+                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -98,8 +99,6 @@ public class FindBooksFragment extends Fragment implements Callback {
             selected_book = resAdapter.getItem(position);
             if (selected_book.getOwner() != null) {
                 userSelected = selected_book.getOwnerEmail();
-            } else {
-                userSelected = selected_book.getStringOwner();
             }
             if (userSelected != null) {
                 getUserDoc(userSelected);

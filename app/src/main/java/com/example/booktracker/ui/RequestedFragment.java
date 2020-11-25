@@ -44,20 +44,21 @@ public class RequestedFragment extends Fragment {
         HomeActivity activity = (HomeActivity) getActivity();
         setHasOptionsMenu(true);
         userEmail = Objects.requireNonNull(activity).getUserEmail();
-        listView = view.findViewById(R.id.requested_books);
+        listView = view.findViewById(R.id.requested_booklist);
         bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
         getQuery = (new getBookQuery(userEmail, bookCollection,view.getContext()));
-        getQuery.getMyBooks("requestedBooks");
+        getQuery.getMyBooks("requested");
         lastStatus = "";
 
         setSelectListener();
         setViewListener();
 
+
         return view;
     }
 
     private void setViewListener() {
-        Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
+        Button viewBookBtn = (Button) view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
@@ -128,7 +129,7 @@ public class RequestedFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return false;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
