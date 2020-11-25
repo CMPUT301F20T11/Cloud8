@@ -37,7 +37,7 @@ public class Book implements Serializable {
         this.owner = nestedData;
         owner.put("", "");
         this.status = "";
-        this.borrower = null;
+        this.borrower = "";
     }
 
     /**
