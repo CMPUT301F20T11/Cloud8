@@ -8,7 +8,7 @@
     <ListView
         android:id="@+id/my_book_list"
         android:layout_width="match_parent"
-        android:layout_height="683dp"
+        android:layout_height="match_parent"
         android:layout_above="@+id/btns"
         android:layout_marginBottom="0dp"
         android:choiceMode="singleChoice"
@@ -16,7 +16,7 @@
         android:dividerHeight="1dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
-        android:listSelector="@android:color/darker_gray"></ListView>
+        android:listSelector="@android:color/darker_gray" />
 
     <LinearLayout android:layout_width="match_parent"
         android:id="@+id/btns"

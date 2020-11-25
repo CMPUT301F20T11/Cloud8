@@ -77,14 +77,11 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         public void onClick(DialogInterface dialog, int which) {
             switch (which){
                 case DialogInterface.BUTTON_POSITIVE:
-//                    startActivityForResult(new Intent(getActivity(), Permissions.class), LAUNCH_PERMISSIONS);
-//                    Intent setGeo = new Intent(getActivity(), SetGeoActivity.class);
-//                    setGeo.putExtra("userGPS", userGPS);
                     startActivityForResult(new Intent(getActivity(), SetGeoActivity.class), LAUNCH_GEO);
                     break;
 
                 case DialogInterface.BUTTON_NEGATIVE:
-                    //No button clicked
+                    // .. request accepted .. dont attach location
                     break;
             }
         }
@@ -100,7 +97,8 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                //no location attached to request
+                //set location cancelled
+                // .. request accepted .. dont attach location
             }
         }
         if(requestCode == LAUNCH_PERMISSIONS){

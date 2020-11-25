@@ -95,7 +95,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap retMap) {
         map = retMap;
-//        checkGPS();
         if (!mLocationPermissionGranted) {
             Log.d(TAG, "Current location is unavailable. Using defaults.");
             map.moveCamera(CameraUpdateFactory
