@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -51,7 +53,6 @@ public class AcceptedReqFragment extends Fragment implements Callback {
         geoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //need to view the geo location here
                 if (selected_book != null){
                     getBookQuery.getLatLong(instance,selected_book);
                 }
@@ -73,5 +74,10 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     public void executeCallback(){
         Double lat = selected_book.getLat();
         Double lon = selected_book.getLon();
+        Intent viewGeo = new Intent(getContext(), ViewGeoActivity.class);
+        viewGeo.putExtra("lat", lat);
+        viewGeo.putExtra("lon", lon);
+        startActivity(viewGeo);
+
     }
 }
