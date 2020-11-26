@@ -65,7 +65,7 @@ public class ViewBookTest {
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
-        solo.clickOnButton("SIGN IN");
+        solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity should be HomeActivity",
                 HomeActivity.class);
