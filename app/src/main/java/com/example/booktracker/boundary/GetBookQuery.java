@@ -91,35 +91,38 @@ public class GetBookQuery extends BookQuery {
                         for (QueryDocumentSnapshot document :
                                 Objects.requireNonNull(task.getResult())) {
                             DocumentReference bookRef = (DocumentReference) document.get("bookReference");
-                            bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot doc = task.getResult();
-                                    if (task.isSuccessful()){
-                                        if (doc.exists()) {
-                                            outputBooks.add(docToBook(doc));
+                            if (bookRef != null){
+                                bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot doc = task.getResult();
+                                        if (task.isSuccessful()){
+                                            if (doc.exists()) {
+                                                outputBooks.add(docToBook(doc));
 
-                                        } else {
-                                            reference.document(bookRef.getId()).delete();
+                                            } else {
+                                                reference.document(bookRef.getId()).delete();
+                                            }
                                         }
                                     }
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                //every step of the loop check if the list of books is full
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (querySize == outputBooks.size() && outputBooks.size() > 0) {
-                                        bookList.setBookList(outputBooks);
-                                        bookList.displayBooks();
-                                        outputBooks = new ArrayList();
-                                        //empty outputBooks to clear results from last query
-                                    } else {
-                                        //in case there no matches clear the current
-                                        // list
-                                        bookList.clearList();
+                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    //every step of the loop check if the list of books is full
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (querySize == outputBooks.size() && outputBooks.size() > 0) {
+                                            bookList.setBookList(outputBooks);
+                                            bookList.displayBooks();
+                                            outputBooks = new ArrayList();
+                                            //empty outputBooks to clear results from last query
+                                        } else {
+                                            //in case there no matches clear the current
+                                            // list
+                                            bookList.clearList();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
+
 
                         }
                     } else {
