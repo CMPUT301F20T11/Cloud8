@@ -1,35 +1,27 @@
 package com.example.booktracker.entities;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.telecom.Call;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
-import com.example.booktracker.control.Email;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
 
 public class NotificationCircle implements Callback {
-    private GetBookQuery query;
-    private int notifs = 0;
+    private GetBookQuery getBookQuery;
+    private UpdateQuery updateQuery;
     private NotifCount count;
     private String email;
     private TextView view;
     public NotificationCircle(String argEmail,TextView argView){
-        query = new GetBookQuery();
+        getBookQuery = new GetBookQuery();
         count = new NotifCount();
         email = argEmail;
         view = argView;
+        updateQuery = new UpdateQuery();
     }
     public void checkNotification(){
-        query.getNotif(this,count,(email));
+        getBookQuery.getNotif(this,count,(email));
     }
     private void raiseNotif(){
         view.setText(Long.toString(count.getTotal()));
@@ -46,6 +38,14 @@ public class NotificationCircle implements Callback {
         }
         if (count.getTotal() == 0){
             clearNotif();
+        }
+        if (count.getAccepted() == 0){
+            //if count accepted is zero then counter could have never been initalized in db
+            updateQuery.emptyNotif(email,"acceptedCount");
+        }
+        if (count.getIncoming() == 0){
+            //if count incoming is zero the counter could have never been initailized in db
+            updateQuery.emptyNotif(email,"incomingCount");
         }
     }
 }
