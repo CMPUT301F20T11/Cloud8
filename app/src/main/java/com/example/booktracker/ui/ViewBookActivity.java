@@ -12,8 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
+import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.QueryOutput;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +31,7 @@ import java.util.Map;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, Callback {
+public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, QueryOutputCallback,Callback {
     private String isbn;
     private Book emptyBook;
     private StorageReference storageReference;
@@ -41,6 +44,9 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private Map<String, Object> hopperUpdates;
     private DocumentReference documentReference;
     private FirebaseFirestore db;
+    private UpdateQuery updateQuery;
+    private QueryOutput queryOutput;
+    private ViewBookActivity instance;
 
     //=========Text Views================
     private TextView isbnView;
@@ -76,8 +82,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         ref = database.getReference("/books/" + isbn);
         db = FirebaseFirestore.getInstance();
         documentReference = db.collection("books").document(isbn);
-
-
+        updateQuery = new UpdateQuery();
+        queryOutput = new QueryOutput();
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
@@ -136,7 +142,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
             Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
-
     /**
      * This method will be called by the query
      */
@@ -145,6 +150,10 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         updateTextViews(emptyBook);
     }
 
+    @Override
+    public void displayQueryResult(String result){
+        Toast.makeText(instance, queryOutput.getOutput(), Toast.LENGTH_SHORT).show();
+    }
     /**
      * This method decides which onClick functionality to execute according
      * to the ID of the button
@@ -163,38 +172,27 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // for book.borrower == none,
                 // book.status == unavailable, book != null, and then book
                 // .setBorrower("user.email")
-                if ((emptyBook != null) && (emptyBook.getStatus().equals("unavailable"))
-                        && emptyBook.getBorrower().equals("none")) {
-                    emptyBook.setBorrower(loginEmail);
-                    Toast.makeText(this, "Book Successfully Borrowed!",
-                            Toast.LENGTH_SHORT).show();
+                if ((emptyBook != null) && (emptyBook.getStatus().equals("available"))
+                        && (emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals("")) {
+                    //need to check if the book is already in the list of accepted books for this user
+                    updateQuery.borrowBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to borrow book!",
                             Toast.LENGTH_SHORT).show();
                 }
-                updateTextViews(emptyBook);
-                updateFirebase();
                 break;
             case R.id.give_book_button:
                 // Since we are the owner in this case, we should check for
                 // book.owner == user.email
                 // and book.borrower == none, and book.status == available,
                 // and book != null
-                System.out.println(emptyBook.getBorrower().equals("none"));
-                System.out.println((emptyBook.getStatus().equals("available")));
-                System.out.println((emptyBook.getOwner().equals(loginEmail)));
-
-                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none"))
+                if ((emptyBook != null) && ((emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals(""))
                         && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
-                    emptyBook.setStatus("unavailable");
-                    Toast.makeText(this, "Book Successfully given!",
-                            Toast.LENGTH_SHORT).show();
+                    updateQuery.lendBook(emptyBook.getIsbn(),emptyBook.getOwnerEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to give book!",
                             Toast.LENGTH_SHORT).show();
                 }
-                updateTextViews(emptyBook);
-                updateFirebase();
                 break;
             case R.id.return_book_button:
                 // Here we are the borrower attempting to hand over the book,
@@ -203,31 +201,23 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // borrower == none
                 if ((emptyBook != null) && emptyBook.getBorrower().equals(loginEmail)
                         && emptyBook.getStatus().equals("unavailable")) {
-                    emptyBook.setBorrower("none");
-                    Toast.makeText(this, "Book Successfully Returned!",
-                            Toast.LENGTH_SHORT).show();
+                    updateQuery.returnBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
                 }
-                updateTextViews(emptyBook);
-                updateFirebase();
                 break;
             case R.id.receive_book_button:
                 // Here we are the owner receiving a book that has been
                 // returned, so we must check
                 // that we own the book, no one is borrowing it, and then set
                 // status to available
-                if ((emptyBook != null) && (emptyBook.getBorrower().equals("none"))
+                if ((emptyBook != null) && ((emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals(""))
                         && emptyBook.getOwner().containsKey(loginEmail)) {
-                    emptyBook.setStatus("available");
-                    Toast.makeText(this, "Book Successfully Received!",
-                            Toast.LENGTH_SHORT).show();
+                    updateQuery.acceptReturn(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to receive book!",
                             Toast.LENGTH_SHORT).show();
                 }
-                updateTextViews(emptyBook);
-                updateFirebase();
                 break;
         }
     }

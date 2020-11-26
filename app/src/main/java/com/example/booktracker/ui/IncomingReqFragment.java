@@ -203,7 +203,6 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 //need to change the status of the book to unavailable
 
                 HashMap<String, Object> dataRes = new HashMap<String, Object>();
-                dataRes.put("status","unavailable");
                 dataRes.put("lat",lat);
                 dataRes.put("lon",lon);
                 selected_book = selected_request.getBook();

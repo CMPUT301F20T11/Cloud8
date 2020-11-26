@@ -14,11 +14,12 @@ import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
+import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
 
-public class AcceptedReqFragment extends Fragment {
+public class AcceptedReqFragment extends Fragment implements Callback {
     private UpdateQuery updateQuery;
     private ListView listView;
     private ArrayList<Book> bookList;
@@ -28,6 +29,7 @@ public class AcceptedReqFragment extends Fragment {
     private Book selected_book = null;
     private String email;
     private HomeActivity activity;
+    private AcceptedReqFragment instance = this;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accepted_req, container, false);
@@ -50,6 +52,9 @@ public class AcceptedReqFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //need to view the geo location here
+                if (selected_book != null){
+                    getBookQuery.getLatLong(instance,selected_book);
+                }
             }
         });
     }
@@ -63,5 +68,10 @@ public class AcceptedReqFragment extends Fragment {
         listView.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = bookCollection.getBook(position);
         });
+    }
+    @Override
+    public void executeCallback(){
+        Double lat = selected_book.getLat();
+        Double lon = selected_book.getLon();
     }
 }

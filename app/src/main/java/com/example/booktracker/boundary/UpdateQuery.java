@@ -119,4 +119,156 @@ public class UpdateQuery {
     private void deleteOldBook(CollectionReference colRef,String isbn){
         colRef.document(isbn).delete();
     }
+    public void borrowBook(String isbn,String borrower,QueryOutputCallback outputCallback,QueryOutput queryOutput){
+        db.collection("users").document(borrower).collection("accepted")
+                .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = task.getResult();
+                if (res.exists()){
+                    db.collection("books").document(isbn).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot res = task.getResult();
+                                    String ownerStat = res.getString("ownerStatus");
+                                    if ( ownerStat != null && ownerStat.equals("unavailable")){
+                                        //this means that the owner has already scaneed the book and lent it
+                                        HashMap<String,Object> data = new HashMap<String,Object>();
+                                        data.put("borrower",borrower);
+                                        data.put("borrowerStatus","unavailable");
+                                        data.put("status","unavailable");
+                                        db.collection("books").document(isbn).update(data);
+                                        changeBookStatus(isbn,isbn,"borrowed",borrower,"accepted");
+                                        changeBookStatus(isbn,isbn,"lent",res.getString("owner"),"accepted");
+                                        queryOutput.setOutput("Book successfully borrowed");
+                                        outputCallback.displayQueryResult("successful");
+
+                                    }else{
+                                        HashMap<String,Object> data = new HashMap<String,Object>();
+                                        data.put("borrower",borrower);
+                                        data.put("borrowerStatus","unavailable");
+                                        queryOutput.setOutput("pending to be accepted by the owner");
+                                        outputCallback.displayQueryResult("successful");
+                                    }
+                                }
+                            });
+
+                }else{
+                    queryOutput.setOutput("Book could not be borrowed");
+                    outputCallback.displayQueryResult("not successful");
+                }
+            }
+        });
+    }
+    public void lendBook(String isbn,String owner,QueryOutputCallback outputCallback,QueryOutput queryOutput){
+        db.collection("users").document(owner).collection("accepted")
+                .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = (DocumentSnapshot) task.getResult();
+                if (res.exists()){
+                    db.collection("books").document(isbn).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot res = task.getResult();
+                                    String borrowerStatus = res.getString("borrowerStatus");
+                                    if ( borrowerStatus != null && borrowerStatus.equals("unavailable")){
+                                        HashMap<String,Object> data = new HashMap<String,Object>();
+                                        data.put("owner","unavailable");
+                                        data.put("status","unavailable");
+                                        db.collection("books").document(isbn).update(data);
+                                        changeBookStatus(isbn,isbn,"lent",owner,"accepted");
+                                        changeBookStatus(isbn,isbn,"borrowed",res.getString("borrower"),"accepted");
+                                        queryOutput.setOutput("Book successfully lent");
+                                        outputCallback.displayQueryResult("successful");
+                                    }else{
+                                        HashMap<String,Object> data = new HashMap<String,Object>();
+                                        data.put("owner","unavailable");
+                                        db.collection("books").document(isbn).update(data);
+                                        queryOutput.setOutput("Pending to be accepted by the borrower");
+                                        outputCallback.displayQueryResult("successful");
+                                    }
+                                }
+                            });
+                }else {
+                    queryOutput.setOutput("Book could not be lent");
+                    outputCallback.displayQueryResult("not successful");
+                }
+            }
+        });
+    }
+    public void returnBook(String isbn,String borrower,QueryOutputCallback outputCallback,QueryOutput queryOutput){
+        DocumentReference userRef = db.collection("users").document(borrower);
+        userRef.collection("borrowed")
+                .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = task.getResult();
+                if (res.exists()){
+                    db.collection("books").document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("unavailable")){
+                                HashMap<String,Object> data = new HashMap<String,Object>();
+                                data.put("borrower","none");
+                                data.put("status","available");
+                                db.collection("books").document(isbn).update(data);
+                                userRef.collection("borrowed").document(isbn).delete();
+                                db.collection("users").document(res.getString("owner"))
+                                        .collection("lent").document(isbn).delete();
+                                queryOutput.setOutput("Book successfully returned");
+                                outputCallback.displayQueryResult("successful");
+                            }
+                            HashMap<String,Object> newData = new HashMap<String,Object>();
+                            newData.put("borrowerStatus","available");
+                            db.collection("books").document(isbn).update(newData);
+                            queryOutput.setOutput("Pending to be accepted by the owner");
+                            outputCallback.displayQueryResult("successful");
+                        }
+                    });
+                }else{
+                    queryOutput.setOutput("Book could not be returned");
+                    outputCallback.displayQueryResult("not successful");
+                }
+            }
+        });
+    }
+    public void acceptReturn(String isbn,String owner,QueryOutputCallback outputCallback,QueryOutput queryOutput){
+        DocumentReference userRef = db.collection("users").document(owner);
+       userRef.collection("lent")
+                .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = (DocumentSnapshot) task.getResult();
+                if (res.exists()){
+                    db.collection("books").document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("unavailable")){
+                                HashMap<String,Object> data = new HashMap<String,Object>();
+                                userRef.collection("borrowed").document(isbn).delete();
+                                db.collection("users").document(res.getString("borrower"))
+                                        .collection("borrowed").document(isbn).delete();
+                                data.put("status","available");
+                                data.put("borrower","none");
+                                db.collection("books").document(isbn).update(data);
+                                queryOutput.setOutput("Book successfully accepted");
+                                outputCallback.displayQueryResult("successful");
+                            }
+                            HashMap<String,Object> newData = new HashMap<String,Object>();
+                            newData.put("ownerStatus","available");
+                            db.collection("books").document(isbn).update(newData);
+                            queryOutput.setOutput("pending to be returned by the borrower");
+                            outputCallback.displayQueryResult("successful");
+                        }
+                    });
+                }else{
+                    queryOutput.setOutput("Book could not be accepted");
+                    outputCallback.displayQueryResult("not successful");
+                }
+            }
+        });
+    }
 }

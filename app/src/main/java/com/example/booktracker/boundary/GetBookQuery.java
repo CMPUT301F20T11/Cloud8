@@ -240,4 +240,25 @@ public class GetBookQuery extends BookQuery {
             }
         });
     }
+
+    /**
+     * this will fill the book with the longitude and lattitude of the of the meeting point
+     * @param callback called when book is filled
+     * @param book book to be filled
+     */
+    public void getLatLong(Callback callback,Book book){
+        db.collection("books").document(book.getIsbn()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot res = task.getResult();
+                Double lat = res.getDouble("lat");
+                Double lon = res.getDouble("lon");
+                if (lat != null && lon != null){
+                    book.setLat(lat);
+                    book.setLon(lon);
+                    callback.executeCallback();
+                }
+            }
+        });
+    }
 }
