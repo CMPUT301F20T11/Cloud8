@@ -46,7 +46,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseFirestore db;
     private UpdateQuery updateQuery;
     private QueryOutput queryOutput;
-    private ViewBookActivity instance;
+    private ViewBookActivity instance = this;
 
     //=========Text Views================
     private TextView isbnView;
@@ -211,7 +211,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // returned, so we must check
                 // that we own the book, no one is borrowing it, and then set
                 // status to available
-                if ((emptyBook != null) && ((emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals(""))
+                if ((emptyBook != null) && !(emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null || emptyBook.getBorrower().equals(""))
                         && emptyBook.getOwner().containsKey(loginEmail)) {
                     updateQuery.acceptReturn(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {

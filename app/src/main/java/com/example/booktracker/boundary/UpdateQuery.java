@@ -15,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class UpdateQuery {
     private FirebaseFirestore db;
@@ -116,6 +117,13 @@ public class UpdateQuery {
         data.put(notifId,0);
         userDoc.update(data);
     }
+    private String getEmail(HashMap<String,String> owner){
+        String email = "";
+        for (Map.Entry<String,String> entry: owner.entrySet()){
+            email = entry.getKey();
+        }
+        return email;
+    }
     private void deleteOldBook(CollectionReference colRef,String isbn){
         colRef.document(isbn).delete();
     }
@@ -140,14 +148,17 @@ public class UpdateQuery {
                                         data.put("status","unavailable");
                                         db.collection("books").document(isbn).update(data);
                                         changeBookStatus(isbn,isbn,"borrowed",borrower,"accepted");
-                                        changeBookStatus(isbn,isbn,"lent",res.getString("owner"),"accepted");
+                                        HashMap<String,String> owner = (HashMap<String,String>)res.get("owner");
+                                        changeBookStatus(isbn,isbn,"lent",getEmail(owner),"accepted");
                                         queryOutput.setOutput("Book successfully borrowed");
                                         outputCallback.displayQueryResult("successful");
 
                                     }else{
                                         HashMap<String,Object> data = new HashMap<String,Object>();
-                                        data.put("borrower",borrower);
                                         data.put("borrowerStatus","unavailable");
+                                        data.put("potentialBorrower",borrower);
+                                        db.collection("books")
+                                                .document(isbn).update(data);
                                         queryOutput.setOutput("pending to be accepted by the owner");
                                         outputCallback.displayQueryResult("successful");
                                     }
@@ -176,16 +187,16 @@ public class UpdateQuery {
                                     String borrowerStatus = res.getString("borrowerStatus");
                                     if ( borrowerStatus != null && borrowerStatus.equals("unavailable")){
                                         HashMap<String,Object> data = new HashMap<String,Object>();
-                                        data.put("owner","unavailable");
+                                        data.put("ownerStatus","unavailable");
                                         data.put("status","unavailable");
                                         db.collection("books").document(isbn).update(data);
                                         changeBookStatus(isbn,isbn,"lent",owner,"accepted");
-                                        changeBookStatus(isbn,isbn,"borrowed",res.getString("borrower"),"accepted");
+                                        changeBookStatus(isbn,isbn,"borrowed",res.getString("potentialBorrower"),"accepted");
                                         queryOutput.setOutput("Book successfully lent");
                                         outputCallback.displayQueryResult("successful");
                                     }else{
                                         HashMap<String,Object> data = new HashMap<String,Object>();
-                                        data.put("owner","unavailable");
+                                        data.put("ownerStatus","unavailable");
                                         db.collection("books").document(isbn).update(data);
                                         queryOutput.setOutput("Pending to be accepted by the borrower");
                                         outputCallback.displayQueryResult("successful");
@@ -210,22 +221,25 @@ public class UpdateQuery {
                     db.collection("books").document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot res = task.getResult();
                             if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("unavailable")){
                                 HashMap<String,Object> data = new HashMap<String,Object>();
                                 data.put("borrower","none");
                                 data.put("status","available");
                                 db.collection("books").document(isbn).update(data);
                                 userRef.collection("borrowed").document(isbn).delete();
-                                db.collection("users").document(res.getString("owner"))
-                                        .collection("lent").document(isbn).delete();
+                                HashMap<String,String> owner = (HashMap<String,String>)res.get("owner");
+                                db.collection("users").document(getEmail(owner)).collection("lent").document(isbn).delete();
                                 queryOutput.setOutput("Book successfully returned");
+                                outputCallback.displayQueryResult("successful");
+                            }else{
+                                queryOutput.setOutput("Pending to be accepted by the owner");
                                 outputCallback.displayQueryResult("successful");
                             }
                             HashMap<String,Object> newData = new HashMap<String,Object>();
                             newData.put("borrowerStatus","available");
                             db.collection("books").document(isbn).update(newData);
-                            queryOutput.setOutput("Pending to be accepted by the owner");
-                            outputCallback.displayQueryResult("successful");
+
                         }
                     });
                 }else{
@@ -246,6 +260,7 @@ public class UpdateQuery {
                     db.collection("books").document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot res = task.getResult();
                             if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("unavailable")){
                                 HashMap<String,Object> data = new HashMap<String,Object>();
                                 userRef.collection("borrowed").document(isbn).delete();
@@ -256,12 +271,14 @@ public class UpdateQuery {
                                 db.collection("books").document(isbn).update(data);
                                 queryOutput.setOutput("Book successfully accepted");
                                 outputCallback.displayQueryResult("successful");
+                            }else{
+                                queryOutput.setOutput("pending to be returned by the borrower");
+                                outputCallback.displayQueryResult("successful");
                             }
                             HashMap<String,Object> newData = new HashMap<String,Object>();
                             newData.put("ownerStatus","available");
                             db.collection("books").document(isbn).update(newData);
-                            queryOutput.setOutput("pending to be returned by the borrower");
-                            outputCallback.displayQueryResult("successful");
+
                         }
                     });
                 }else{
