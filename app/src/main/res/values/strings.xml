@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">bookTracker</string>
+    <string name="app_name">BookTracker</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
 
