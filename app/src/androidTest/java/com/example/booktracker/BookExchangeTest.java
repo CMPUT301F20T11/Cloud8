@@ -64,7 +64,7 @@ public class BookExchangeTest {
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), password);
-        solo.clickOnButton("SIGN IN");
+        solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity should be HomeActivity",
                 HomeActivity.class);
@@ -127,7 +127,7 @@ public class BookExchangeTest {
      */
     private void checkRequestedBooks(){
         navDrawer("Requested Books");
-        assertTrue("Book not appearing in borrowed", solo.searchText("request69"));
+        assertTrue("Book not appearing in Requested", solo.searchText("request69"));
     }
 
     /**
@@ -174,10 +174,9 @@ public class BookExchangeTest {
      * denote book as borrowed from borrower side
      */
     private void borrowBook() {
-        navDrawer("Accepted Requests");
         solo.clickOnText("request69");
-        solo.clickOnButton("View");
-        solo.clickOnButton("Borrow book");
+        solo.clickOnView(solo.getView(R.id.view_button_accepted));
+        solo.clickOnButton("Borrow Book");
     }
 
     /**
@@ -254,7 +253,7 @@ public class BookExchangeTest {
      *
      */
     @Test
-    public void TestrequestesT() {
+    public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
         login(email2, pass2);
         //create request for user1 book from user2
