@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class FindBooksFragment extends Fragment implements Callback {
@@ -46,6 +48,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private UpdateQuery updateQuery;
     private FindBooksFragment instance = this;
     private HomeActivity home;
+    private Button viewButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +64,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         userEmail = home.getUserEmail();
         updateQuery = new UpdateQuery();
         home.notifRefresh();
+        viewButton = view.findViewById(R.id.view_button);
+        setViewListener();
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -98,7 +103,16 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
 
-
+    private void setViewListener(){
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                startActivity(intent);
+            }
+        });
+    }
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
