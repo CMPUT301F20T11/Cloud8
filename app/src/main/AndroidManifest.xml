@@ -25,12 +25,14 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.SignInActivity"
-            android:theme="@style/Base.Theme.AppCompat">
+            android:theme="@style/login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"></action>
                 <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.SignUpActivity" android:theme="@style/login"/>
 
         <activity android:name=".boundary.CaptureAct"
             android:screenOrientation="fullSensor"
@@ -40,7 +42,6 @@
         </activity>
         <activity android:name=".ui.ScanActivity"
             />
-        <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.SetGeoActivity" />
         <activity android:name=".ui.HomeActivity" />
         <activity android:name=".ui.ViewBookActivity"/>

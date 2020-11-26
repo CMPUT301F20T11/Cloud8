@@ -36,6 +36,13 @@
                 android:layout_weight="1"
                 android:text="@string/view_pickup_location" />
 
+            <Button
+                android:id="@+id/view_button_accepted"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="View" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
