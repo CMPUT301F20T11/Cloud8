@@ -2,6 +2,7 @@ package com.example.booktracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.BundleCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
@@ -20,6 +22,8 @@ import com.example.booktracker.entities.Book;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -91,9 +95,13 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     public void executeCallback(){
         Double lat = selected_book.getLat();
         Double lon = selected_book.getLon();
+        Bundle pickupLoc = new Bundle();
+        pickupLoc.putDouble("pickupLat", lat);
+        pickupLoc.putDouble("pickupLng", lon);
+        Log.d(TAG, "acceptedReq lat: " + lat);
+        Log.d(TAG, "acceptedReq lon: " + lon);
         Intent viewGeo = new Intent(getContext(), ViewGeoActivity.class);
-        viewGeo.putExtra("lat", lat);
-        viewGeo.putExtra("lon", lon);
+        viewGeo.putExtras(pickupLoc);
         startActivity(viewGeo);
 
     }
