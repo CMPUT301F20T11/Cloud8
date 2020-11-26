@@ -18,8 +18,19 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
+        <TextView
+            android:id="@+id/hamburger_count"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="-45dp"
+            android:background="@drawable/red_circle_background"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

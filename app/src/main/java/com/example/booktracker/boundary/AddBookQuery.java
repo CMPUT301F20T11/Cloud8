@@ -1,14 +1,22 @@
 package com.example.booktracker.boundary;
 
 
+import androidx.annotation.NonNull;
+
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -137,15 +145,6 @@ public class AddBookQuery extends BookQuery {
                 .document(newBook.getIsbn())
                 .set(data);
     }
-
-    public void addRequest(Book requested, String requester) {
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("bookReference", db.collection("books").document(requested.getIsbn()));
-        db.collection("users").document(requester).collection("requestedBooks")
-                .document(requested.getIsbn())
-                .set(data);
-    }
-
     public void loadUsername(Book book) {
         userDoc.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -165,4 +164,4 @@ public class AddBookQuery extends BookQuery {
         });
     }
 }
-
+            

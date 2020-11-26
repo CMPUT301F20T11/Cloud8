@@ -112,7 +112,6 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
                 Thread.currentThread().interrupt();
             }
 
-            finish();
             //============================================================
         });
 
@@ -219,8 +218,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             newBook.setLocalUri(book.getLocalUri());
             localUri = Uri.parse(book.getLocalUri()).getLastPathSegment();
         } else if (imageUri != null) {
-            newBook.setLocalUri(imageUri.toString());
-            localUri = imageUri.getLastPathSegment();
+            localUri = book.getLocalUri();
         } else {
             newBook.setLocalUri(null);
             localUri = null;
@@ -249,7 +247,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         } else {
             newBook.setUri(null);
             HashMap<String, Object> data = createData(newBook.getTitle(),
-                    newBook.getAuthor(), newBook.getDescription(), null, null);
+                    newBook.getAuthor(), newBook.getDescription(), null, localUri);
             updateQuery.updateBook(newBook, instance, data, toast_output);
             progressDialog.dismiss();
 

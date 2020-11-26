@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
-import com.example.booktracker.boundary.getBookQuery;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,7 +33,7 @@ public class RequestedFragment extends Fragment {
     private ListView listView;
     private String userEmail, userSelected, lastStatus;
     private BookCollection bookCollection;
-    private getBookQuery getQuery;
+    private GetBookQuery getQuery;
     private View view;
     private Book selected_book = null;
     private DocumentSnapshot userDoc;
@@ -45,8 +45,8 @@ public class RequestedFragment extends Fragment {
         setHasOptionsMenu(true);
         userEmail = Objects.requireNonNull(activity).getUserEmail();
         listView = view.findViewById(R.id.requested_booklist);
-        bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
-        getQuery = (new getBookQuery(userEmail, bookCollection,view.getContext()));
+        bookCollection = new BookCollection(new ArrayList<Book>(), listView, userEmail, view.getContext());
+        getQuery = (new GetBookQuery(userEmail, bookCollection,view.getContext()));
         getQuery.getMyBooks("requested");
         lastStatus = "";
 
@@ -58,13 +58,12 @@ public class RequestedFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
+        Button viewBookBtn = (Button) view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
-                Intent intent = new Intent(view.getContext(),
-                        ViewBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                RequestedFragment.this.startActivity(intent);
+                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                startActivity(intent);
             }
         });
     }
@@ -75,11 +74,9 @@ public class RequestedFragment extends Fragment {
     private void setSelectListener() {
         listView.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = bookCollection.getBook(position);
-            if (selected_book.getOwner() != null) {
-                userSelected = selected_book.getOwnerEmail();
-            }
+            userSelected = selected_book.getOwnerEmail();
             if (userSelected != null) {
-                RequestedFragment.this.getUserDoc(userSelected);
+                getUserDoc(userSelected);
             }
         });
     }

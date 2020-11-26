@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -31,13 +32,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import static android.content.ContentValues.TAG;
 
 public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private boolean mLocationPermissionGranted = false;
-    private boolean userGPS = false;
     public static final int ERROR_DIALOG_REQUEST = 9001;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
     public static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
@@ -53,6 +55,10 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
     LatLng defaultLocation = new LatLng(53.5461, -113.4938);
 
 
+    /**
+     *  SetGeo creation - create map, initialize buttons, GPS permissions
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +95,11 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
     }
 
 
+    /**
+     *   Setup map location based on current location if available otherwise default edmonton
+     *   Listener for pin placement of pickup location
+     * @param retMap map returned from creation
+     */
     @Override
     public void onMapReady(GoogleMap retMap) {
         map = retMap;
@@ -106,62 +117,73 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         Toast.makeText(this, "Hold location to place pickup spot", Toast.LENGTH_SHORT).show();
 
-        map.setOnMapLongClickListener(latLng -> {
-            pickupLat = latLng.latitude;
-            pickupLng = latLng.longitude;
-            if (pickupMarker != null) {
-                pickupMarker.setPosition(latLng);
-            } else {
-                pickupMarker = map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title("Pickup location"));
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                pickupLat = latLng.latitude;
+                pickupLng = latLng.longitude;
+                if (pickupMarker != null) {
+                    pickupMarker.setPosition(latLng);
+                } else {
+                    pickupMarker = map.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .title("Pickup location"));
+                }
             }
         });
     }
 
+
+    /**
+     *   If GPS available - retrieve lat/lon and
+     */
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Location location = task.getResult();
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-                LatLng userCurrentPosition = new LatLng(lat, lon);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
-                Log.d(TAG, "lat: " + lat);
-                Log.d(TAG, "lon: " + lon);
+        map.setMyLocationEnabled(true);
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful()) {
+                    Location location = task.getResult();
+                    Double lat = location.getLatitude();
+                    Double lon = location.getLongitude();
+                    LatLng userCurrentPosition = new LatLng(lat, lon);
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
+                    Log.d(TAG, "lat: " + lat);
+                    Log.d(TAG, "lon: " + lon);
+                }
             }
         });
     }
 
 
+    /**
+     *   Check google services, GPS enabled, and app location permission
+     *   If permission not granted - prompt
+     */
     public void checkGPS() {
         if (isServicesOK()) {
             if (isGPSEnabled()) {
-                if (mLocationPermissionGranted) {
-                    userGPS = true;
-                } else {
+                if (!mLocationPermissionGranted) {
                     getLocationPermission();
                 }
             }
         }
     }
 
-
+    /**
+     *   Check if google services are functional
+     */
     public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
-
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(SetGeoActivity.this);
-
         if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //an error occured but we can resolve it
-            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(SetGeoActivity.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
         } else {
@@ -170,6 +192,9 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         return false;
     }
 
+    /**
+     *   Check if device GPS is enabled, if not prompt option to enable
+     */
     public boolean isGPSEnabled() {
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -179,22 +204,33 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
+    /**
+     *   Dialog to choose whether user wants GPS functionality or not
+     *   If yes then handle callback to verify with onActivityResult
+     */
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Enable GPS?")
-                .setNegativeButton("No", (dialog, id) -> {
-                    userGPS = false;
-                    // start activity without gps functionality
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        //continue without GPS functionality
+                    }
                 })
-                .setPositiveButton("Yes", (dialog, id) -> {
-                    Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
+                    }
                 });
 
         final AlertDialog alert = builder.create();
         alert.show();
     }
 
+    /**
+     *   If user wants GPS enabled - check upon returning to app whether it was actually enabled
+     *   If enabled then ensure app specific location is enabled
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -211,20 +247,15 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
 
     /**
      *   https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
-     *
+     *   Request specific permissions to use location for bookTracker
+     *   The result of the permission request is handled by a callback,
+     *   onRequestPermissionsResult.
      */
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-            //start activity with gps functionality
-
         } else {
             ActivityCompat.requestPermissions(this,
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -234,7 +265,11 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
 
     /**
      *   https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
-     *
+     *   Results from requesting location permission for bookTracker
+     *   If allowed set map to zoom on current location
+     * @param requestCode
+     * @param permissions
+     * @param grantResults - empty if permission is not granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -256,13 +291,5 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         }
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (!mLocationPermissionGranted) {
-//            getLocationPermission();
-//        }
-//    }
 
 }
