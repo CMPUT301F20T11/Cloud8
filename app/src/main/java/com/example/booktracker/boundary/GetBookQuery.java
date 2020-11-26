@@ -94,8 +94,20 @@ public class GetBookQuery extends BookQuery {
                             bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    DocumentSnapshot document = task.getResult();
-                                    outputBooks.add(docToBook(document));
+                                    DocumentSnapshot doc = task.getResult();
+                                    if (task.isSuccessful()){
+                                        if (doc.exists()) {
+                                            outputBooks.add(docToBook(doc));
+
+                                        } else {
+                                            reference.document(bookRef.getId()).delete();
+                                        }
+                                    }
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                //every step of the loop check if the list of books is full
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                         bookList.setBookList(outputBooks);
                                         bookList.displayBooks();
@@ -106,15 +118,9 @@ public class GetBookQuery extends BookQuery {
                                         // list
                                         bookList.clearList();
                                     }
-
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                //every step of the loop check if the list of books is full
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
                                 }
                             });
+
                         }
                     } else {
                         throw new RuntimeException("Error getting books");
@@ -156,7 +162,6 @@ public class GetBookQuery extends BookQuery {
      *                  query.
      */
     public void getABook(String isbn, Book emptyBook, Callback callback) {
-
         db
                 .collection("books")
                 .document(isbn)
@@ -198,6 +203,7 @@ public class GetBookQuery extends BookQuery {
                                         "description"));
                                 emptyBook.setStatus((String) res.get(
                                         "status"));
+                                emptyBook.setBorrower(res.getString("borrower"));
                                 callback.executeCallback();
                             }
                         }
