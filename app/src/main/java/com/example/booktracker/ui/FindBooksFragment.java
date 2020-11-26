@@ -107,9 +107,11 @@ public class FindBooksFragment extends Fragment implements Callback {
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                startActivity(intent);
+                if (selected_book != null){
+                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                    startActivity(intent);
+                }
             }
         });
     }

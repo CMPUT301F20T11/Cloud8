@@ -1,11 +1,13 @@
 package com.example.booktracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +24,9 @@ import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
 
-public class BorrowedBooksFragment extends Fragment implements View.OnClickListener {
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
+public class BorrowedBooksFragment extends Fragment{
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     Book selected_book = null;
@@ -35,6 +39,7 @@ public class BorrowedBooksFragment extends Fragment implements View.OnClickListe
     private Request selected_request = null;
     private String email;
     private HomeActivity activity;
+    private Button viewButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,27 +49,35 @@ public class BorrowedBooksFragment extends Fragment implements View.OnClickListe
         email = activity.getUserEmail();
         bookList = new ArrayList<Book>();
         listView = view.findViewById(R.id.my_book_list);
-
+        viewButton = view.findViewById(R.id.view_button_borrowed);
+        setViewListener();
         book = new BookCollection(bookList,listView,email,view.getContext());
         getBookQuery = new GetBookQuery(activity.getUserEmail(), book,view.getContext());
+        setSelectListener();
 
         return view;
     }
-
+    private void setViewListener(){
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null){
+                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                    startActivity(intent);
+                }
+            }
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();
         getBookQuery.getMyBooks("borrowed");
         activity.notifRefresh();
     }
-
-    // know what book is referenced when view profile option selected
-    @Override
-    public void onClick(View v) {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                selected_book = bookDataList.get(position);
-            }
+    private void setSelectListener() {
+        listView.setOnItemClickListener((adapter, v, position, id) -> {
+            selected_book = book.getBook(position);
         });
     }
 }
