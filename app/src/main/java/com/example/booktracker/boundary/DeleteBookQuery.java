@@ -22,7 +22,7 @@ public class DeleteBookQuery extends BookQuery {
         db.collection("books")
                 .document(book.getIsbn())
                 .delete();
-        if (book.getStatus() != "" && book.getStatus() != null) {
+        if (!book.getStatus().equals("") && book.getStatus() != null) {
             userDoc.collection(book.getStatus())
                     .document(book.getIsbn())
                     .delete();

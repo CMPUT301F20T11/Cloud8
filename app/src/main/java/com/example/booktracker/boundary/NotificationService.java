@@ -3,16 +3,12 @@ package com.example.booktracker.boundary;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -20,8 +16,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.booktracker.R;
 import com.example.booktracker.ui.HomeActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,9 +25,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
-import java.util.Random;
-
-import static android.app.PendingIntent.getActivity;
+import java.util.Objects;
 
 /**
  * Used for message handling and to receive notifications in foreground apps
@@ -92,7 +84,7 @@ public class NotificationService extends FirebaseMessagingService {
      * @param token
      */
     @Override
-    public void onNewToken(String token) {
+    public void onNewToken(@NonNull String token) {
 
         sendRegistrationToServer(token);
     }
@@ -105,7 +97,7 @@ public class NotificationService extends FirebaseMessagingService {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-        DocumentReference userDoc = db.collection("users").document(user.getEmail());
+        DocumentReference userDoc = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
         userDoc.update("token", token);
 
         String email = user.getEmail();
@@ -122,18 +114,15 @@ public class NotificationService extends FirebaseMessagingService {
 
         if (auth.getCurrentUser() != null) {
             FirebaseMessaging.getInstance().getToken()
-                    .addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                return;
-                            }
-
-                            // Get new FCM registration token
-                            String token = task.getResult();
-                            sendRegistrationToServer(token);
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
                         }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        sendRegistrationToServer(token);
                     });
 
 
@@ -143,7 +132,8 @@ public class NotificationService extends FirebaseMessagingService {
 
     /**
      * Create and show notification
-     * @param messageBody FCM message body to be received
+     * @param remoteMessage
+     * FCM message body to be received
      */
     /*
     public void sendNotification(String title, String messageBody) {
@@ -190,9 +180,6 @@ public class NotificationService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         notificationManager.notify(1,notificationBuilder.build());
-
-
-
     }
 
 

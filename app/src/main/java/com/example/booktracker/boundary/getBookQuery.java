@@ -3,8 +3,6 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,7 +29,7 @@ public class getBookQuery extends BookQuery {
      * This will call its parent constructor from BookQuery
      *
      * @param userEmail
-     * @param argBookList Book collectoin containing listView
+     * @param argBookList Book collection containing listView
      */
     public getBookQuery(String userEmail, BookCollection argBookList,
                         Context argContext) {
@@ -99,20 +97,19 @@ public class getBookQuery extends BookQuery {
                             // every step of the loop check if the list of
                             // books is full
                             Objects.requireNonNull(bookRef).get().addOnCompleteListener(task1 -> {
-                                DocumentSnapshot document1 = task1.getResult();
-                                outputBooks.add(docToBook(Objects.requireNonNull(document1)));
+                                DocumentSnapshot doc = task1.getResult();
+                                outputBooks.add(getBookQuery.this.docToBook(Objects.requireNonNull(doc)));
 
-                            }).addOnCompleteListener(task12 -> {
+                            }).addOnCompleteListener(task2 -> {
                                 if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                     bookList.setBookList(outputBooks);
                                     bookList.displayBooks();
                                     outputBooks = new ArrayList<>();
-                                    //empty outputBooks to clear results
+                                    // empty outputBooks to clear results
                                     // from last query
                                 } else {
-                                    //in case there no matches clear the
-                                    // current
-                                    // list
+                                    // in case there no matches clear the
+                                    // current list
                                     bookList.clearList();
                                 }
                             });
@@ -120,7 +117,6 @@ public class getBookQuery extends BookQuery {
                     } else {
                         throw new RuntimeException("Error getting books");
                     }
-
                 });
     }
     /**
@@ -163,41 +159,34 @@ public class getBookQuery extends BookQuery {
                     if (task.isSuccessful()) {
                         DocumentSnapshot res = task.getResult();
                         if (res.exists()) {
-                            if (res != null) {
-                                if (res.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) res.get(
-                                                    "image_uri"));
-                                    emptyBook.setUri(imageUri.toString());
-                                }
-                                if (res.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) res.get(
-                                                    "local_image_uri"));
-                                    emptyBook.setLocalUri(localImageUri.toString());
-                                }
-                                List<String> authors =
-                                        (List<String>) res.get("author");
-
-                                if (res.get("owner") instanceof String) {
-                                    String stringOwner =
-                                            (String) res.get("owner");
-                                    emptyBook.setStringOwner(stringOwner);
-                                } else {
-                                    HashMap<String, String> owner =
-                                            (HashMap<String, String>) res.get("owner");
-                                    emptyBook.setOwner(owner);
-                                }
-                                emptyBook.setAuthor(authors);
-                                emptyBook.setIsbn(isbn);
-                                emptyBook.setTitle((String) res.get(
-                                        "title"));
-                                emptyBook.setDescription((String) res.get(
-                                        "description"));
-                                emptyBook.setStatus((String) res.get(
-                                        "status"));
-                                callback.executeCallback();
+                            if (res.get("image_uri") != null) {
+                                Uri imageUri =
+                                        Uri.parse((String) res.get(
+                                                "image_uri"));
+                                emptyBook.setUri(imageUri.toString());
                             }
+                            if (res.get("local_image_uri") != null) {
+                                Uri localImageUri =
+                                        Uri.parse((String) res.get(
+                                                "local_image_uri"));
+                                emptyBook.setLocalUri(localImageUri.toString());
+                            }
+                            List<String> authors =
+                                    (List<String>) res.get("author");
+                            if (res.get("owner") != null) {
+                                HashMap<String, String> owner =
+                                        (HashMap<String, String>) res.get("owner");
+                                emptyBook.setOwner(owner);
+                            }
+                            emptyBook.setAuthor(authors);
+                            emptyBook.setIsbn(isbn);
+                            emptyBook.setTitle((String) res.get(
+                                    "title"));
+                            emptyBook.setDescription((String) res.get(
+                                    "description"));
+                            emptyBook.setStatus((String) res.get(
+                                    "status"));
+                            callback.executeCallback();
                         }
                     }
                 });
@@ -212,7 +201,7 @@ public class getBookQuery extends BookQuery {
     public void getBooks(Callback callback, ArrayList<Book> bookList) {
         db.collection("books").get()
                 .addOnCompleteListener(task -> {
-                    QuerySnapshot res = task.getResult();
+                    QuerySnapshot res = Objects.requireNonNull(task.getResult());
                     for (DocumentSnapshot doc : res) {
                         bookList.add(docToBook(doc));
                     }

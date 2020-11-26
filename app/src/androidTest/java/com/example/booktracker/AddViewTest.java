@@ -1,6 +1,5 @@
 package com.example.booktracker;
 
-import android.app.Activity;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;

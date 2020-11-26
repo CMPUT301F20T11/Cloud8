@@ -1,14 +1,8 @@
 package com.example.booktracker.boundary;
 
-import androidx.annotation.NonNull;
-
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,31 +31,22 @@ public class UpdateQuery {
         DocumentReference bookRef =
                 db.collection("books").document(oldBook.getIsbn());
         bookRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot res = task.getResult();
-                        if (res.exists()){
-                            bookRef.update(data);
-                        }
+                .addOnCompleteListener(task -> {
+                    DocumentSnapshot res = task.getResult();
+                    if (res.exists()){
+                        bookRef.update(data);
                     }
-                }).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                queryOutput.setOutput("Book " +
-                        "successfully edited");
-                callback.displayQueryResult(
-                        "successful");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                queryOutput.setOutput("Book " +
-                        "was  not edited");
-                callback.displayQueryResult(
-                        "not successful");
-            }
-        });
+                }).addOnSuccessListener(documentSnapshot -> {
+                    queryOutput.setOutput("Book " +
+                            "successfully edited");
+                    callback.displayQueryResult(
+                            "successful");
+                }).addOnFailureListener(e -> {
+                    queryOutput.setOutput("Book " +
+                            "was  not edited");
+                    callback.displayQueryResult(
+                            "not successful");
+                });
     }
 
     /**
@@ -74,10 +59,10 @@ public class UpdateQuery {
     public void changeBookStatus(Book book,String status,String user){
         String bookStatus = book.getStatus();
         String bookIsbn = book.getIsbn();
-        if (bookStatus != status){
+        if (!bookStatus.equals(status)){
             DocumentReference userDoc =  db.collection("users").document(user);
             DocumentReference bookRef = db.collection("books").document(book.getIsbn());
-            HashMap<String,Object> data = new HashMap<String,Object>();
+            HashMap<String,Object> data = new HashMap<>();
             data.put("bookReference",bookRef);
             //====================delete reference in old status collection================
             userDoc

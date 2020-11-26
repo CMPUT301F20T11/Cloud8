@@ -42,7 +42,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private DocumentSnapshot userDoc;
     private String userSelected, searchText, userEmail;
     private getBookQuery query;
-    private FindBooksFragment instance = this;
+    private final FindBooksFragment instance = this;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,15 +79,12 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
 
         Button requestBtn = view.findViewById(R.id.request_book_button);
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null) {
-                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
-                    request.sendRequest();
-                } else {
-                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
-                }
+        requestBtn.setOnClickListener(view1 -> {
+            if (selected_book != null) {
+                Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                request.sendRequest();
+            } else {
+                Toast.makeText(view1.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -164,7 +161,7 @@ public class FindBooksFragment extends Fragment implements Callback {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return false;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

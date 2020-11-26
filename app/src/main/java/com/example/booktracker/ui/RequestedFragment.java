@@ -58,12 +58,13 @@ public class RequestedFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = (Button) view.findViewById(R.id.requested_view_book_button);
+        Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
-                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
-                intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
-                startActivity(intent);
+                Intent intent = new Intent(view.getContext(),
+                        ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                RequestedFragment.this.startActivity(intent);
             }
         });
     }
@@ -78,7 +79,7 @@ public class RequestedFragment extends Fragment {
                 userSelected = selected_book.getOwnerEmail();
             }
             if (userSelected != null) {
-                getUserDoc(userSelected);
+                RequestedFragment.this.getUserDoc(userSelected);
             }
         });
     }

@@ -8,6 +8,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Objects;
+
 public abstract class BookQuery {
     protected DocumentReference userDoc;
     protected FirebaseFirestore db;
@@ -31,7 +33,7 @@ public abstract class BookQuery {
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        uid = user.getUid();
+        uid = Objects.requireNonNull(user).getUid();
     }
     public BookQuery() {
         db = FirebaseFirestore.getInstance();

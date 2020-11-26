@@ -5,7 +5,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -32,8 +31,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import static android.content.ContentValues.TAG;
 
@@ -109,18 +106,15 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         Toast.makeText(this, "Hold location to place pickup spot", Toast.LENGTH_SHORT).show();
 
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                pickupLat = latLng.latitude;
-                pickupLng = latLng.longitude;
-                if (pickupMarker != null) {
-                    pickupMarker.setPosition(latLng);
-                } else {
-                    pickupMarker = map.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title("Pickup location"));
-                }
+        map.setOnMapLongClickListener(latLng -> {
+            pickupLat = latLng.latitude;
+            pickupLng = latLng.longitude;
+            if (pickupMarker != null) {
+                pickupMarker.setPosition(latLng);
+            } else {
+                pickupMarker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Pickup location"));
             }
         });
     }
@@ -129,18 +123,15 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    Location location = task.getResult();
-                    Double lat = location.getLatitude();
-                    Double lon = location.getLongitude();
-                    LatLng userCurrentPosition = new LatLng(lat, lon);
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
-                    Log.d(TAG, "lat: " + lat);
-                    Log.d(TAG, "lon: " + lon);
-                }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Location location = task.getResult();
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+                LatLng userCurrentPosition = new LatLng(lat, lon);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
+                Log.d(TAG, "lat: " + lat);
+                Log.d(TAG, "lon: " + lon);
             }
         });
     }
@@ -191,17 +182,13 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Enable GPS?")
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        userGPS = false;
-                        // start activity without gps functionality
-                    }
+                .setNegativeButton("No", (dialog, id) -> {
+                    userGPS = false;
+                    // start activity without gps functionality
                 })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
-                    }
+                .setPositiveButton("Yes", (dialog, id) -> {
+                    Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(enableGpsIntent, PERMISSIONS_REQUEST_ENABLE_GPS);
                 });
 
         final AlertDialog alert = builder.create();
@@ -251,7 +238,7 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
         switch (requestCode) {

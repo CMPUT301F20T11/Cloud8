@@ -3,7 +3,6 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.widget.ListView;
 
-import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;

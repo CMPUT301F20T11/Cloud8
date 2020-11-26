@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -25,19 +24,13 @@ public class BorrowedBooksFragment extends Fragment implements View.OnClickListe
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_borrowed_books, container, false);
 
-
-        return view;
+        return inflater.inflate(R.layout.fragment_borrowed_books, container, false);
     }
 
     // know what book is referenced when view profile option selected
     @Override
     public void onClick(View v) {
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                selected_book = bookDataList.get(position);
-            }
-        });
+        bookList.setOnItemClickListener((adapter, v1, position, id) -> selected_book = bookDataList.get(position));
     }
 }

@@ -21,12 +21,7 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.entities.QueryOutput;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -117,7 +112,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         Button cancelBtn = findViewById(R.id.addbook_cancelbtn);
         cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(v -> pickFromGallery(v));
+        imageView.setOnClickListener(this::pickFromGallery);
 
         Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
         clearPhotoBtn.setOnClickListener(v -> {

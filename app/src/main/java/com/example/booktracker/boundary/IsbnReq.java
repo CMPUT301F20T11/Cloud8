@@ -6,8 +6,6 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
-import com.example.booktracker.entities.User;
-import com.example.booktracker.ui.AddBookActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -68,7 +66,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
                 JSONObject curObj = (JSONObject) arr.get(i);
                 JSONObject obj2 = curObj.getJSONObject("volumeInfo");
                 JSONArray authors = obj2.getJSONArray("authors");
-                ArrayList<String> authorList = new ArrayList<String>();
+                ArrayList<String> authorList = new ArrayList<>();
                 for (int j = 0; j < authors.length(); j++) {
                     authorList.add((String) authors.get(j));
                 }
@@ -102,7 +100,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      */
     private String getJson(String isbn) throws RuntimeException{
         String formatString = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
-        StringBuffer output = null;
+        StringBuffer output;
         try{
             //make http request to google books api
             URL url = new URL(String.format(formatString,isbn.trim()));
@@ -119,7 +117,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
             }
             input.close();
             connection.disconnect();
-            return (String) output.toString();
+            return output.toString();
         }catch(Exception e){
             throw new RuntimeException(String.format("http request to get isbn %s failed e:%s ",isbn,e));
         }

@@ -73,60 +73,45 @@ public class FilterFragment extends DialogFragment {
      * set listener for accepted books filter
      */
     private void lent_listener() {
-        lent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks("lent");
-                getDialog().dismiss();
-            }
+        lent.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks("lent");
+            getDialog().dismiss();
         });
     }
     /**
      * set listener for requested books filter
      */
     private void requested_listener() {
-        requested.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks("requested");
-                getDialog().dismiss();
-            }
+        requested.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks("requested");
+            getDialog().dismiss();
         });
     }
     /**
      * set listener for no filter books filter
      */
     private void my_books_listener() {
-        myBooks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks();
-                getDialog().dismiss();
-            }
+        myBooks.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks();
+            getDialog().dismiss();
         });
     }
     /**
      * set listener for borrowed books filter
      */
     private void borrowed_listener() {
-        borrowed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks("borrowed");
-                getDialog().dismiss();
-            }
+        borrowed.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks("borrowed");
+            getDialog().dismiss();
         });
     }
     /**
      * set listener for available books filter
      */
     private void available_listener() {
-        available.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                parentActivity.getQuery().getMyBooks("available");
-                getDialog().dismiss();
-            }
+        available.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks("available");
+            getDialog().dismiss();
         });
     }
 }

@@ -21,10 +21,6 @@ import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -123,12 +119,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         Button cancelBtn = findViewById(R.id.editbook_cancelbtn);
         cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditBookActivity.this.pickFromGallery(v);
-            }
-        });
+        imageView.setOnClickListener(EditBookActivity.this::pickFromGallery);
 
         Button clearPhoto_btn = findViewById(R.id.editbook_rmPhoto_btn);
         clearPhoto_btn.setOnClickListener(v -> {

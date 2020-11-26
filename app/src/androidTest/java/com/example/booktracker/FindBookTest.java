@@ -1,19 +1,14 @@
 package com.example.booktracker;
 
-import android.app.Activity;
-import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.SearchView;
 
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.ui.AddBookActivity;
-import com.example.booktracker.ui.FindBooksFragment;
 import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.robotium.solo.Solo;

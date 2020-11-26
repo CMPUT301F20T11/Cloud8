@@ -1,9 +1,7 @@
 package com.example.booktracker.ui;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -20,20 +18,19 @@ import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.getBookQuery;
 import com.example.booktracker.control.Email;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.navigation.NavigationView;
 
-import static android.content.ContentValues.TAG;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomeActivity extends AppCompatActivity {
-
     private AppBarConfiguration mAppBarConfiguration;
     private String userEmail;
     private BookCollection bookList;
     private String email;
     private getBookQuery getQuery;
+    private long backPressedTime;
+    private Toast backToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +38,13 @@ public class HomeActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //======================save the email if the activity gets killed
+        //save the email if the activity gets killed
         if (savedInstanceState != null) {
             userEmail = savedInstanceState.getString("email");
         } else {
             userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
         }
-        //=====================================================================
+        //===============================================================
 
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -66,8 +63,7 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController,
                 mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        //========================nav
-        // buttons============================================
+        // ======================== nav buttons ========================
     }
 
     public String getUserEmail() {
@@ -103,6 +99,17 @@ public class HomeActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-
+    /*@Override
+    public void onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+            backToast.cancel();
+            super.onBackPressed();
+            return;
+        } else {
+            backToast = Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+            backToast.show();
+        }
+        backPressedTime = System.currentTimeMillis();
+    }*/
 
 }

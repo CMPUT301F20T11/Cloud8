@@ -6,7 +6,7 @@
     tools:context=".ui.MyBooksFragment">
 
     <ListView
-        android:id="@+id/requested_books"
+        android:id="@+id/requested_booklist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btns"
