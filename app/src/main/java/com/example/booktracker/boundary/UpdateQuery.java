@@ -117,6 +117,11 @@ public class UpdateQuery {
         data.put(notifId,0);
         userDoc.update(data);
     }
+    /**
+     * This will get the email of the user that is stored in firestore
+     * @param owner
+     * @return
+     */
     private String getEmail(HashMap<String,String> owner){
         String email = "";
         for (Map.Entry<String,String> entry: owner.entrySet()){
