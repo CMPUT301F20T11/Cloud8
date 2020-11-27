@@ -156,13 +156,12 @@ public class BookExchangeTest {
     }
 
     /**
-     * DOESNT WORK -- NEED TO SET LOCATION PIN MANUALLY
+     * Sets pickup location on map
      */
     private void setGeo(){
         //set location
-        solo.clickLongOnScreen(240,400,1500);
-        solo.clickLongOnScreen(400,400,2500);
-        solo.clickLongOnScreen(100,100,2500);
+        solo.clickOnView(solo.getView(R.id.map));
+        solo.clickLongOnScreen(420,420,2000);
         solo.clickOnButton("Confirm");
         checkActivity(HomeActivity.class, "HomeActivity");
     }
