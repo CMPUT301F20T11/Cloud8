@@ -149,7 +149,6 @@ public class BookExchangeTest {
         assertTrue("Book not appearing in Incoming requests", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnText("Accept");
-        //solo.clickOnButton("Accept");
         solo.clickOnText("Yes");
         checkActivity(SetGeoActivity.class, "SetGeoActivity");
         setGeo();
@@ -162,7 +161,8 @@ public class BookExchangeTest {
         //set location
         solo.clickOnView(solo.getView(R.id.map));
         solo.clickLongOnScreen(420,420,2000);
-        solo.clickOnButton("Confirm");
+        solo.clickOnView(solo.getView(R.id.geo_confirm_button));
+        solo.sleep(1000);
         checkActivity(HomeActivity.class, "HomeActivity");
     }
 
