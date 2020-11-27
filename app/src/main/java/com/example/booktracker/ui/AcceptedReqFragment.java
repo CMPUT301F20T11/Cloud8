@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class AcceptedReqFragment extends Fragment implements Callback {
     private UpdateQuery updateQuery;
     private ListView listView;
@@ -32,6 +34,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     private String email;
     private HomeActivity activity;
     private AcceptedReqFragment instance = this;
+    private Button viewButton;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_accepted_req, container, false);
@@ -44,10 +47,24 @@ public class AcceptedReqFragment extends Fragment implements Callback {
         getBookQuery = new GetBookQuery(activity.getUserEmail(), bookCollection,view.getContext());
         setButtonListener((Button) view.findViewById(R.id.view_geo_button));
         setSelectListener();
+        viewButton = view.findViewById(R.id.view_button_accepted);
+        setViewListener();
         updateQuery = new UpdateQuery();
         updateQuery.emptyNotif(activity.getUserEmail(),"acceptedCount");
         activity.notifRefresh();
         return view;
+    }
+    private void setViewListener(){
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null){
+                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                    startActivity(intent);
+                }
+            }
+        });
     }
     private void setButtonListener(Button geoButton){
         geoButton.setOnClickListener(new View.OnClickListener() {
