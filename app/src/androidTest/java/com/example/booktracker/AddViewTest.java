@@ -76,7 +76,7 @@ public class AddViewTest {
     @Test
     public void addBook(){
         login();
-        solo.clickOnButton("Add");
+        solo.clickOnView(solo.getView(R.id.add_book_button));
         solo.assertCurrentActivity("Wrong activity should be AddBookActivity",AddBookActivity.class);
         mockBook();
         solo.clickOnButton("Add");

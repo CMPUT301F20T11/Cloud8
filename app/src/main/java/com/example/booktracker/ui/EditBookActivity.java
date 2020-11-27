@@ -128,7 +128,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         Button clearPhoto_btn = findViewById(R.id.editbook_rmPhoto_btn);
         clearPhoto_btn.setOnClickListener(v -> {
             imageView.setImageURI(null);
-            imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+            imageView.setImageResource(R.drawable.ic_addbook_add_photo_foreground);
             imageUri = null;
             String localUri;
             if (book.getLocalUri() != null) {

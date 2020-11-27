@@ -17,5 +17,8 @@
         android:text="Scan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/custom_button_blue_round"
+        android:textColor="@color/white"
+        android:layout_margin="5dp"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

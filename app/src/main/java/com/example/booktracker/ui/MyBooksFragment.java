@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -65,8 +66,8 @@ public class MyBooksFragment extends Fragment {
         setSelectListener();
         setDeleteListener();
         setViewListener();
-        setFilterListener();
-        Button addBookBtn = view.findViewById(R.id.add_book_button);
+        //setFilterListener();
+        ImageButton addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
                     AddBookActivity.class);
@@ -74,7 +75,7 @@ public class MyBooksFragment extends Fragment {
             startActivity(intent);
         });
 
-        Button editBookBtn = view.findViewById(R.id.edit_book_button);
+        ImageButton editBookBtn = view.findViewById(R.id.edit_book_button);
         editBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(),
@@ -92,7 +93,7 @@ public class MyBooksFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = view.findViewById(R.id.view_book_button);
+        ImageButton viewBookBtn = view.findViewById(R.id.view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(),
@@ -100,20 +101,23 @@ public class MyBooksFragment extends Fragment {
                 intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
                 startActivity(intent);
             }
+            else {
+                Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
+            }
         });
     }
-
+/*
     private void setFilterListener() {
         Button filterBtn = view.findViewById(R.id.filter_button);
         filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
                 "Filter"));
     }
-
+*/
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
     private void setDeleteListener() {
-        Button deleteBookBtn = view.findViewById(R.id.delete_book_button);
+        ImageButton deleteBookBtn = view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 if (selected_book.getOwner() != null && selected_book.getOwnerEmail().trim().equals(userEmail.trim())) {

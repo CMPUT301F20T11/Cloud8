@@ -77,7 +77,7 @@ public class DeleteTest {
     public void deleteBook() {
         login();
         solo.clickOnText("The Communist Manifesto");
-        solo.clickOnButton("Delete");
+        solo.clickOnView(solo.getView(R.id.delete_book_button));
         assertFalse("book was not deleted", solo.searchText("The Communist " +
                 "Manifesto"));
     }
