@@ -1,5 +1,6 @@
 package com.example.booktracker;
 
+import android.app.Activity;
 import android.widget.EditText;
 import android.widget.SearchView;
 
@@ -13,6 +14,7 @@ import com.example.booktracker.entities.Request;
 import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SetGeoActivity;
 import com.example.booktracker.ui.SignInActivity;
+import com.example.booktracker.ui.ViewBookActivity;
 import com.example.booktracker.ui.ViewGeoActivity;
 import com.google.android.gms.maps.model.LatLng;
 import com.robotium.solo.Solo;
@@ -34,9 +36,8 @@ import static org.junit.Assert.assertTrue;
 public class BookExchangeTest {
     private Solo solo;
     private String email1 = "testrequest1@gmail.com";
-    private String pass1 = "password";
     private String email2 = "testrequest2@gmail.com";
-    private String pass2 = "password";
+    private String pass = "password";
 
 
     private Book book;
@@ -54,32 +55,38 @@ public class BookExchangeTest {
         addBookToDb(email1);
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),
                 rule.getActivity());
+        instantiateReqs(email1);
+        instantiateReqs(email2);
     }
+
+    private void instantiateReqs(String email) {
+        login(email);
+        navDrawer("Incoming Requests");
+        navDrawer("Accepted Requests");
+        navDrawer("Requested Books");
+        logout();
+    }
+
 
     /**
      * Sign in and set the current activity to HomeActivity.
      */
-    private void login(String email, String password) {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+    private void login(String email) {
+        solo.assertCurrentActivity("Wrong activity should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
-        solo.enterText((EditText) solo.getView(R.id.password_field), password);
+        solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
-        solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
-                HomeActivity.class);
+        checkActivity(HomeActivity.class, "HomeActivity");
     }
 
     /**
      * Log out of current account
      */
     private void logout(){
-        // nav drawer
         navDrawer("Profile");
         solo.clickOnText("Logout");
-        solo.waitForActivity(SignInActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be SignInActivity",
-                SignInActivity.class);
+        checkActivity(SignInActivity.class, "SignInActivity");
     }
 
 
@@ -116,6 +123,7 @@ public class BookExchangeTest {
         navDrawer("Find Books");
         SearchView searchview = (SearchView) solo.getView(R.id.book_search);
         searchview.setQuery("descr69",true);
+        assertTrue("Book not appearing in Find Books", solo.searchText("request69"));
         //click on book
         solo.clickOnText("request69");
         //request book
@@ -136,15 +144,13 @@ public class BookExchangeTest {
      */
     private void acceptRequest() {
         //accept request
-        solo.clickOnView(solo.getView(R.id.nav_find));
-        solo.clickOnImageButton(0);
-        solo.clickOnText("Incoming Requests");
+        navDrawer("Incoming Requests");
+        assertTrue("Book not appearing in Incoming requests", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnText("Accept");
+        //solo.clickOnButton("Accept");
         solo.clickOnText("Yes");
-        solo.waitForActivity(SetGeoActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be SetGeoActivity",
-                SetGeoActivity.class);
+        checkActivity(SetGeoActivity.class, "SetGeoActivity");
         setGeo();
     }
 
@@ -153,8 +159,9 @@ public class BookExchangeTest {
      */
     private void setGeo(){
         //set location
-        solo.clickLongOnScreen(240,400,1000);
-        solo.clickOnText("Confirm");
+        solo.clickLongOnScreen(240,400,1500);
+        solo.clickOnButton("Confirm");
+        checkActivity(HomeActivity.class, "HomeActivity");
     }
 
     /**
@@ -163,30 +170,39 @@ public class BookExchangeTest {
      */
     private void viewLocation() {
         navDrawer("Accepted Requests");
+        assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnButton("View Pickup Location");
-        solo.waitForActivity(ViewGeoActivity.class);
+        checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
         solo.sleep(1000);
         solo.clickOnButton("Done");
+        checkActivity(HomeActivity.class, "HomeActivity");
+
     }
 
     /**
-     * denote book as borrowed from borrower side
+     * denote book as borrowed from borrower side in Accepted requests (View Book)
      */
     private void borrowBook() {
         solo.clickOnText("request69");
         solo.clickOnView(solo.getView(R.id.view_button_accepted));
-        solo.clickOnButton("Borrow Book");
+        checkActivity(ViewBookActivity.class, "ViewBookActivity");
+        solo.clickOnView(solo.getView(R.id.borrow_book_button));
+        exitActivity();
     }
 
     /**
      * denote book as borrowed from owner side
      */
     private void giveBook() {
-        navDrawer("My Books");
+        checkActivity(HomeActivity.class, "HomeActivity");
+        assertTrue("Book not appearing in My Books", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnButton("View");
+        checkActivity(ViewBookActivity.class, "ViewBookActivity");
         solo.clickOnButton("Give Book");
+        exitActivity();
+
     }
 
 
@@ -195,9 +211,12 @@ public class BookExchangeTest {
      */
     private void checkBorrowedStatus(){
         navDrawer("My Books");
+        assertTrue("Book not appearing in My Books", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnButton("View");
         assertTrue("Book status is not borrowed", solo.searchText("Borrowed"));
+        exitActivity();
+
     }
 
     /**
@@ -213,21 +232,38 @@ public class BookExchangeTest {
      * user2 returns book to user1
      */
     private void returnBook(){
-        navDrawer("Borrowed Books");
-        assertTrue("Book not appearing in borrowed", solo.searchText("request69"));
         solo.clickOnText("request69");
         solo.clickOnButton("View");
-        solo.clickOnButton("Return book");
-    }
+        checkActivity(ViewBookActivity.class, "ViewBookActivity");
+        solo.clickOnButton("Return Book");
+        exitActivity();
 
+    }
 
     /**
      * user1 confirms book is received
      */
     private void receiveBook() {
         navDrawer("My Books");
+        assertTrue("Book not appearing in My Books", solo.searchText("request69"));
         solo.clickOnText("request69");
-        solo.clickOnButton("Return book");
+        solo.clickOnButton("View");
+        checkActivity(ViewBookActivity.class, "ViewBookActivity");
+        exitActivity();
+    }
+
+    private void checkActivity(final Class<? extends Activity> Activity, String activity) {
+        solo.waitForActivity(Activity);
+        solo.assertCurrentActivity("Wrong activity should be " + activity + ", was " + solo.getCurrentActivity(),
+                Activity);
+    }
+
+    /**
+     * return activity to HomeActivity
+     */
+    private void exitActivity() {
+        solo.goBack();
+        checkActivity(HomeActivity.class, "HomeActivity");
     }
 
     /**
@@ -261,7 +297,7 @@ public class BookExchangeTest {
     @Test
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
-        login(email2, pass2);
+        login(email2);
         //create request for user1 book from user2
         requestBook();
         //see if new request shows
@@ -269,13 +305,13 @@ public class BookExchangeTest {
         //logout user2 account
         logout();
         //login to user1 account
-        login(email1, pass1);
+        login(email1);
         //accept request for my book and set location
         acceptRequest();
         //logout user1 account
         logout();
         //login user2 account
-        login(email2, pass2);
+        login(email2);
         //view accepted request location
         viewLocation();
         //user2 denote borrowed
@@ -283,7 +319,7 @@ public class BookExchangeTest {
         //logout user2 account
         logout();
         //login user1 account
-        login(email1, pass1);
+        login(email1);
         //user1 denote borrowed
         giveBook();
         //book should have status "borrowed" in My Books
@@ -291,7 +327,7 @@ public class BookExchangeTest {
         //logout user1 account
         logout();
         //login user2 account
-        login(email2, pass2);
+        login(email2);
         //book should appear in Borrowed Books
         checkBorrowedBook();
         //return book back to user1
@@ -299,7 +335,7 @@ public class BookExchangeTest {
         //logout user2 account
         logout();
         //login user1 account
-        login(email1, pass1);
+        login(email1);
         //receive book from user2
         receiveBook();
         //book should appear available in My Books
