@@ -128,6 +128,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/custom_button_blue_round"
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
             android:text="@string/add_book_text" />
 
         <Button
@@ -135,6 +138,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/custom_button_blue_round"
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
             android:text="@string/return_book_text" />
 
         <Button
@@ -142,6 +148,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/custom_button_blue_round"
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
             android:text="@string/receive_book_text" />
 
         <Button
@@ -149,6 +158,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/custom_button_blue_round"
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
             android:text="@string/borrow_book_text" />
 
         <Button
@@ -156,6 +168,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/custom_button_blue_round"
+            android:textColor="@color/white"
+            android:layout_margin="3dp"
             android:text="@string/give_book_text" />
 
     </LinearLayout>

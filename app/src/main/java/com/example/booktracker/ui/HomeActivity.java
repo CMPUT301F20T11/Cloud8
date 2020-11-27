@@ -1,12 +1,20 @@
 package com.example.booktracker.ui;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -16,9 +24,18 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.UserQuery;
+import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
+import com.example.booktracker.entities.NotifCount;
+import com.example.booktracker.entities.Notification;
 import com.example.booktracker.entities.NotificationCircle;
+import com.example.booktracker.entities.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -26,10 +43,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private String userEmail;
-    private BookCollection bookList;
-    private String email;
-    private GetBookQuery getQuery;
     private NotificationCircle notif;
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +60,11 @@ public class HomeActivity extends AppCompatActivity {
         }
         //=====================================================================
         notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count));
+        getUsername();
 
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -66,10 +82,31 @@ public class HomeActivity extends AppCompatActivity {
         // ======================== nav buttons ========================
     }
 
+    /**
+     * Set up the navigation header
+     */
+    public void getUsername() {
+        FirebaseFirestore.getInstance().collection("users")
+                .document(userEmail)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                if (documentSnapshot.exists()) {
+                    String username = (String) documentSnapshot.get("username");
+                    View headerView = navigationView.getHeaderView(0);
+                    TextView usernameText = (TextView) headerView.findViewById(R.id.nav_header_username);
+                    usernameText.setText(username);
+                    TextView emailText = (TextView) headerView.findViewById(R.id.nav_header_email);
+                    emailText.setText(userEmail);
+                }
+            }
+        });
+    }
+
     public void notifRefresh(){
         notif.checkNotification();
     }
-
     public String getUserEmail() {
         return userEmail;
     }

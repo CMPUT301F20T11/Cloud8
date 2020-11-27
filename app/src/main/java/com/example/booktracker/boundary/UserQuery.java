@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
+import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,19 +29,28 @@ public class UserQuery {
      * @param userEmail
      * @param argContext
      */
-    public UserQuery(String userEmail, Context argContext) {
+    public UserQuery(String userEmail,Context argContext) {
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
 
         email = userEmail;
         context = argContext;
-        setUserObject();
+
+    }
+
+    public UserQuery(String userEmail, Callback callback,Context argContext) {
+        db = FirebaseFirestore.getInstance();
+        userDoc = db.collection("users").document(userEmail);
+
+        email = userEmail;
+        context = argContext;
+        setUserObject(callback);
     }
 
     /**
      * Grabs the user data from the database and sets it to user object
      */
-    private void setUserObject() {
+    private void setUserObject(Callback callback) {
         userDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

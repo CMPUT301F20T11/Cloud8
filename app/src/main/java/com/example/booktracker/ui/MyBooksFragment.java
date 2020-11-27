@@ -8,7 +8,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotificationCircle;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,8 +33,10 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class MyBooksFragment extends Fragment {
-    private ListView bookList;
-    private Book selected_book = null;
+    ListView bookList;
+    ArrayAdapter<Book> bookAdapter;
+    ArrayList<Book> bookDataList;
+    Book selected_book = null;
     private GetBookQuery getQuery;
     private String userEmail, userSelected;
     private View view;
@@ -41,9 +46,10 @@ public class MyBooksFragment extends Fragment {
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        // ======================= set attributes =======================
+        //=============set attributes=======================
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         bookList = view.findViewById(R.id.my_book_list);
@@ -56,13 +62,12 @@ public class MyBooksFragment extends Fragment {
         getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
         activity.notifRefresh();
-        //===============================================================
+        //======================================================
         setSelectListener();
         setDeleteListener();
         setViewListener();
-        setFilterListener();
-
-        Button addBookBtn = view.findViewById(R.id.add_book_button);
+        //setFilterListener();
+        ImageButton addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
                     AddBookActivity.class);
@@ -70,7 +75,7 @@ public class MyBooksFragment extends Fragment {
             startActivity(intent);
         });
 
-        Button editBookBtn = view.findViewById(R.id.edit_book_button);
+        ImageButton editBookBtn = view.findViewById(R.id.edit_book_button);
         editBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(),
@@ -88,7 +93,7 @@ public class MyBooksFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = view.findViewById(R.id.view_book_button);
+        ImageButton viewBookBtn = view.findViewById(R.id.view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(),
@@ -96,20 +101,23 @@ public class MyBooksFragment extends Fragment {
                 intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
                 startActivity(intent);
             }
+            else {
+                Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
+            }
         });
     }
-
+/*
     private void setFilterListener() {
         Button filterBtn = view.findViewById(R.id.filter_button);
         filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
                 "Filter"));
     }
-
+*/
     /**
      * Set the callback function to be executed when a book need to be deleted
      */
     private void setDeleteListener() {
-        Button deleteBookBtn = view.findViewById(R.id.delete_book_button);
+        ImageButton deleteBookBtn = view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 if (selected_book.getOwner() != null && selected_book.getOwnerEmail().trim().equals(userEmail.trim())) {
@@ -195,7 +203,7 @@ public class MyBooksFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return false;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

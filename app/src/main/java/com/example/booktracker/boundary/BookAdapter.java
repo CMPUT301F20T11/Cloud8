@@ -66,14 +66,17 @@ public class BookAdapter extends ArrayAdapter<Book> {
         String title = book.getTitle();
         String desc = book.getDescription();
         String status = book.getStatus();
-        String owner = book.getOwnerName();
-        String result = title + "\n" + desc + "\n" + owner + "\n" + status;
-        mainView.setText(result);
-        if (book.getUri() != null) {
-            Glide.with(view).load(book.getUri()).into(imageView);
-        } else {
-            Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+        if (book.getOwner() != null) {
+            String owner = book.getOwnerName();
+            String result = title + "\n" + desc + "\n" + owner + "\n" + status;
+            mainView.setText(result);
+            if (book.getUri() != null) {
+                Glide.with(view).load(book.getUri()).into(imageView);
+            } else {
+                Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+            }
         }
+
         return view;
     }
 }
