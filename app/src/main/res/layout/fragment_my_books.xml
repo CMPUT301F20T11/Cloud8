@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,49 +13,61 @@
         android:layout_above="@+id/btns"
         android:layout_marginBottom="0dp"
         android:choiceMode="singleChoice"
-        android:divider="#000"
-        android:dividerHeight="1dp"
+        android:divider="#517E7E7E"
+        android:dividerHeight="5dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:listSelector="@android:color/darker_gray" />
 
     <LinearLayout android:layout_width="match_parent"
         android:id="@+id/btns"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-        <Button
+        <ImageButton
             android:id="@+id/add_book_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-
+            android:src="@drawable/ic_add"
+            android:background="@drawable/custom_button_blue"
             android:text="Add" />
-        <Button
+        <ImageButton
             android:id="@+id/edit_book_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:src="@drawable/ic_edit"
+            android:background="@drawable/custom_button_blue"
             android:text="Edit" />
 
-        <Button
+        <!--
+        <ImageButton
             android:id="@+id/filter_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="filter" />
-        <Button
+            -->
+
+        <ImageButton
             android:id="@+id/delete_book_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:src="@drawable/ic_delete"
+            android:background="@drawable/custom_button_blue"
             android:text="Delete" />
-        <Button
+        <ImageButton
             android:id="@+id/view_book_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:src="@drawable/ic_book"
+            android:background="@drawable/custom_button_blue"
             android:text="View" />
+
+
     </LinearLayout>
 </RelativeLayout>

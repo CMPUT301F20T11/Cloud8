@@ -69,7 +69,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         if (book.getOwner() != null) {
             String owner = book.getOwnerName();
-            mainView.setText(title + "\n" + desc + "\n" + owner + "\n" + status);
+            mainView.setText(title + "\n" + owner + "\n" + desc + "\n" + status);
             if (book.getUri() != null) {
                 Glide.with(view).load(book.getUri()).into(imageView);
             } else {
@@ -77,7 +77,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             }
         } else {
             String stringOwner = book.getStringOwner();
-            mainView.setText(title + "\n" + desc + "\n" + stringOwner + "\n" + status);
+            mainView.setText(title + "\n" + stringOwner + "\n" + desc + "\n" + status);
             if (book.getUri() != null) {
                 Glide.with(view).load(book.getUri()).into(imageView);
             } else {

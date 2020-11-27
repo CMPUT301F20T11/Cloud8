@@ -247,6 +247,12 @@ public class BookExchangeTest {
     @After
     public final void tearDown() {
         deleteBook(email1);
+        DeleteBookQuery del = new DeleteBookQuery();
+        del.deleteBookList("incomingRequests",email1);
+        del.deleteBookList("lent",email1);
+        del.deleteBookList("borrowed",email2);
+        del.deleteBookList("requested",email2);
+        del.deleteBookList("accepted",email2);
     }
 
     /**

@@ -3,33 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:title="@string/menu_home" />
+            android:id="@+id/group_books"
+            android:title="Books">
+            <menu>
+                <item
+                    android:icon="@drawable/ic_book"
+                    android:id="@+id/nav_home"
+                    android:checkable="true"
+                    android:title="@string/menu_home" />
+                <item
+                    android:icon="@drawable/ic_book"
+                    android:id="@+id/nav_borrowed"
+                    android:checkable="true"
+                    android:title="@string/menu_borrowed" />
+                <item
+                    android:icon="@drawable/ic_search"
+                    android:id="@+id/nav_find"
+                    android:checkable="true"
+                    android:title="@string/menu_find" />
+                <item
+                    android:icon="@drawable/ic_scan"
+                    android:id="@+id/nav_scan"
+                    android:checkable="true"
+                    android:title="@string/menu_scan" />
+            </menu>
+        </item>
+
         <item
-            android:id="@+id/nav_borrowed"
-            android:title="@string/menu_borrowed" />
+            android:id="@+id/group_requests"
+            android:title="Requests">
+            <menu>
+                <item
+                    android:icon="@drawable/ic_incoming_arrow"
+                    android:id="@+id/nav_incoming"
+                    android:checkable="true"
+                    android:title="@string/menu_incoming" />
+                <item
+                    android:icon="@drawable/ic_check"
+                    android:id="@+id/nav_accepted"
+                    android:checkable="true"
+                    android:title="@string/menu_accepted" />
+                <item
+                    android:icon="@drawable/ic_outgoing_arrow"
+                    android:id="@+id/nav_requested"
+                    android:checkable="true"
+                    android:title="@string/menu_requested" />
+            </menu>
+        </item>
+
         <item
-            android:id="@+id/nav_find"
-            android:title="@string/menu_find" />
-        <item
-            android:id="@+id/nav_scan"
-            android:title="@string/menu_scan" />
-        <item
-            android:id="@+id/nav_incoming"
-            android:title="@string/menu_incoming" />
-        <item
-            android:id="@+id/nav_accepted"
-            android:title="@string/menu_accepted" />
-        <item
-            android:id="@+id/nav_requested"
-            android:title="@string/menu_requested" />
-        <item
-            android:id="@+id/nav_profile"
-            android:title="@string/menu_profile" />
-        <item
-            android:id="@+id/nav_notifications"
-            android:title="@string/menu_notifications" />
-    </group>
+            android:id="@+id/group_account"
+            android:title="Account">
+            <menu>
+                <item
+                    android:icon="@drawable/ic_person"
+                    android:id="@+id/nav_profile"
+                    android:checkable="true"
+                    android:title="@string/menu_profile" />
+                <item
+                    android:icon="@drawable/ic_notification"
+                    android:id="@+id/nav_notifications"
+                    android:checkable="true"
+                    android:title="@string/menu_notifications" />
+            </menu>
+        </item>
+
+
+
 </menu>

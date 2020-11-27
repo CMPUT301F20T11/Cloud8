@@ -126,7 +126,7 @@ public class ViewBookTest {
     public void addBook() {
         login();
         solo.clickOnText("The Communist Manifesto");
-        solo.clickOnButton("View");
+        solo.clickOnView(solo.getView(R.id.view_book_button));
         testView();
     }
 }

@@ -20,4 +20,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="NavigationTheme" parent="AppTheme">
+        <item name="listPreferredItemHeightSmall">40dp</item>
+
+
+    </style>
+
 </resources>
