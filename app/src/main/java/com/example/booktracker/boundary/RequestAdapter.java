@@ -54,6 +54,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.request_adapter_content, parent, false);
         }
+
         Request request = requestList.get(position);
 
         TextView mainView = view.findViewById(R.id.request_all_text);
@@ -63,8 +64,8 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         String title = book.getTitle();
         String authors = TextUtils.join(",", book.getAuthor());
         String fromUsername = request.getFromUsername();
-
-        mainView.setText(title + "\n" + authors + "\n" + fromUsername);
+        String result = title + "\n" + authors + "\n" + fromUsername;
+        mainView.setText(result);
         if (book.getUri() != null) {
             Glide.with(view).load(book.getUri()).into(imageView);
         } else {

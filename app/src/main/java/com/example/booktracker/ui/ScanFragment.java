@@ -27,10 +27,9 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
         scanButton = view.findViewById(R.id.scanButton);
         scanButton.setOnClickListener(this);
 
-
         return view;
     }
-    public void displayDescription(){
+    public void displayDescription() {
         //description should be displayed when the view book displays
     }
 
@@ -42,7 +41,8 @@ public class ScanFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item=menu.findItem(R.id.action_view_user);
-        if(item!=null)
+        if (item != null) {
             item.setVisible(false);
+        }
     }
 }

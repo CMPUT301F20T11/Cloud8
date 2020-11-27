@@ -1,5 +1,6 @@
 package com.example.booktracker.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_scan);
         scanCode();
     }
 
@@ -51,30 +51,36 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null){
+        if (result != null) {
             if (result.getContents() != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(result.getContents());
                 builder.setTitle("Scan Result");
-                builder.setPositiveButton("Scan Again", (dialogInterface, i) -> scanCode()).setNegativeButton("Finish", (dialogInterface, i) -> {
-                    if (getCallingActivity() != null){
-                        //==========code to pass data back to parent activity======
-                        Intent data1 = new Intent();
-                        data1.setData(Uri.parse(result.getContents()));
-                        setResult(RESULT_OK, data1);
-                        //=========================================================
-                        finish();
-                    }else{
-                        Intent intent = new Intent(ref,ViewBookActivity.class);
-                        intent.putExtra(EXTRA_MESSAGE,result.getContents());
-                        startActivity(intent);
+                builder.setPositiveButton("Scan Again", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        scanCode();
                     }
-
+                }).setNegativeButton("Finish", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (getCallingActivity() != null){
+                            //==========code to pass data back to parent activity======
+                            Intent data = new Intent();
+                            data.setData(Uri.parse(result.getContents()));
+                            setResult(RESULT_OK,data);
+                            //=========================================================
+                            finish();
+                        } else {
+                            Intent intent = new Intent(ref,ViewBookActivity.class);
+                            intent.putExtra(EXTRA_MESSAGE,result.getContents());
+                            startActivity(intent);
+                        }
+                    }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-            }
-            else {
+            } else {
                 Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
             }
         } else {

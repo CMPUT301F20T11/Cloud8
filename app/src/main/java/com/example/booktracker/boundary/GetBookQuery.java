@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class GetBookQuery extends BookQuery {
-    private ArrayList<Book> outputBooks = new ArrayList();
+    private ArrayList<Book> outputBooks = new ArrayList<>();
     private Book output;
     private CountDownLatch done = new CountDownLatch(1);
     private boolean isDone = false;
@@ -80,6 +80,7 @@ public class GetBookQuery extends BookQuery {
         }
         return book;
     }
+
     /**
      * get will get all contents of the specified collection reference and output it
      * @param reference
@@ -114,7 +115,7 @@ public class GetBookQuery extends BookQuery {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
-                                            outputBooks = new ArrayList();
+                                            outputBooks = new ArrayList<>();
                                             //empty outputBooks to clear results from last query
                                         } else {
                                             //in case there no matches clear the current
@@ -173,35 +174,38 @@ public class GetBookQuery extends BookQuery {
                     if (task.isSuccessful()) {
                         DocumentSnapshot res = task.getResult();
                         if (res.exists()) {
-                            if (res.get("image_uri") != null) {
-                                Uri imageUri =
-                                        Uri.parse((String) res.get(
-                                                "image_uri"));
-                                emptyBook.setUri(imageUri.toString());
+                            if (res != null) {
+                                if (res.get("image_uri") != null) {
+                                    Uri imageUri =
+                                            Uri.parse((String) res.get(
+                                                    "image_uri"));
+                                    emptyBook.setUri(imageUri.toString());
+                                }
+                                if (res.get("local_image_uri") != null) {
+                                    Uri localImageUri =
+                                            Uri.parse((String) res.get(
+                                                    "local_image_uri"));
+                                    emptyBook.setLocalUri(localImageUri.toString());
+                                }
+                                List<String> authors =
+                                        (List<String>) res.get("author");
+
+                                if (res.get("owner") != null) {
+                                    HashMap<String, String> owner =
+                                            (HashMap<String, String>) res.get("owner");
+                                    emptyBook.setOwner(owner);
+                                }
+                                emptyBook.setAuthor(authors);
+                                emptyBook.setIsbn(isbn);
+                                emptyBook.setTitle((String) res.get(
+                                        "title"));
+                                emptyBook.setDescription((String) res.get(
+                                        "description"));
+                                emptyBook.setStatus((String) res.get(
+                                        "status"));
+                                emptyBook.setBorrower(res.getString("borrower"));
+                                callback.executeCallback();
                             }
-                            if (res.get("local_image_uri") != null) {
-                                Uri localImageUri =
-                                        Uri.parse((String) res.get(
-                                                "local_image_uri"));
-                                emptyBook.setLocalUri(localImageUri.toString());
-                            }
-                            List<String> authors =
-                                    (List<String>) res.get("author");
-                            if (res.get("owner") != null) {
-                                HashMap<String, String> owner =
-                                        (HashMap<String, String>) res.get("owner");
-                                emptyBook.setOwner(owner);
-                            }
-                            emptyBook.setAuthor(authors);
-                            emptyBook.setIsbn(isbn);
-                            emptyBook.setTitle((String) res.get(
-                                    "title"));
-                            emptyBook.setDescription((String) res.get(
-                                    "description"));
-                            emptyBook.setStatus((String) res.get(
-                                    "status"));
-                            emptyBook.setBorrower(res.getString("borrower"));
-                            callback.executeCallback();
                         }
                     }
                 });
@@ -216,27 +220,24 @@ public class GetBookQuery extends BookQuery {
     public void getBooks(Callback callback, ArrayList<Book> bookList) {
         db.collection("books").get()
                 .addOnCompleteListener(task -> {
-                    QuerySnapshot res = Objects.requireNonNull(task.getResult());
-                    for (DocumentSnapshot doc : res) {
+                    QuerySnapshot res = task.getResult();
+                    for (DocumentSnapshot doc:res){
                         bookList.add(docToBook(doc));
                     }
                     callback.executeCallback();
                 });
     }
-    public void getNotif(Callback callback, NotifCount count,String email){
-        db.collection("users").document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot res = task.getResult();
-                if (res.get("incomingCount") != null){
-                    count.setIncoming((long) res.get("incomingCount"));
-                }
-                if (res.get("acceptedCount") != null){
-                    count.setAccepted((long) res.get("acceptedCount"));
-                }
 
-                callback.executeCallback();
+    public void getNotif(Callback callback, NotifCount count, String email){
+        db.collection("users").document(email).get().addOnCompleteListener(task -> {
+            DocumentSnapshot res = task.getResult();
+            if (res.get("incomingCount") != null){
+                count.setIncoming((long) res.get("incomingCount"));
             }
+            if (res.get("acceptedCount") != null){
+                count.setAccepted((long) res.get("acceptedCount"));
+            }
+            callback.executeCallback();
         });
     }
 
@@ -245,18 +246,15 @@ public class GetBookQuery extends BookQuery {
      * @param callback called when book is filled
      * @param book book to be filled
      */
-    public void getLatLong(Callback callback,Book book){
-        db.collection("books").document(book.getIsbn()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot res = task.getResult();
-                Double lat = res.getDouble("lat");
-                Double lon = res.getDouble("lon");
-                if (lat != null && lon != null){
-                    book.setLat(lat);
-                    book.setLon(lon);
-                    callback.executeCallback();
-                }
+    public void getLatLong(Callback callback, Book book){
+        db.collection("books").document(book.getIsbn()).get().addOnCompleteListener(task -> {
+            DocumentSnapshot res = task.getResult();
+            Double lat = res.getDouble("lat");
+            Double lon = res.getDouble("lon");
+            if (lat != null && lon != null) {
+                book.setLat(lat);
+                book.setLon(lon);
+                callback.executeCallback();
             }
         });
     }

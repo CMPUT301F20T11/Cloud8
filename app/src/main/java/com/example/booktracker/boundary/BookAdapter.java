@@ -67,7 +67,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
         String desc = book.getDescription();
         String status = book.getStatus();
         String owner = book.getOwnerName();
-        mainView.setText(title + "\n" + desc + "\n" + owner + "\n" + status);
+        String result = title + "\n" + desc + "\n" + owner + "\n" + status;
+        mainView.setText(result);
         if (book.getUri() != null) {
             Glide.with(view).load(book.getUri()).into(imageView);
         } else {

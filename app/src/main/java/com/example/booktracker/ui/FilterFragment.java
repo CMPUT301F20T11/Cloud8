@@ -39,7 +39,7 @@ public class FilterFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         view = LayoutInflater.from(getActivity())
-                .inflate(R.layout.fragment_filter,null);
+                .inflate(R.layout.fragment_filter,null, false);
         bindViews();
         setAllListeners();
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

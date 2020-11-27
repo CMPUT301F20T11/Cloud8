@@ -2,17 +2,14 @@ package com.example.booktracker.boundary;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,8 +17,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +61,7 @@ public class RequestQuery {
      * @param res result of get query
      * @param emptyBook book to be filled up by data attained from query
      */
-    private void parseBook(DocumentSnapshot res,Book emptyBook){
+    private void parseBook(DocumentSnapshot res, Book emptyBook) {
         if (res.get("image_uri") != null) {
             Uri imageUri =
                     Uri.parse((String) res.get(
@@ -81,7 +76,6 @@ public class RequestQuery {
         }
         List<String> authors =
                 (List<String>) res.get("author");
-
         if (res.get("owner") != null) {
             HashMap<String, String> owner =
                     (HashMap<String, String>) res.get("owner");
@@ -94,6 +88,7 @@ public class RequestQuery {
                 "description"));
         emptyBook.setStatus((String) res.get("status"));
     }
+
     /**
      * This will get the list of books that is in the incomingRequests collection
      */
@@ -105,10 +100,8 @@ public class RequestQuery {
                 if (task.isSuccessful()) {
                     outputRequests = new ArrayList<>();
                     outputSize = task.getResult().size();
-                    if (task.getResult().size() > 0 ){
-
+                    if (task.getResult().size() > 0 ) {
                         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-
                             DocumentReference docRef = (DocumentReference) document.get("bookReference");
                             DocumentReference userRef = (DocumentReference) document.get("from");
                             Task bookDoc = docRef.get();
@@ -122,7 +115,7 @@ public class RequestQuery {
                                     curFromEmail = (String)res2.get("email");
                                     curFromUsername = (String) res2.getString("username");
                                     book = new Book();
-                                    parseBook(res1,book);
+                                    parseBook(res1, book);
                                     Request request = new Request(curFromEmail, toEmail, book, context);
                                     request.setFromUsername(curFromUsername);
                                     outputRequests.add(request);
@@ -134,13 +127,11 @@ public class RequestQuery {
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         requestCollection.clearList();
                     }
                 }
             }
         });
     }
-
-
 }

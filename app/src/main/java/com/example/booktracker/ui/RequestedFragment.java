@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
@@ -43,16 +42,15 @@ public class RequestedFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_requested, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         setHasOptionsMenu(true);
-        userEmail = Objects.requireNonNull(activity).getUserEmail();
+        userEmail = activity.getUserEmail();
         listView = view.findViewById(R.id.requested_booklist);
-        bookCollection = new BookCollection(new ArrayList<Book>(), listView, userEmail, view.getContext());
+        bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
         getQuery = (new GetBookQuery(userEmail, bookCollection,view.getContext()));
         getQuery.getMyBooks("requested");
         lastStatus = "";
 
         setSelectListener();
         setViewListener();
-
 
         return view;
     }
@@ -127,7 +125,7 @@ public class RequestedFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return true;
+                return false;
             }
         }
         return super.onOptionsItemSelected(item);

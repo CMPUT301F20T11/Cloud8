@@ -4,11 +4,17 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.booktracker.boundary.UserQuery;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
@@ -80,7 +86,17 @@ public class Request extends Notification {
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(com.android.volley.Request.Method.POST, FCM_API, notification,
-                response -> Log.i("REQUEST TAG", "onResponse: " +  response.toString()), error -> Log.i("REQUEST TAG", "onErrorResponse: Request error")){
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("REQUEST TAG", "onResponse: " +  response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("REQUEST TAG", "onErrorResponse: Request error");
+            }
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> map = new HashMap<>();
@@ -91,7 +107,6 @@ public class Request extends Notification {
         };
 
         mQueue.add(jsonObjectRequest);
-        //MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
     /**
@@ -119,13 +134,19 @@ public class Request extends Notification {
         DocumentReference toDoc = db.collection("users").document(toEmail);
         toDoc.collection("incomingRequests")
                 .document(book.getIsbn() + "-" + fromEmail)
-                .set(data).addOnSuccessListener(aVoid -> {
-                    Log.i("Add Request to Book", "Request added successfully");
-                    Toast.makeText(context, "Book requested", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(e -> {
-                    Log.i("Add Request to Book", "Request did not succeed");
-                    Toast.makeText(context, "Book request failed", Toast.LENGTH_SHORT).show();
-                });
+                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i("Add Request to Book", "Request added successfully");
+                Toast.makeText(context, "Book requested", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Add Request to Book", "Request did not succeed");
+                Toast.makeText(context, "Book request failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

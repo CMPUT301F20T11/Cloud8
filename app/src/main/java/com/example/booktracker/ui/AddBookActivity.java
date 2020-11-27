@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
@@ -22,6 +23,10 @@ import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -209,15 +214,28 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             UploadTask uploadTask = ref.putFile(imageUri);
             // Register observers to listen for when the download is done or
             // if it fails
-            uploadTask.addOnFailureListener(exception -> toast_output.setOutput("Upload failed")).addOnCompleteListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                downloadUrl = uri.toString();
-                toast_output.setOutput("Upload successful");
-                newBook.setUri(downloadUrl);
-                newBook.setLocalUri(imageUri.toString());
-                addQuery.loadUsername(newBook);
-                addQuery.addBook(newBook);
-                progressDialog.dismiss();
-            }));
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toast_output.setOutput("Upload failed");
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadUrl = uri.toString();
+                            toast_output.setOutput("Upload successful");
+                            newBook.setUri(downloadUrl);
+                            newBook.setLocalUri(imageUri.toString());
+                            addQuery.loadUsername(newBook);
+                            addQuery.addBook(newBook);
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
         } else {
             newBook.setUri(null);
             addQuery.loadUsername(newBook);

@@ -2,10 +2,10 @@ package com.example.booktracker.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,7 +31,7 @@ import java.util.Map;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, QueryOutputCallback,Callback {
+public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, QueryOutputCallback, Callback {
     private String isbn;
     private Book emptyBook;
     private StorageReference storageReference;
@@ -48,7 +48,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private QueryOutput queryOutput;
     private ViewBookActivity instance = this;
 
-    //=========Text Views================
+    //========= Text Views ==============
     private TextView isbnView;
     private TextView ownerView;
     private TextView borrowerView;
@@ -72,7 +72,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         emptyBook = new Book();
         setTextViews();
 
-
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         user = auth.getCurrentUser();
@@ -84,6 +83,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         documentReference = db.collection("books").document(isbn);
         updateQuery = new UpdateQuery();
         queryOutput = new QueryOutput();
+
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
@@ -95,8 +95,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         receiveButton.setOnClickListener(this);
         Button addButton = (Button) findViewById(R.id.add_book_button);
         addButton.setOnClickListener(this);
-
-
 
         //==============query database for a book==============
         GetBookQuery query = new GetBookQuery(this);
@@ -140,6 +138,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
             Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
+
     /**
      * This method will be called by the query
      */
@@ -149,9 +148,10 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void displayQueryResult(String result){
+    public void displayQueryResult(String result) {
         Toast.makeText(instance, queryOutput.getOutput(), Toast.LENGTH_SHORT).show();
     }
+
     /**
      * This method decides which onClick functionality to execute according
      * to the ID of the button
@@ -165,6 +165,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
             case R.id.add_book_button:
                 Toast.makeText(this, loginEmail, Toast.LENGTH_SHORT).show();
                 break;
+
             case R.id.borrow_book_button:
                 // Since we are the borrower in this case, we need to check
                 // for book.borrower == none,
@@ -173,12 +174,13 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 if ((emptyBook != null) && (emptyBook.getStatus().equals("available"))
                         && (emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals("")) {
                     //need to check if the book is already in the list of accepted books for this user
-                    updateQuery.borrowBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
+                    updateQuery.borrowBook(emptyBook.getIsbn(), user.getEmail(), instance, queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to borrow book!",
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
+
             case R.id.give_book_button:
                 // Since we are the owner in this case, we should check for
                 // book.owner == user.email
@@ -186,12 +188,13 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // and book != null
                 if ((emptyBook != null) && ((emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals(""))
                         && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
-                    updateQuery.lendBook(emptyBook.getIsbn(),emptyBook.getOwnerEmail(),instance,queryOutput);
+                    updateQuery.lendBook(emptyBook.getIsbn(), emptyBook.getOwnerEmail(), instance, queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to give book!",
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
+
             case R.id.return_book_button:
                 // Here we are the borrower attempting to hand over the book,
                 // so we must check that
@@ -204,6 +207,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
                 }
                 break;
+
             case R.id.receive_book_button:
                 // Here we are the owner receiving a book that has been
                 // returned, so we must check
@@ -220,20 +224,19 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
     /**
      * setHopperUpdates will be called after the user clicks one of the buttons to give, borrow,
      * receive, or accept a book. After the button is pressed, it changes the book attributes and
      * setHopperUpdates will save the changes to the database.
      */
-    private void setHopperUpdates(){
+    private void setHopperUpdates() {
         hopperUpdates = new HashMap<>();
         hopperUpdates.put("borrower", borrowerView.getText().toString());
         hopperUpdates.put("status", statusView.getText().toString());
         ref.updateChildren(hopperUpdates);
     }
 
-    private void updateFirebase(){
+    private void updateFirebase() {
         hopperUpdates = new HashMap<>();
         hopperUpdates.put("borrower", borrowerView.getText().toString());
         hopperUpdates.put("status", statusView.getText().toString());

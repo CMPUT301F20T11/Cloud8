@@ -18,12 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.NotificationCircle;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,7 +45,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private String userSelected, searchText, userEmail;
     private GetBookQuery query;
     private UpdateQuery updateQuery;
-    private FindBooksFragment instance = this;
+    private final FindBooksFragment instance = this;
     private HomeActivity home;
     private Button viewButton;
 
@@ -58,14 +57,15 @@ public class FindBooksFragment extends Fragment implements Callback {
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
         query = new GetBookQuery();
-        bookDataList = new ArrayList<Book>();
-        setSelectListener();
-       home = (HomeActivity) getActivity();
+        bookDataList = new ArrayList<>();
+        home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
         updateQuery = new UpdateQuery();
         home.notifRefresh();
         viewButton = view.findViewById(R.id.view_button);
         setViewListener();
+        setSelectListener();
+
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -102,19 +102,19 @@ public class FindBooksFragment extends Fragment implements Callback {
         return view;
     }
 
-
-    private void setViewListener(){
+    private void setViewListener() {
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected_book != null){
-                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                if (selected_book != null) {
+                    Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
                     intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
                     startActivity(intent);
                 }
             }
         });
     }
+
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);

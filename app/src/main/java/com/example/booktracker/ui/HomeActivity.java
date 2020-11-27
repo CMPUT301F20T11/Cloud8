@@ -1,18 +1,12 @@
 package com.example.booktracker.ui;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.Menu;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,8 +17,6 @@ import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.control.Email;
-import com.example.booktracker.entities.NotifCount;
-import com.example.booktracker.entities.Notification;
 import com.example.booktracker.entities.NotificationCircle;
 import com.google.android.material.navigation.NavigationView;
 
@@ -73,9 +65,11 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
         // ======================== nav buttons ========================
     }
+
     public void notifRefresh(){
         notif.checkNotification();
     }
+
     public String getUserEmail() {
         return userEmail;
     }

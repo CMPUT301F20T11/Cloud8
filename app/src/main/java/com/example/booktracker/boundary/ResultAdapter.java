@@ -45,13 +45,13 @@ public class ResultAdapter extends ArrayAdapter<Book> {
         String desc = book.getDescription();
         String status = book.getStatus();
         String owner = book.getOwnerName();
-        mainView.setText(title + "\n" + desc + "\n" + owner + "\n" + status);
+        String result = title + "\n" + desc + "\n" + owner + "\n" + status;
+        mainView.setText(result);
         if (book.getUri() != null) {
             Glide.with(view).load(book.getUri()).into(imageView);
         } else {
             Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
         }
-
 
         return view;
     }

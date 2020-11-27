@@ -11,10 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.NotificationService;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
@@ -24,10 +21,7 @@ public class SignInActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private FirebaseAuth mAuth;
     private long lastClickTime = 0;
-    //==============Get db=================
-    private FirebaseFirestore db;
-    private CollectionReference collectionReference;
-    //=====================================
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +33,6 @@ public class SignInActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password_field);
         mAuth = FirebaseAuth.getInstance();
 
-        //==============Get db=================
-        db = FirebaseFirestore.getInstance();
-        collectionReference = db.collection("users");
-        //=====================================
         signInButton.setOnClickListener(v -> {
             if ((SystemClock.elapsedRealtime() - lastClickTime) < 1000) {
                 return;
@@ -84,18 +74,11 @@ public class SignInActivity extends AppCompatActivity {
                 Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                 String loginEmail = emailEditText.getText().toString().trim();
                 intent.putExtra(EXTRA_MESSAGE, loginEmail);
-
-                // Update user token for device
-                NotificationService service = new NotificationService();
-                service.updateToken();
-
                 startActivity(intent);
-                //finish();
 
             } else {
                 Toast.makeText(SignInActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

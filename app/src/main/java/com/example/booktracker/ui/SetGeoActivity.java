@@ -32,8 +32,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import static android.content.ContentValues.TAG;
 
@@ -142,18 +140,15 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
             return;
         }
         map.setMyLocationEnabled(true);
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    Location location = task.getResult();
-                    Double lat = location.getLatitude();
-                    Double lon = location.getLongitude();
-                    LatLng userCurrentPosition = new LatLng(lat, lon);
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
-                    Log.d(TAG, "lat: " + lat);
-                    Log.d(TAG, "lon: " + lon);
-                }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Location location = task.getResult();
+                Double lat = location.getLatitude();
+                Double lon = location.getLongitude();
+                LatLng userCurrentPosition = new LatLng(lat, lon);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
+                Log.d(TAG, "lat: " + lat);
+                Log.d(TAG, "lon: " + lon);
             }
         });
     }

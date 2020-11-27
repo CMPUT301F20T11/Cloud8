@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class IsbnReq extends AsyncTask<String,String,String> {
+public class IsbnReq extends AsyncTask<String, String, String> {
     private boolean done = false;
     private String isbn;
     private ArrayList<Book> output;
@@ -30,7 +30,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      * @param argList list of empty books initialized in the scope of the caller
      * @param argInstance instance of the caller that implemented executeCallback
      */
-    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance){
+    public IsbnReq(String argIsbn, ArrayList<Book> argList, Callback argInstance){
         super();
         isbn = argIsbn;
         output = argList;
@@ -43,7 +43,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      * @param argList list of empty books initialized in the scope of the caller
      * @param argInstance instance of the caller that implemented executeCallback
      */
-    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance,QueryOutput argQueryOutput,QueryOutputCallback argOutputCallback){
+    public IsbnReq(String argIsbn ,ArrayList<Book> argList, Callback argInstance, QueryOutput argQueryOutput, QueryOutputCallback argOutputCallback){
         super();
         isbn = argIsbn;
         output = argList;
@@ -86,7 +86,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        if (s.equals("COMPLETED")){
+        if (s.equals("COMPLETED")) {
             instance.executeCallback();
         }
 
@@ -101,7 +101,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     private String getJson(String isbn) throws RuntimeException{
         String formatString = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
         StringBuffer output;
-        try{
+        try {
             //make http request to google books api
             URL url = new URL(String.format(formatString,isbn.trim()));
 
@@ -118,7 +118,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
             input.close();
             connection.disconnect();
             return output.toString();
-        }catch(Exception e){
+        } catch(Exception e) {
             throw new RuntimeException(String.format("http request to get isbn %s failed e:%s ",isbn,e));
         }
     }

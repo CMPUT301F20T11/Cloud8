@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,22 +20,18 @@ import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.NotificationCircle;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class MyBooksFragment extends Fragment {
-    ListView bookList;
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
-    Book selected_book = null;
+    private ListView bookList;
+    private Book selected_book = null;
     private GetBookQuery getQuery;
     private String userEmail, userSelected;
     private View view;
@@ -46,14 +41,13 @@ public class MyBooksFragment extends Fragment {
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //=============set attributes=======================
+        // ======================= set attributes =======================
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         bookList = view.findViewById(R.id.my_book_list);
-        userEmail = Objects.requireNonNull(activity).getUserEmail();
+        userEmail = activity.getUserEmail();
         collection = new BookCollection(new ArrayList<>(), bookList,
                 userEmail, view.getContext());
         del = new DeleteBookQuery(userEmail);
@@ -62,11 +56,12 @@ public class MyBooksFragment extends Fragment {
         getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
         activity.notifRefresh();
-        //======================================================
+        //===============================================================
         setSelectListener();
         setDeleteListener();
         setViewListener();
         setFilterListener();
+
         Button addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -169,9 +164,9 @@ public class MyBooksFragment extends Fragment {
      */
     @Override
     public void onResume() {
-        //this is needed to refresh the list of books displayed when the user
+        // this is needed to refresh the list of books displayed when the user
         // goes back to the
-        //home activity
+        // home activity
         super.onResume();
         if (lastStatus.equals("")) {
             getQuery.getMyBooks();
@@ -200,7 +195,7 @@ public class MyBooksFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return true;
+                return false;
             }
         }
         return super.onOptionsItemSelected(item);

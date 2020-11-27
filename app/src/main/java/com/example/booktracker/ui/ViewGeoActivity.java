@@ -1,7 +1,6 @@
 package com.example.booktracker.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
@@ -16,10 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     Double pickupLat = null;
     Double pickupLng = null;
 

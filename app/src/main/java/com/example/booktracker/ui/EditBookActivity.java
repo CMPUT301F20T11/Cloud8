@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,9 @@ import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -89,8 +93,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         email = ((Email) this.getApplication()).getEmail();
         addQuery = new AddBookQuery(email);
 
-        //===============================OnClickListeners
-        // ============================
+        // ===================== OnClickListeners =====================
 
         Button addBtn = findViewById(R.id.editbook_addbtn);
         addBtn.setOnClickListener(v -> {
@@ -105,7 +108,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             addQuery.loadUsername(newBook);
             upload(newBook);
 
-            //====Ivan: made it so that the activity automatically exits==
+            //== Ivan: made it so that the activity automatically exits ==
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -230,20 +233,30 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             UploadTask uploadTask = ref.putFile(imageUri);
             // Register observers to listen for when the download is done or
             // if it fails
-            uploadTask.addOnFailureListener(exception -> toast_output.setOutput("Upload failed")).addOnCompleteListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                downloadUrl = uri.toString();
-                newBook.setUri(downloadUrl);
-                HashMap<String, Object> data =
-                        createData(newBook.getTitle(),
-                                newBook.getAuthor(),
-                                newBook.getDescription(),
-                                newBook.getUri(),
-                                newBook.getLocalUri());
-                updateQuery.updateBook(newBook, instance, data,
-                        toast_output);
-                progressDialog.dismiss();
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toast_output.setOutput("Upload failed");
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                        downloadUrl = uri.toString();
+                        newBook.setUri(downloadUrl);
+                        HashMap<String, Object> data =
+                                EditBookActivity.this.createData(newBook.getTitle(),
+                                        newBook.getAuthor(),
+                                        newBook.getDescription(),
+                                        newBook.getUri(),
+                                        newBook.getLocalUri());
+                        updateQuery.updateBook(newBook, instance, data,
+                                toast_output);
+                        progressDialog.dismiss();
 
-            }));
+                    });
+                }
+            });
         } else {
             newBook.setUri(null);
             HashMap<String, Object> data = createData(newBook.getTitle(),

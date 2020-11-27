@@ -13,14 +13,16 @@ public class NotificationCircle implements Callback {
     private NotifCount count;
     private String email;
     private TextView view;
-    public NotificationCircle(String argEmail,TextView argView){
+
+    public NotificationCircle(String argEmail, TextView argView){
         getBookQuery = new GetBookQuery();
         count = new NotifCount();
         email = argEmail;
         view = argView;
         updateQuery = new UpdateQuery();
     }
-    public void checkNotification(){
+
+    public void checkNotification() {
         getBookQuery.getNotif(this,count,(email));
     }
     private void raiseNotif(){
@@ -28,23 +30,28 @@ public class NotificationCircle implements Callback {
         view.setVisibility(View.VISIBLE);
         view.bringToFront();
     }
+
     private void clearNotif(){
         view.setVisibility(View.GONE);
     }
+
     @Override
-    public void executeCallback(){
+    public void executeCallback() {
         if (count.getAccepted() > 0 || count.getIncoming() > 0){
             raiseNotif();
         }
-        if (count.getTotal() == 0){
+
+        if (count.getTotal() == 0) {
             clearNotif();
         }
-        if (count.getAccepted() == 0){
-            //if count accepted is zero then counter could have never been initalized in db
+
+        if (count.getAccepted() == 0) {
+            //if count accepted is zero then counter could have never been initialized in db
             updateQuery.emptyNotif(email,"acceptedCount");
         }
-        if (count.getIncoming() == 0){
-            //if count incoming is zero the counter could have never been initailized in db
+
+        if (count.getIncoming() == 0) {
+            //if count incoming is zero the counter could have never been initialized in db
             updateQuery.emptyNotif(email,"incomingCount");
         }
     }

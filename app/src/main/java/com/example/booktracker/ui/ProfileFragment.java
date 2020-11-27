@@ -59,6 +59,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
             editDialog.setTargetFragment(ProfileFragment.this, 1337);
             editDialog.show(getParentFragmentManager(), "EDIT PROFILE");
         });
+
         logoutButton.setOnClickListener(view -> {
             mAuth.signOut();
             Intent intent = new Intent(profileView.getContext(),
@@ -120,7 +121,8 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         MenuItem item=menu.findItem(R.id.action_view_user);
-        if(item!=null)
+        if (item != null) {
             item.setVisible(false);
+        }
     }
 }
