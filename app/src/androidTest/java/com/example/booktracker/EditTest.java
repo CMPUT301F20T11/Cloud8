@@ -125,12 +125,12 @@ public class EditTest {
     public void editBook() {
         login();
         solo.clickOnText("The Communist Manifesto");
-        solo.clickOnButton("Edit");
+        solo.clickOnView(solo.getView(R.id.edit_book_button));
         mockEdit();
         solo.clickOnButton("Save");
         assertTrue(solo.waitForActivity(HomeActivity.class));
         solo.clickOnText("The Communist Manifesto");
-        solo.clickOnButton("View");
+        solo.clickOnView(solo.getView(R.id.view_book_button));
         checkEdit();
     }
 }

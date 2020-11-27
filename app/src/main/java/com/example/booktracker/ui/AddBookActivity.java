@@ -122,7 +122,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
         clearPhotoBtn.setOnClickListener(v -> {
             imageView.setImageURI(null);
-            imageView.setImageResource(R.drawable.ic_stock_book_photo_foreground);
+            imageView.setImageResource(R.drawable.ic_addbook_add_photo_foreground);
             imageUri = null;
         });
     }
