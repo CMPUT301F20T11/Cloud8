@@ -95,11 +95,9 @@ public class EditTest {
      * check if the edit was properly applied.
      */
     private void checkEdit() {
-        assertTrue("title cant be found", solo.searchText("Edited The " +
-                "Communist Manifesto"));
+        assertTrue("title cant be found", solo.searchText("Edited The Communist Manifesto"));
         assertTrue("author cant be found", solo.searchText("Edited Karl Marx"));
-        assertTrue("description was not edited", solo.searchText("Edited Test" +
-                " book"));
+        assertTrue("description was not edited", solo.searchText("Edited Test book"));
     }
 
     /**

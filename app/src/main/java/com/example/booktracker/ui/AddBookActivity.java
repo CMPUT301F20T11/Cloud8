@@ -84,8 +84,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
         imageView = findViewById(R.id.addbook_image);
-        //============Ivan===============
 
+        //============Ivan===============
         Button scanBtn = findViewById(R.id.scan_btn);
         scanBtn.setOnClickListener(view -> startActivityForResult(new Intent(view.getContext(),
                 ScanActivity.class), SCAN_RQ));

@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private String userEmail;
     private NotificationCircle notif;
     private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -38,10 +38,9 @@ public class UserQuery {
 
     }
 
-    public UserQuery(String userEmail, Callback callback,Context argContext) {
+    public UserQuery(String userEmail, Callback callback, Context argContext) {
         db = FirebaseFirestore.getInstance();
         userDoc = db.collection("users").document(userEmail);
-
         email = userEmail;
         context = argContext;
         setUserObject(callback);
