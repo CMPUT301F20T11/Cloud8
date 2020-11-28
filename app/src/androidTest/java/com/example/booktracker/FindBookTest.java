@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class FindBookTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
     private Book book;
     @Rule
@@ -54,7 +54,7 @@ public class FindBookTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -64,11 +64,11 @@ public class FindBookTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -76,9 +76,9 @@ public class FindBookTest {
      * Initialize entries in the AddBookActivity edit text.
      */
     private void mockBook(){
-        solo.enterText((EditText) solo.getView(R.id.addbook_title),"The Communist Manifesto");
-        solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Marx");
-        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"9780671678814");
+        solo.enterText((EditText) solo.getView(R.id.addbook_title),"/pol/ Manifesto");
+        solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
+        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
     }
 
@@ -104,7 +104,7 @@ public class FindBookTest {
         solo.clickOnText("Find Books");
         SearchView view = (SearchView) solo.getView(R.id.book_search);
         view.setQuery("Test book",true);
-        assertTrue("Book not found", solo.searchText("The Communist Manifesto"));
+        assertTrue("Book not found", solo.searchText("/pol/ Manifesto"));
     }
 
 }

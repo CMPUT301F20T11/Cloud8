@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 
 public class DeleteTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
     private Book book;
     @Rule
@@ -49,9 +49,9 @@ public class DeleteTest {
         ArrayList<String> author = new ArrayList<>();
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        author.add("Karl Marx");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        author.add("Karl Pogs");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -76,9 +76,9 @@ public class DeleteTest {
     @Test
     public void deleteBook() {
         login();
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.delete_book_button));
-        assertFalse("book was not deleted", solo.searchText("The Communist " +
+        assertFalse("book was not deleted", solo.searchText("/pol/ " +
                 "Manifesto"));
     }
 }

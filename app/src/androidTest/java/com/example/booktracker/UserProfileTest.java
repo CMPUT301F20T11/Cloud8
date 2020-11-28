@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 public class UserProfileTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
-    private String username = "test";
-    private String phone = "12345678";
+    private String username = "ZiQing";
+    private String phone = "4034292688";
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class,true,true);

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 public class EditTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
     private Book book;
     @Rule
@@ -71,8 +71,8 @@ public class EditTest {
         title.setText("");
         author.setText("");
         description.setText("");
-        solo.enterText(title, "Edited The Communist Manifesto");
-        solo.enterText(author, "Edited Karl Marx");
+        solo.enterText(title, "The /b/ Manifesto");
+        solo.enterText(author, "Karl Mar/x/");
         solo.enterText(description, "Edited Test book");
     }
 
@@ -82,11 +82,11 @@ public class EditTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -95,8 +95,8 @@ public class EditTest {
      * check if the edit was properly applied.
      */
     private void checkEdit() {
-        assertTrue("title cant be found", solo.searchText("Edited The Communist Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Edited Karl Marx"));
+        assertTrue("title cant be found", solo.searchText("The /b/ Manifesto"));
+        assertTrue("author cant be found", solo.searchText("Karl Mar/x/"));
         assertTrue("description was not edited", solo.searchText("Edited Test book"));
     }
 
@@ -106,7 +106,7 @@ public class EditTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -122,12 +122,12 @@ public class EditTest {
     @Test
     public void editBook() {
         login();
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.edit_book_button));
         mockEdit();
         solo.clickOnButton("Save");
         assertTrue(solo.waitForActivity(HomeActivity.class));
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("The /b/ Manifesto");
         solo.clickOnView(solo.getView(R.id.view_book_button));
         checkEdit();
     }

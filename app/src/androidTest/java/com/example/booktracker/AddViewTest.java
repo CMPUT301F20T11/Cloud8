@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class AddViewTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
     @Rule
     public ActivityTestRule<SignInActivity> rule =
@@ -41,9 +41,9 @@ public class AddViewTest {
      * Initialize entries in the AddBookActivity edit text.
      */
     private void mockBook(){
-        solo.enterText((EditText) solo.getView(R.id.addbook_title),"The Communist Manifesto");
-        solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Marx");
-        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"9780671678814");
+        solo.enterText((EditText) solo.getView(R.id.addbook_title),"/pol/ Manifesto");
+        solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
+        solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
     }
 
@@ -64,7 +64,7 @@ public class AddViewTest {
     private void deleteBook(){
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -80,7 +80,7 @@ public class AddViewTest {
         mockBook();
         solo.clickOnButton("Add");
         assertTrue(solo.waitForActivity(HomeActivity.class));
-        assertTrue("book was not added",solo.searchText("The Communist Manifesto"));
+        assertTrue("book was not added",solo.searchText("/pol/ Manifesto"));
         deleteBook();
     }
 

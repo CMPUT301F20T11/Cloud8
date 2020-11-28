@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ViewBookTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
     private Book book;
     @Rule
@@ -48,11 +48,11 @@ public class ViewBookTest {
      */
     private void mockBook() {
         solo.enterText((EditText) solo.getView(R.id.addbook_title), "The " +
-                "Communist Manifesto");
+                "/pol/ Manifesto");
         solo.enterText((EditText) solo.getView(R.id.addbook_author), "Karl " +
-                "Marx");
+                "Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),
-                "9780671678814");
+                "6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),
                 "Test book");
     }
@@ -75,12 +75,12 @@ public class ViewBookTest {
      * Test if correct information is displayed in ViewBookActivity.
      */
     private void testView() {
-        assertTrue("title cant be found", solo.searchText("The Communist " +
+        assertTrue("title cant be found", solo.searchText("/pol/ " +
                 "Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Karl Marx"));
-        assertTrue("isbn cant be found", solo.searchText("9780671678814"));
+        assertTrue("author cant be found", solo.searchText("Karl Pogs"));
+        assertTrue("isbn cant be found", solo.searchText("6980671678814"));
         assertTrue("description cant be found", solo.searchText("Test book"));
-        assertTrue("owner cant be found", solo.searchText("test@gmail.com"));
+        assertTrue("owner cant be found", solo.searchText("zm1@ualberta.ca"));
         assertTrue("status cant be found", solo.searchText("Test book"));
     }
 
@@ -90,7 +90,7 @@ public class ViewBookTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -101,11 +101,11 @@ public class ViewBookTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -125,7 +125,7 @@ public class ViewBookTest {
     @Test
     public void addBook() {
         login();
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.view_book_button));
         testView();
     }

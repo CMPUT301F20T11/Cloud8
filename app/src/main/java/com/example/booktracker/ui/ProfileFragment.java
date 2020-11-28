@@ -23,12 +23,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment implements ProfileEditDialog.onEditListener {
     private static final String TAG = ProfileFragment.class.getName();
-    private TextView nameText, idText, emailText, phoneText;
+    private TextView nameText, emailText, phoneText;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
     private DocumentReference docRef;
-    private String userName, userID, userEmail, loginEmail, userPhone;
+    private String userName, /*userID*/ userEmail, loginEmail, userPhone;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,14 +36,12 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         setHasOptionsMenu(true);
 
         nameText = profileView.findViewById(R.id.username);
-        idText = profileView.findViewById(R.id.uid);
         emailText = profileView.findViewById(R.id.email);
         phoneText = profileView.findViewById(R.id.phone);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         if (user != null) {
-            userID = user.getUid();
             loginEmail = user.getEmail();
         }
         HomeActivity activity = (HomeActivity) getActivity();
@@ -82,7 +80,6 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
                     userPhone = doc.getString("phone");
 
                     nameText.setText(userName);
-                    idText.setText(userID);
                     if (userEmail != null) {
                         emailText.setText(userEmail);
                     } else {
@@ -120,7 +117,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item=menu.findItem(R.id.action_view_user);
+        MenuItem item = menu.findItem(R.id.action_view_user);
         if (item != null) {
             item.setVisible(false);
         }

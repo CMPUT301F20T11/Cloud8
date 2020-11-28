@@ -24,10 +24,10 @@ import static org.junit.Assert.assertTrue;
 
 public class BookUserInfoTest {
     private Solo solo;
-    private String email = "test@gmail.com";
+    private String email = "zm1@ualberta.ca";
     private String pass = "password";
-    private String username = "test";
-    private String phone = "12345678";
+    private String username = "ZiQing";
+    private String phone = "4034292688";
     private Book book;
     @Rule
     public ActivityTestRule<SignInActivity> rule =
@@ -58,7 +58,7 @@ public class BookUserInfoTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -80,17 +80,17 @@ public class BookUserInfoTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
     @Test
     public void testUserInfo() {
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnMenuItem("View User");
         assertTrue("cant find username",solo.searchText(username));
         assertTrue("cant find email",solo.searchText(email));
