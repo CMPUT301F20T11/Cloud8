@@ -68,6 +68,18 @@ public class BookCollection {
         listView.setAdapter(adapter);//bind ui to adapter,if list View ui
     }
 
+    /**
+     * will display the books with the specified status
+     * @param status
+     */
+    public void displayBooksStatus(String status,ArrayList<Book> books){
+        for (Book book:books){
+            book.setStatus(status);
+        }
+        adapter = new BookAdapter(context, books);
+        displayBooks();
+    }
+
     public void setBookList(ArrayList<Book> argBookList) {
         adapter = new BookAdapter(context, argBookList);
     }

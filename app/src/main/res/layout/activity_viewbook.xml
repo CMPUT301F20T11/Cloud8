@@ -108,16 +108,6 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/add_book_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_button_blue_round"
-            android:text="@string/add_book_text"
-            android:textColor="@color/white" />
-
-        <Button
             android:id="@+id/return_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
