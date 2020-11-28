@@ -6,8 +6,6 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
-import com.example.booktracker.entities.User;
-import com.example.booktracker.ui.AddBookActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class IsbnReq extends AsyncTask<String,String,String> {
+public class IsbnReq extends AsyncTask<String, String, String> {
     private boolean done = false;
     private String isbn;
     private ArrayList<Book> output;
@@ -32,7 +30,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      * @param argList list of empty books initialized in the scope of the caller
      * @param argInstance instance of the caller that implemented executeCallback
      */
-    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance){
+    public IsbnReq(String argIsbn, ArrayList<Book> argList, Callback argInstance){
         super();
         isbn = argIsbn;
         output = argList;
@@ -45,7 +43,7 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      * @param argList list of empty books initialized in the scope of the caller
      * @param argInstance instance of the caller that implemented executeCallback
      */
-    public IsbnReq(String argIsbn,ArrayList<Book> argList, Callback argInstance,QueryOutput argQueryOutput,QueryOutputCallback argOutputCallback){
+    public IsbnReq(String argIsbn, ArrayList<Book> argList, Callback argInstance, QueryOutput argQueryOutput, QueryOutputCallback argOutputCallback){
         super();
         isbn = argIsbn;
         output = argList;
@@ -68,14 +66,14 @@ public class IsbnReq extends AsyncTask<String,String,String> {
                 JSONObject curObj = (JSONObject) arr.get(i);
                 JSONObject obj2 = curObj.getJSONObject("volumeInfo");
                 JSONArray authors = obj2.getJSONArray("authors");
-                ArrayList<String> authorList = new ArrayList<String>();
+                ArrayList<String> authorList = new ArrayList<>();
                 for (int j = 0; j < authors.length(); j++) {
                     authorList.add((String) authors.get(j));
                 }
                 output.add(new Book(authorList, obj2.getString("title"), isbn));
             }
             return "COMPLETED";
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println(e);
         }
         return "NOT COMPLETED";
@@ -88,10 +86,9 @@ public class IsbnReq extends AsyncTask<String,String,String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        if (s.equals("COMPLETED")){
+        if (s.equals("COMPLETED")) {
             instance.executeCallback();
         }
-
     }
 
     /**
@@ -100,16 +97,16 @@ public class IsbnReq extends AsyncTask<String,String,String> {
      * @param isbn will contain the isbn number of a book
      * @return json in String format
      */
-    private String getJson(String isbn) throws RuntimeException{
+    private String getJson(String isbn) throws RuntimeException {
         String formatString = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
-        StringBuffer output = null;
-        try{
+        StringBuffer output;
+        try {
             //make http request to google books api
-            URL url = new URL(String.format(formatString,isbn.trim()));
+            URL url = new URL(String.format(formatString, isbn.trim()));
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Content-Type","application/json");
+            connection.setRequestProperty("Content-Type", "application/json");
             BufferedReader input =
                     new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String inputLine;
@@ -119,9 +116,9 @@ public class IsbnReq extends AsyncTask<String,String,String> {
             }
             input.close();
             connection.disconnect();
-            return (String) output.toString();
-        }catch(Exception e){
-            throw new RuntimeException(String.format("http request to get isbn %s failed e:%s ",isbn,e));
+            return output.toString();
+        } catch(Exception e) {
+            throw new RuntimeException(String.format("http request to get isbn %s failed e:%s ", isbn, e));
         }
     }
 }

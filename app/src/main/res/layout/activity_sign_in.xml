@@ -28,7 +28,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_conversion_absoluteHeight="45dp"
-        tools:layout_conversion_absoluteWidth="411dp" />
+        tools:layout_conversion_absoluteWidth="411dp"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/password_field"
@@ -46,7 +47,8 @@
         app:layout_constraintEnd_toEndOf="@+id/email_field"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/email_field"
-        app:layout_constraintTop_toBottomOf="@+id/email_field" />
+        app:layout_constraintTop_toBottomOf="@+id/email_field"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/sign_in_button"

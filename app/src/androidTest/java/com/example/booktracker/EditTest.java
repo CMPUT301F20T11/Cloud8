@@ -33,7 +33,7 @@ public class EditTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-     * Initialize solo to be used by tests. And add book to be tested in db.
+     * Initialize solo to be used by tests and add book to be tested in db
      *
      * @throws Exception
      */
@@ -47,21 +47,21 @@ public class EditTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity",
                 HomeActivity.class);
     }
 
     /**
-     * set the EditText for author,title, and description in EditBookActivity.
+     * set the EditText for author, title, and description in EditBookActivity.
      */
     private void mockEdit() {
-        solo.assertCurrentActivity("Wrong activity should be AddBookActivity"
+        solo.assertCurrentActivity("Wrong activity, should be AddBookActivity"
                 , EditBookActivity.class);
         EditBookActivity activity =
                 (EditBookActivity) solo.getCurrentActivity();
@@ -71,8 +71,8 @@ public class EditTest {
         title.setText("");
         author.setText("");
         description.setText("");
-        solo.enterText(title, "Edited The Communist Manifesto");
-        solo.enterText(author, "Edited Karl Marx");
+        solo.enterText(title, "The /b/ Manifesto");
+        solo.enterText(author, "Karl Mar/x/");
         solo.enterText(description, "Edited Test book");
     }
 
@@ -82,11 +82,11 @@ public class EditTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -95,11 +95,9 @@ public class EditTest {
      * check if the edit was properly applied.
      */
     private void checkEdit() {
-        assertTrue("title cant be found", solo.searchText("Edited The " +
-                "Communist Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Edited Karl Marx"));
-        assertTrue("description was not edited", solo.searchText("Edited Test" +
-                " book"));
+        assertTrue("title cant be found", solo.searchText("The /b/ Manifesto"));
+        assertTrue("author cant be found", solo.searchText("Karl Mar/x/"));
+        assertTrue("description was not edited", solo.searchText("Edited Test book"));
     }
 
     /**
@@ -108,7 +106,7 @@ public class EditTest {
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
@@ -124,12 +122,12 @@ public class EditTest {
     @Test
     public void editBook() {
         login();
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.edit_book_button));
         mockEdit();
         solo.clickOnButton("Save");
         assertTrue(solo.waitForActivity(HomeActivity.class));
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("The /b/ Manifesto");
         solo.clickOnView(solo.getView(R.id.view_book_button));
         checkEdit();
     }

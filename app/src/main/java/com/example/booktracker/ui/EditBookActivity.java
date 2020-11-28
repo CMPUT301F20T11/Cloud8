@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -23,7 +24,6 @@ import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.QueryOutput;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,11 +39,9 @@ import java.util.List;
 
 /**
  * Activity for editing a user's book
- *
  * @author Edlee Ducay
  */
 public class EditBookActivity extends AppCompatActivity implements QueryOutputCallback {
-
     private EditText titleView, authorView, descView;
     private ImageView imageView;
     private String email, isbn;
@@ -59,7 +57,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     private QueryOutput toast_output;
     private String downloadUrl;
     private UpdateQuery updateQuery;
-    private final EditBookActivity instance = this;
+    private EditBookActivity instance = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,8 +92,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         email = ((Email) this.getApplication()).getEmail();
         addQuery = new AddBookQuery(email);
 
-        //===============================OnClickListeners
-        // ============================
+        // ===================== OnClickListeners =====================
 
         Button addBtn = findViewById(R.id.editbook_addbtn);
         addBtn.setOnClickListener(v -> {
@@ -110,20 +107,19 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             addQuery.loadUsername(newBook);
             upload(newBook);
 
-            //====Ivan: made it so that the activity automatically exits==
+            //== Ivan: made it so that the activity automatically exits ==
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-
             //============================================================
         });
 
         Button cancelBtn = findViewById(R.id.editbook_cancelbtn);
         cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(v -> pickFromGallery(v));
+        imageView.setOnClickListener(EditBookActivity.this::pickFromGallery);
 
         Button clearPhoto_btn = findViewById(R.id.editbook_rmPhoto_btn);
         clearPhoto_btn.setOnClickListener(v -> {
@@ -151,7 +147,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     private void pickFromGallery(View v) {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1200, 1200)
+                .setAspectRatio(1000, 1400)
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(EditBookActivity.this);
     }
@@ -174,17 +170,14 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
             // Get the uri from selected image and set into the image view
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
                 imageView.setImageURI(imageUri);
             }
         }
-
         if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
         }
@@ -197,7 +190,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             Toast.makeText(EditBookActivity.this, toast_output.getOutput(),
                     Toast.LENGTH_LONG).show();
         }
-        if (result.equals("successful")) {
+        if (result.equals("Successful")) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -233,22 +226,32 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             StorageReference ref =
                     storageReference.child("images/users/" + uid + "/" + localUri);
             UploadTask uploadTask = ref.putFile(imageUri);
-            // Register observers to listen for when the download is done or
-            // if it fails
-            uploadTask.addOnFailureListener(exception -> toast_output.setOutput("Upload failed")).addOnCompleteListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                downloadUrl = uri.toString();
-                newBook.setUri(downloadUrl);
-                HashMap<String, Object> data =
-                        createData(newBook.getTitle(),
-                                newBook.getAuthor(),
-                                newBook.getDescription(),
-                                newBook.getUri(),
-                                newBook.getLocalUri());
-                updateQuery.updateBook(newBook, instance, data,
-                        toast_output);
-                progressDialog.dismiss();
+            // Register observers to listen for when the download
+            // is done or if it fails
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toast_output.setOutput("Upload failed");
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                        downloadUrl = uri.toString();
+                        newBook.setUri(downloadUrl);
+                        HashMap<String, Object> data =
+                                createData(newBook.getTitle(),
+                                        newBook.getAuthor(),
+                                        newBook.getDescription(),
+                                        newBook.getUri(),
+                                        newBook.getLocalUri());
+                        updateQuery.updateBook(newBook, instance, data,
+                                toast_output);
+                        progressDialog.dismiss();
 
-            }));
+                    });
+                }
+            });
         } else {
             newBook.setUri(null);
             HashMap<String, Object> data = createData(newBook.getTitle(),

@@ -19,12 +19,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookAdapter;
-import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.NotificationCircle;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -59,20 +57,21 @@ public class FindBooksFragment extends Fragment implements Callback {
         db = FirebaseFirestore.getInstance();
         bookList = view.findViewById(R.id.books_found);
         query = new GetBookQuery();
-        bookDataList = new ArrayList<Book>();
-        setSelectListener();
-       home = (HomeActivity) getActivity();
+        bookDataList = new ArrayList<>();
+        home = (HomeActivity) getActivity();
         userEmail = home.getUserEmail();
         updateQuery = new UpdateQuery();
         home.notifRefresh();
         viewButton = view.findViewById(R.id.view_button);
         setViewListener();
+        setSelectListener();
+
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
                 bookDataList.clear();
-                query.getBooks(instance,bookDataList);
+                query.getBooks(instance, bookDataList);
                 searchText = queryText;
                 searchView.clearFocus();
                 return false;
@@ -87,42 +86,34 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
 
         Button requestBtn = view.findViewById(R.id.request_book_button);
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null) {
-                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
-                    updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
-                    request.sendRequest();
-                } else {
-                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
-                }
+        requestBtn.setOnClickListener(v -> {
+            if (selected_book != null) {
+                Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
+                request.sendRequest();
+            } else {
+                Toast.makeText(v.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
         });
 
         return view;
     }
 
-
-    private void setViewListener(){
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null){
-                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                    startActivity(intent);
-                }
+    private void setViewListener() {
+        viewButton.setOnClickListener(view -> {
+            if (selected_book != null) {
+                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                startActivity(intent);
             }
         });
     }
+
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
             if (selected_book.getOwner() != null) {
                 userSelected = selected_book.getOwnerEmail();
-            } else {
-                userSelected = selected_book.getStringOwner();
             }
             if (userSelected != null) {
                 getUserDoc(userSelected);
@@ -149,7 +140,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         }
         updateBookList(results);
     }
-    public void executeCallback(){
+
+    public void executeCallback() {
         searchBooks(searchText);
     }
 
@@ -203,10 +195,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         String username = userDoc.getString("username");
         String email = userDoc.getString("email");
         String phone = userDoc.getString("phone");
-        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
-                email, phone);
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW BOOK USER");
     }
-
 }

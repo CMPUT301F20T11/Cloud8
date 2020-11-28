@@ -3,7 +3,8 @@ package com.example.booktracker.entities;
 public class NotifCount {
     private long incoming;
     private long accepted;
-    public NotifCount(){
+
+    public NotifCount() {
         incoming = 0;
         accepted = 0;
     }
@@ -23,5 +24,6 @@ public class NotifCount {
     public void setIncoming(long incoming) {
         this.incoming = incoming;
     }
+
     public long getTotal(){return  incoming+accepted;}
 }

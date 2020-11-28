@@ -3,7 +3,6 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.widget.ListView;
 
-import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class RequestCollection {
      * @param position
      * @return Request
      */
-    public Request getRequest(int position){
+    public Request getRequest(int position) {
         return adapter.getItem(position);
     }
 
@@ -50,10 +49,12 @@ public class RequestCollection {
     public void setRequestList(ArrayList<Request> argRequestList) {
         adapter = new RequestAdapter(context, argRequestList);
     }
-    public void deleteRequest(Request toRemove){
+
+    public void deleteRequest(Request toRemove) {
         adapter.remove(toRemove);
         adapter.notifyDataSetChanged();
     }
+
     /**
      * Binds the ui to the adapter
      */

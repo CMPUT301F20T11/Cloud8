@@ -12,9 +12,7 @@ public class User {
     public String phoneNumber;
     public String token;
 
-    public User() {
-
-    }
+    public User() {}
 
     /**
      * Constructor for User class without token

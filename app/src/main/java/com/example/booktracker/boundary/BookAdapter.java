@@ -2,6 +2,7 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -55,46 +58,39 @@ public class BookAdapter extends ArrayAdapter<Book> {
         }
         Book book = bookList.get(position);
 
-        ImageView imageView = view.findViewById(R.id.imageView);
+        ImageView imageView = view.findViewById(R.id.book_imageView);
         TextView titleView = view.findViewById(R.id.book_adapter_title);
+        TextView authorView = view.findViewById(R.id.book_adapter_author);
+        TextView isbnView = view.findViewById(R.id.book_adapter_isbn);
         TextView ownerView = view.findViewById(R.id.book_adapter_owner);
-        TextView descView = view.findViewById(R.id.book_adapter_desc);
         TextView statusView = view.findViewById(R.id.book_adapter_status);
 
-        StringBuilder authors = new StringBuilder();
-        for (String s : book.getAuthor()) {
-            authors.append(s);
-            authors.append(", ");
-        }
+        String authors = TextUtils.join(",", book.getAuthor());
         String title = book.getTitle();
-        String desc = book.getDescription();
+        String isbn = book.getIsbn();
         String status = book.getStatus();
-        if (status.equals("available")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_available, null));
-        } else if (status.equals("borrowed")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_borrowed, null));
-        } else if (status.equals("requested")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_requested, null));
-        } else if (status.equals("accepted")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_accepted, null));
+        
+        switch (status) {
+            case "available":
+                statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_available, null));
+                break;
+            case "borrowed":
+                statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_borrowed, null));
+                break;
+            case "requested":
+                statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_requested, null));
+                break;
+            case "accepted":
+                statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_accepted, null));
+                break;
         }
 
         if (book.getOwner() != null) {
             String owner = book.getOwnerName();
             titleView.setText(title);
-            ownerView.setText(owner);
-            descView.setText(desc);
-            statusView.setText(status);
-            if (book.getUri() != null) {
-                Glide.with(view).load(book.getUri()).into(imageView);
-            } else {
-                Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
-            }
-        } else {
-            String stringOwner = book.getStringOwner();
-            titleView.setText(title);
-            ownerView.setText(stringOwner);
-            descView.setText(desc);
+            authorView.setText("Author: " + authors);
+            isbnView.setText("ISBN:    " + isbn);
+            ownerView.setText("Owner: " + owner);
             statusView.setText(status);
             if (book.getUri() != null) {
                 Glide.with(view).load(book.getUri()).into(imageView);

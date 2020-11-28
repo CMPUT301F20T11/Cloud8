@@ -32,28 +32,24 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import static android.content.ContentValues.TAG;
 
 public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     private boolean mLocationPermissionGranted = false;
     public static final int ERROR_DIALOG_REQUEST = 9001;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
     public static final int PERMISSIONS_REQUEST_ENABLE_GPS = 9003;
     private static final float DEFAULT_ZOOM = 10;
     private FusedLocationProviderClient mFusedLocationClient;
-    final Marker[] marker = {null};
-    Marker pickupMarker = marker[0];
-    Double pickupLat = null;
-    Double pickupLng = null;
+    private final Marker[] marker = {null};
+    private Marker pickupMarker = marker[0];
+    private Double pickupLat = null;
+    private Double pickupLng = null;
     private GoogleMap map;
 
     //edmonton
-    LatLng defaultLocation = new LatLng(53.5461, -113.4938);
-
+    private LatLng defaultLocation = new LatLng(53.5461, -113.4938);
 
     /**
      *  SetGeo creation - create map, initialize buttons, GPS permissions
@@ -94,7 +90,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
-
     /**
      *   Setup map location based on current location if available otherwise default edmonton
      *   Listener for pin placement of pickup location
@@ -117,22 +112,18 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         }
         Toast.makeText(this, "Hold location to place pickup spot", Toast.LENGTH_SHORT).show();
 
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                pickupLat = latLng.latitude;
-                pickupLng = latLng.longitude;
-                if (pickupMarker != null) {
-                    pickupMarker.setPosition(latLng);
-                } else {
-                    pickupMarker = map.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title("Pickup location"));
-                }
+        map.setOnMapLongClickListener(latLng -> {
+            pickupLat = latLng.latitude;
+            pickupLng = latLng.longitude;
+            if (pickupMarker != null) {
+                pickupMarker.setPosition(latLng);
+            } else {
+                pickupMarker = map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Pickup location"));
             }
         });
     }
-
 
     /**
      *   If GPS available - retrieve lat/lon and
@@ -142,22 +133,18 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
             return;
         }
         map.setMyLocationEnabled(true);
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    Location location = task.getResult();
-                    double lat = location.getLatitude();
-                    double lon = location.getLongitude();
-                    LatLng userCurrentPosition = new LatLng(lat, lon);
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
-                    Log.d(TAG, "setgeo lat: " + lat);
-                    Log.d(TAG, "setgeo lon: " + lon);
-                }
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Location location = task.getResult();
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+                LatLng userCurrentPosition = new LatLng(lat, lon);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
+                Log.d(TAG, "lat: " + lat);
+                Log.d(TAG, "lon: " + lon);
             }
         });
     }
-
 
     /**
      *   Check google services, GPS enabled, and app location permission
@@ -180,7 +167,7 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         Log.d(TAG, "isServicesOK: checking google services version");
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(SetGeoActivity.this);
         if (available == ConnectionResult.SUCCESS) {
-            //everything is fine and the user can make map requests
+            // everything is fine and the user can make map requests
             Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
         } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
@@ -213,7 +200,7 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         builder.setMessage("Enable GPS?")
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        //continue without GPS functionality
+                        // continue without GPS functionality
                     }
                 })
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -235,14 +222,11 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult: called.");
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if (!mLocationPermissionGranted) {
-                    getLocationPermission();
-                }
+        if (requestCode == PERMISSIONS_REQUEST_ENABLE_GPS) {
+            if (!mLocationPermissionGranted) {
+                getLocationPermission();
             }
         }
-
     }
 
     /**
@@ -273,21 +257,20 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
      */
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    map.setMyLocationEnabled(true);
-                    getCurrentLocation();
+        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mLocationPermissionGranted = true;
+                if (ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
+                map.setMyLocationEnabled(true);
+                getCurrentLocation();
             }
         }
     }
