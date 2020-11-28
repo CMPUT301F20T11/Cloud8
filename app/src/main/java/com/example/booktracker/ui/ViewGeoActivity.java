@@ -1,7 +1,6 @@
 package com.example.booktracker.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,13 +18,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import static android.content.ContentValues.TAG;
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    Double pickupLat = null;
-    Double pickupLng = null;
-//    double pickupLat, pickupLng;
+    private Double pickupLat = null;
+    private Double pickupLng = null;
 
     /**
      *  ViewGeo creation - retrieve pickupLoc and display on map
@@ -41,19 +37,13 @@ public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCall
 
         setContentView(R.layout.activity_view_geo);
 
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         Button doneBtn = findViewById(R.id.view_geo_done_button);
-        doneBtn.setOnClickListener(view -> {
-            finish();
-        });
-
+        doneBtn.setOnClickListener(view -> finish());
     }
-
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -63,11 +53,9 @@ public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCall
                 .title("Pickup Location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(pickupLoc, 15));
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         map.setMyLocationEnabled(true);
-
     }
 }

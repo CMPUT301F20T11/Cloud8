@@ -1,6 +1,5 @@
 package com.example.booktracker;
 
-import android.widget.ActionMenuView;
 import android.widget.EditText;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -53,26 +52,28 @@ public class BookUserInfoTest {
     public void tearDown(){
         deleteBook();
     }
+
     /**
      * Delete the book that was used from firestore.
      */
     private void deleteBook() {
         DeleteBookQuery del = new DeleteBookQuery(email);
         Book book1 = new Book();
-        book1.setIsbn("9780671678814");
+        book1.setIsbn("6980671678814");
         book1.setStatus("available");
         del.deleteBook(book1);
     }
+
     /**
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy", SignInActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity", SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity", HomeActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
 
     /**
@@ -81,20 +82,21 @@ public class BookUserInfoTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
-        author.add("Karl Marx");
+        author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
+
     @Test
     public void testUserInfo() {
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnMenuItem("View User");
-        assertTrue("cant find username",solo.searchText(username));
-        assertTrue("cant find email",solo.searchText(email));
-        assertTrue("cant find phone number",solo.searchText(phone));
+        assertTrue("Cannot find username", solo.searchText(username));
+        assertTrue("Cannot find email", solo.searchText(email));
+        assertTrue("Cannot find phone number", solo.searchText(phone));
     }
 }

@@ -16,13 +16,11 @@ import com.google.zxing.integration.android.IntentResult;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ScanActivity extends AppCompatActivity {
-
     private ScanActivity ref = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_scan);
         scanCode();
     }
 
@@ -31,10 +29,9 @@ public class ScanActivity extends AppCompatActivity {
      * https://github.com/zxing/zxing/wiki/Scanning-Via-Intent
      * @author Andrew Wood <awood@ualberta.ca>
      */
-    private void scanCode(){
+    private void scanCode() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(CaptureAct.class);
-
         integrator.setOrientationLocked(false);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Scanning Code");
@@ -52,7 +49,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null){
+        if (result != null) {
             if (result.getContents() != null) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(result.getContents());
@@ -66,24 +63,22 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (getCallingActivity() != null){
-                            //==========code to pass data back to parent activity======
+                            // ==========code to pass data back to parent activity======
                             Intent data = new Intent();
                             data.setData(Uri.parse(result.getContents()));
                             setResult(RESULT_OK,data);
-                            //=========================================================
+                            // =========================================================
                             finish();
-                        }else{
+                        } else {
                             Intent intent = new Intent(ref,ViewBookActivity.class);
                             intent.putExtra(EXTRA_MESSAGE,result.getContents());
                             startActivity(intent);
                         }
-
                     }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-            }
-            else {
+            } else {
                 Toast.makeText(this, "No Results", Toast.LENGTH_LONG).show();
             }
         } else {

@@ -28,7 +28,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
     private FirebaseUser user;
     private FirebaseFirestore db;
     private DocumentReference docRef;
-    private String userName, userID, userEmail, loginEmail, userPhone;
+    private String userName, userEmail, loginEmail, userPhone;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +42,6 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         user = FirebaseAuth.getInstance().getCurrentUser();
         mAuth = FirebaseAuth.getInstance();
         if (user != null) {
-            userID = user.getUid();
             loginEmail = user.getEmail();
         }
         HomeActivity activity = (HomeActivity) getActivity();
@@ -58,6 +57,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
             editDialog.setTargetFragment(ProfileFragment.this, 1337);
             editDialog.show(getParentFragmentManager(), "EDIT PROFILE");
         });
+
         logoutButton.setOnClickListener(view -> {
             mAuth.signOut();
             Intent intent = new Intent(profileView.getContext(),
@@ -108,17 +108,18 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         docRef
                 .update("phone", phone,
                         "email", email)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Phone number " +
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Phone and email " +
                         "successfully changed!"))
-                .addOnFailureListener(e -> Log.d(TAG, "Phone number failed to" +
+                .addOnFailureListener(e -> Log.d(TAG, "Phone and email failed to" +
                         " change!" + e.toString()));
         loadProfile(loginEmail);
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        MenuItem item=menu.findItem(R.id.action_view_user);
-        if(item!=null)
+        MenuItem item = menu.findItem(R.id.action_view_user);
+        if (item != null) {
             item.setVisible(false);
+        }
     }
 }
