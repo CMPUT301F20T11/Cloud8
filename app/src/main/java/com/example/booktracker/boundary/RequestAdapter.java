@@ -59,16 +59,19 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         ImageView imageView = view.findViewById(R.id.request_imageView);
         TextView titleView = view.findViewById(R.id.request_title);
         TextView authorView = view.findViewById(R.id.request_author);
+        TextView isbnView = view.findViewById(R.id.request_isbn);
         TextView fromView = view.findViewById(R.id.request_from);
 
         Book book = request.getBook();
         String title = book.getTitle();
         String authors = TextUtils.join(",", book.getAuthor());
+        String isbn = book.getIsbn();
         String fromUsername = request.getFromUsername();
 
         titleView.setText(title);
-        authorView.setText(authors);
-        fromView.setText(fromUsername);
+        authorView.setText("Author: " + authors);
+        isbnView.setText("ISBN:   " + isbn);
+        fromView.setText("From:   " + fromUsername);
         if (book.getUri() != null) {
             Glide.with(view).load(book.getUri()).into(imageView);
         } else {

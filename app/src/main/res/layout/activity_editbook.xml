@@ -16,8 +16,7 @@
         <ImageView
             android:id="@+id/editbook_image"
             android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:scaleType="fitXY"
+            android:layout_height="210dp"
             android:adjustViewBounds="true"
             android:layout_gravity="center"
             android:foreground="@drawable/addbook_photo_border"

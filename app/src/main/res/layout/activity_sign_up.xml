@@ -77,6 +77,7 @@
         android:ems="10"
         android:hint="Phone"
         android:inputType="phone"
+        android:maxLength="10"
         app:layout_constraintBottom_toTopOf="@+id/sign_up_send"
         app:layout_constraintEnd_toEndOf="@+id/editTextEmailAddress"
         app:layout_constraintHorizontal_bias="0.5"

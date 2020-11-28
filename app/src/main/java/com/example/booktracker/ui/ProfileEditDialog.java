@@ -2,6 +2,8 @@ package com.example.booktracker.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ public class ProfileEditDialog extends DialogFragment {
     private EditText emailText, phoneText;
     private onEditListener listener;
     private String profileEmail = null, profilePhone = null;
+    private View view;
 
     public interface onEditListener {
         void onEditOk(String email, String phone);
@@ -28,7 +31,7 @@ public class ProfileEditDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final ProfileFragment fragment = (ProfileFragment) getTargetFragment();
-        final View view =
+        view =
                 LayoutInflater.from(getActivity()).inflate(R.layout.fragment_edit_profile, null);
         if (fragment != null) {
             profileEmail = fragment.getProfileEmail();
@@ -43,14 +46,18 @@ public class ProfileEditDialog extends DialogFragment {
         phoneText = view.findViewById(R.id.edit_phone);
         phoneText.setText(profilePhone);
 
+        Button cancelBtn = view.findViewById(R.id.edit_profile_cancel);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+            }
+        });
+
         final AlertDialog.Builder builder =
-                new AlertDialog.Builder(getActivity());
+                new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
         return builder
                 .setView(view)
-                .setTitle("Edit Contact Information")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                })
                 .create();
     }
 
@@ -59,8 +66,9 @@ public class ProfileEditDialog extends DialogFragment {
         super.onResume();
         final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
-            Button okButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
-            okButton.setOnClickListener(view -> {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            Button confirmBtn = view.findViewById(R.id.edit_profile_confirm);
+            confirmBtn.setOnClickListener(view -> {
                 String newEmail = emailText.getText().toString().trim();
                 String newPhone = phoneText.getText().toString().trim();
 
