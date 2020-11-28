@@ -4,7 +4,6 @@ package com.example.booktracker.entities;
 import android.text.TextUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +33,9 @@ public class Book implements Serializable {
      * constructor for initializing an empty book
      */
     public Book() {
-        List<String> authors = new ArrayList<>();
-        authors.add("");
-        this.author = authors;
         this.title = "";
         this.isbn = "";
         this.description = "";
-        List<String> keywords = new ArrayList<>();
-        keywords.add("");
-        this.keyword = keywords;
         Map<String, String> nestedData = new HashMap<>();
         nestedData.put("", "");
         this.owner = nestedData;
@@ -197,7 +190,6 @@ public class Book implements Serializable {
      * @param keywords
      */
     public void setKeywords(List<String> keywords) {
-        keyword.clear();
         this.keyword = keywords;
     }
 
