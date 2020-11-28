@@ -42,7 +42,7 @@ public class UpdateQuery {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot res = task.getResult();
-                        if (res.exists()){
+                        if (res.exists()) {
                             bookRef.update(data);
                         }
                     }

@@ -197,6 +197,7 @@ public class Book implements Serializable {
      * @param keywords
      */
     public void setKeywords(List<String> keywords) {
+        keyword.clear();
         this.keyword = keywords;
     }
 

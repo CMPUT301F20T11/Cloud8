@@ -166,9 +166,9 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
                                                String local_image_uri) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", title);
+        data.put("author", author);
         data.put("description", description);
         data.put("keywords", keywords);
-        data.put("author", author);
         data.put("image_uri", imageUri);
         data.put("local_image_uri", local_image_uri);
         return data;

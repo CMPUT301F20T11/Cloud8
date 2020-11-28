@@ -73,6 +73,7 @@ public class EditTest {
         title.setText("");
         author.setText("");
         description.setText("");
+        keyword.setText("");
         solo.enterText(title, "The /b/ Manifesto");
         solo.enterText(author, "Karl Mar/x/");
         solo.enterText(description, "Edited Test book");
