@@ -48,8 +48,8 @@ public class BorrowedBooksFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_borrowed_books, container, false);
+        setHasOptionsMenu(true);
         activity = (HomeActivity) getActivity();
         email = activity.getUserEmail();
         bookList = new ArrayList<>();

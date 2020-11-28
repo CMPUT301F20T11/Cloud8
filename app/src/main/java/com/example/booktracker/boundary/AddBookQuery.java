@@ -130,8 +130,8 @@ public class AddBookQuery extends BookQuery {
      * @param newBook book to be added
      * @param borrowerEmail email of the person who is receiving the book
      */
-    public void addBookBorrower(Book newBook,String borrowerEmail){
-        HashMap<String,Object> data = new HashMap<>();
+    public void addBookBorrower(Book newBook, String borrowerEmail) {
+        HashMap<String, Object> data = new HashMap<>();
         data.put("bookReference", db.collection("books").document(newBook.getIsbn()));
         db.collection("users").document(borrowerEmail).collection(newBook.getStatus())
                 .document(newBook.getIsbn())

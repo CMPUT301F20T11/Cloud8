@@ -133,7 +133,7 @@ public class BookExchangeTest {
     /**
      * Once user has requested a book it should show up in RequestedBooks
      */
-    private void checkRequestedBooks(){
+    private void checkRequestedBooks() {
         navDrawer("Requested Books");
         assertTrue("Book not appearing in Requested", solo.searchText("Requesting 69"));
     }

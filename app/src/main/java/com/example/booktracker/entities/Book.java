@@ -61,16 +61,6 @@ public class Book implements Serializable {
         this.borrower = null;
     }
 
-    public Book(String argOwner, List<String> argAuthor, String argTitle,
-                String argIsbn, String argDesc) {
-        this.author = argAuthor;
-        this.title = argTitle;
-        this.isbn = argIsbn;
-        this.description = argDesc;
-        this.status = "available";
-        this.borrower = null;
-    }
-
     /**
      * Constructor for books without a description
      *
