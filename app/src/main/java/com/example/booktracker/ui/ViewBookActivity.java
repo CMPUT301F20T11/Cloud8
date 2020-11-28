@@ -187,7 +187,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // book.status == unavailable, book != null, and then book
                 // .setBorrower("user.email")
                 if ((emptyBook != null) && (emptyBook.getStatus().equals("available"))
-                        && (emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals("")) {
+                        && (emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none")) || emptyBook.getBorrower().equals("")) {
                     //need to check if the book is already in the list of accepted books for this user
                     updateQuery.borrowBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
@@ -200,7 +200,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // book.owner == user.email
                 // and book.borrower == none, and book.status == available,
                 // and book != null
-                if ((emptyBook != null) && ((emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null) || emptyBook.getBorrower().equals(""))
+                if ((emptyBook != null) && ((emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none")) || emptyBook.getBorrower().equals(""))
                         && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
                     updateQuery.lendBook(emptyBook.getIsbn(),emptyBook.getOwnerEmail(),instance,queryOutput);
                 } else {
