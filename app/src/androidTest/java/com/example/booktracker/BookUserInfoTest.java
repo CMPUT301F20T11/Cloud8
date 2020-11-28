@@ -24,10 +24,10 @@ import static org.junit.Assert.assertTrue;
 
 public class BookUserInfoTest {
     private Solo solo;
-    private String email = "zm1@ualberta.ca";
+    private String email = "test@gmail.com";
     private String pass = "password";
-    private String username = "ZiQing";
-    private String phone = "4034292688";
+    private String username = "test";
+    private String phone = "12345678";
     private Book book;
     @Rule
     public ActivityTestRule<SignInActivity> rule =

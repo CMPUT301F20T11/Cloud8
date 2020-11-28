@@ -22,7 +22,6 @@ import java.util.HashMap;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText new_username_field, editTextPassword, editTextEmailAddress, editTextPhone;
     private Button confirmSignUp;
-
     private FirebaseAuth mAuth;
     //==============Get db=================
     private FirebaseFirestore db;
@@ -46,9 +45,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         //==============Get db=================
         db = FirebaseFirestore.getInstance();
         collectionReference = db.collection("users");
-
         //===============================
-
     }
 
     @Override
@@ -90,7 +87,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 return;
             }
             if (password.length() < 6) {
-                editTextPassword.setError("password needs to be at least 6 characters.      ");
+                editTextPassword.setError("Password needs to be at least 6 characters.");
                 editTextPassword.requestFocus();
                 return;
             }

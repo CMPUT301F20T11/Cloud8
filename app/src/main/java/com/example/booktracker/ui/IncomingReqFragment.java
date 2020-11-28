@@ -37,9 +37,8 @@ import java.util.HashMap;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class IncomingReqFragment extends Fragment implements View.OnClickListener, QueryOutputCallback {
-    Book selected_book = null;
-    int LAUNCH_GEO = 523;
-
+    private Book selected_book = null;
+    private int LAUNCH_GEO = 523;
     private boolean userGPS = false;
     private String userEmail, userSelected, lastStatus;
     private ListView listView;

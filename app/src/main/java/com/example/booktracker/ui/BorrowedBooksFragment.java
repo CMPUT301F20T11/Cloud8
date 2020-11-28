@@ -31,10 +31,7 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class BorrowedBooksFragment extends Fragment {
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
     Book selected_book = null;
-    private UpdateQuery updateQuery;
     private ListView listView;
     private ArrayList<Book> bookList;
     private GetBookQuery getBookQuery;

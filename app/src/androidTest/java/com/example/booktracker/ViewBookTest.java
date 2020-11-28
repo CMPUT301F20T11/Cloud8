@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ViewBookTest {
     private Solo solo;
-    private String email = "zm1@ualberta.ca";
+    private String email = "test@gmail.com";
     private String pass = "password";
     private Book book;
     @Rule
@@ -80,7 +80,7 @@ public class ViewBookTest {
         assertTrue("author cant be found", solo.searchText("Karl Pogs"));
         assertTrue("isbn cant be found", solo.searchText("6980671678814"));
         assertTrue("description cant be found", solo.searchText("Test book"));
-        assertTrue("owner cant be found", solo.searchText("zm1@ualberta.ca"));
+        assertTrue("owner cant be found", solo.searchText("test@gmail.com"));
         assertTrue("status cant be found", solo.searchText("Test book"));
     }
 

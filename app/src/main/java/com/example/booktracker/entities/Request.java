@@ -30,7 +30,6 @@ import java.util.Map;
  * @author Edlee Ducay
  */
 public class Request extends Notification {
-
     private String FCM_API = "https://fcm.googleapis.com/fcm/send";
     private Book book;
     private Context context;

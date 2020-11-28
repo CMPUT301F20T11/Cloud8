@@ -28,7 +28,7 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
     private FirebaseUser user;
     private FirebaseFirestore db;
     private DocumentReference docRef;
-    private String userName, /*userID*/ userEmail, loginEmail, userPhone;
+    private String userName, userEmail, loginEmail, userPhone;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

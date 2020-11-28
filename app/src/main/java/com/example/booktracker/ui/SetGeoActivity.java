@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import static android.content.ContentValues.TAG;
 
 public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     private boolean mLocationPermissionGranted = false;
     public static final int ERROR_DIALOG_REQUEST = 9001;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
@@ -51,7 +50,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
 
     //edmonton
     LatLng defaultLocation = new LatLng(53.5461, -113.4938);
-
 
     /**
      *  SetGeo creation - create map, initialize buttons, GPS permissions
@@ -92,7 +90,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
-
     /**
      *   Setup map location based on current location if available otherwise default edmonton
      *   Listener for pin placement of pickup location
@@ -131,7 +128,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         });
     }
 
-
     /**
      *   If GPS available - retrieve lat/lon and
      */
@@ -152,7 +148,6 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
     }
-
 
     /**
      *   Check google services, GPS enabled, and app location permission

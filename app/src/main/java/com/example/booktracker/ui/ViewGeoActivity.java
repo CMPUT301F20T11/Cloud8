@@ -22,7 +22,6 @@ import static android.content.ContentValues.TAG;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
-
     Double pickupLat = null;
     Double pickupLng = null;
     // double pickupLat, pickupLng;
@@ -54,7 +53,6 @@ public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCall
         });
 
     }
-
 
     @Override
     public void onMapReady(GoogleMap map) {

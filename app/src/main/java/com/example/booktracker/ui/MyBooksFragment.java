@@ -33,10 +33,8 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class MyBooksFragment extends Fragment {
-    ListView bookList;
-    ArrayAdapter<Book> bookAdapter;
-    ArrayList<Book> bookDataList;
-    Book selected_book = null;
+    private ListView bookList;
+    private Book selected_book = null;
     private GetBookQuery getQuery;
     private String userEmail, userSelected;
     private View view;
@@ -45,7 +43,6 @@ public class MyBooksFragment extends Fragment {
     private String lastStatus;
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

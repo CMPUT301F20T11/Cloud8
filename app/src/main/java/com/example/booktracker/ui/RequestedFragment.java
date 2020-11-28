@@ -56,7 +56,7 @@ public class RequestedFragment extends Fragment {
     }
 
     private void setViewListener() {
-        Button viewBookBtn = (Button) view.findViewById(R.id.requested_view_book_button);
+        Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);

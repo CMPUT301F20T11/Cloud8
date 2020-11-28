@@ -16,7 +16,6 @@ import com.google.zxing.integration.android.IntentResult;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ScanActivity extends AppCompatActivity {
-
     private ScanActivity ref = this;
 
     @Override

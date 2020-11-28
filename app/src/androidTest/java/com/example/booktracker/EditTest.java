@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 public class EditTest {
     private Solo solo;
-    private String email = "zm1@ualberta.ca";
+    private String email = "test@gmail.com";
     private String pass = "password";
     private Book book;
     @Rule

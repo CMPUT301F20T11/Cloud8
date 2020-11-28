@@ -35,8 +35,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class BookExchangeTest {
     private Solo solo;
-    private String email1 = "zm1@ualberta.ca";
-    private String email2 = "notitest@gmail.com";
+    private String email1 = "test@gmail.com";
+    private String email2 = "test69@gmail.com";
     private String pass = "password";
     private Book book;
 

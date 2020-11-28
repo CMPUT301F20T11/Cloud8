@@ -17,10 +17,10 @@ import static org.junit.Assert.assertTrue;
 
 public class UserProfileEdit {
     private Solo solo;
-    private String email = "zm1@ualberta.ca";
+    private String email = "test@gmail.com";
     private String pass = "password";
-    private String username = "ZiQing";
-    private String phone = "4034292688";
+    private String username = "test";
+    private String phone = "12345678";
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class, true, true);
@@ -55,13 +55,13 @@ public class UserProfileEdit {
         emailBuff.setText("");
         phoneBuff.setText("");
         solo.enterText(emailBuff, "edited" + email);
-        solo.enterText(phoneBuff, "11" + phone);
+        solo.enterText(phoneBuff, "69" + phone);
         solo.clickOnText("OK");
     }
 
     private void checkProfEdit() {
         assertTrue("Email not found", solo.searchText("edited" + email));
-        assertTrue("Phone number not found", solo.searchText("11" + phone));
+        assertTrue("Phone number not found", solo.searchText("69" + phone));
     }
 
     private void revert() {

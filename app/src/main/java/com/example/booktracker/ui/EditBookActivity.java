@@ -42,7 +42,6 @@ import java.util.List;
  * @author Edlee Ducay
  */
 public class EditBookActivity extends AppCompatActivity implements QueryOutputCallback {
-
     private EditText titleView, authorView, descView;
     private ImageView imageView;
     private String email, isbn;

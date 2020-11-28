@@ -84,15 +84,15 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         updateQuery = new UpdateQuery();
         queryOutput = new QueryOutput();
         // Creating buttons
-        Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
+        Button borrowButton = findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
-        Button giveButton = (Button) findViewById(R.id.give_book_button);
+        Button giveButton = findViewById(R.id.give_book_button);
         giveButton.setOnClickListener(this);
-        Button returnButton = (Button) findViewById(R.id.return_book_button);
+        Button returnButton = findViewById(R.id.return_book_button);
         returnButton.setOnClickListener(this);
-        Button receiveButton = (Button) findViewById(R.id.receive_book_button);
+        Button receiveButton = findViewById(R.id.receive_book_button);
         receiveButton.setOnClickListener(this);
-        Button addButton = (Button) findViewById(R.id.add_book_button);
+        Button addButton = findViewById(R.id.add_book_button);
         addButton.setOnClickListener(this);
 
         //==============query database for a book==============

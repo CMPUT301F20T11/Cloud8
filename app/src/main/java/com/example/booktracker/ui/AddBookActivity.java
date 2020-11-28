@@ -46,7 +46,6 @@ import java.util.List;
  */
 public class AddBookActivity extends AppCompatActivity implements Callback,
         QueryOutputCallback {
-
     private Uri imageUri;
     private BookCollection bookList;
     private String email;
@@ -67,7 +66,6 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private String uid;
     private QueryOutput toast_output;
     private String downloadUrl;
-    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

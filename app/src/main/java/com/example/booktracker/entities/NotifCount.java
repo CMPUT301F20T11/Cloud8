@@ -23,5 +23,6 @@ public class NotifCount {
     public void setIncoming(long incoming) {
         this.incoming = incoming;
     }
+
     public long getTotal(){return  incoming+accepted;}
 }

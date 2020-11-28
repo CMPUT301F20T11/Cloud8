@@ -41,7 +41,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class HomeActivity extends AppCompatActivity {
-
     private AppBarConfiguration mAppBarConfiguration;
     private String userEmail;
     private NotificationCircle notif;
