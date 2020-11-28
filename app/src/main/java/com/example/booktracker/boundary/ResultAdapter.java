@@ -1,7 +1,6 @@
 package com.example.booktracker.boundary;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,8 @@ import com.example.booktracker.entities.Book;
 import java.util.ArrayList;
 
 public class ResultAdapter extends ArrayAdapter<Book> {
-    private final ArrayList<Book> bookList;
-    private final Context context;
+    private ArrayList<Book> bookList;
+    private Context context;
 
     public ResultAdapter(Context argContext, ArrayList<Book> argBookList) {
         super(argContext, 0, argBookList);
@@ -29,8 +28,7 @@ public class ResultAdapter extends ArrayAdapter<Book> {
         this.context = argContext;
     }
 
-    @SuppressLint("SetTextI18n")
-    public View getView(final int position, @Nullable View convertView,
+    public View getView(int position, @Nullable View convertView,
                         @NonNull ViewGroup parent) {
         View view = convertView;
         if (view == null) {

@@ -55,10 +55,10 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private IsbnReq req;
     private ArrayList<Book> bookArray;
 
-    EditText titleView;
-    EditText authorView;
-    EditText isbnView;
-    EditText descView;
+    private EditText titleView;
+    private EditText authorView;
+    private EditText isbnView;
+    private EditText descView;
 
     private StorageReference storageReference;
     private FirebaseAuth auth;
@@ -168,7 +168,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     @Override
     public void executeCallback() {
         if (bookArray.size() > 0) {
-            Book newBook = bookArray.get(0);//get first book of the query
+            Book newBook = bookArray.get(0); // get first book of the query
             titleView.setText(newBook.getTitle());
             authorView.setText(newBook.getAuthor().get(0));
             isbnView.setText(newBook.getIsbn());
@@ -183,7 +183,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     public void displayQueryResult(String result) {
         Toast.makeText(AddBookActivity.this, toast_output.getOutput(),
                 Toast.LENGTH_LONG).show();
-        if (result.equals("successful")) {
+        if (result.equals("Successful")) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -201,7 +201,6 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
      * @param newBook
      */
     public void upload(Book newBook) {
-
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading");
         progressDialog.show();

@@ -20,25 +20,26 @@ public class LogInTest {
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class,true,true);
+
     /**
      * Initialize solo to be used by tests.
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
-        solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
+    public void setUp() throws Exception {
+        solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
     }
 
     /**
      * Test if registered user is able to log in
      */
     @Test
-    public void login(){
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",SignInActivity.class);
-        solo.enterText((EditText) solo.getView(R.id.email_field),email);
-        solo.enterText((EditText) solo.getView(R.id.password_field),pass);
+    public void login() {
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity", SignInActivity.class);
+        solo.enterText((EditText) solo.getView(R.id.email_field), email);
+        solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",HomeActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
 }

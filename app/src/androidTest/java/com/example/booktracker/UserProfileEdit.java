@@ -39,12 +39,12 @@ public class UserProfileEdit {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy", SignInActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity", SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity", HomeActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
 
     private void editProfile() {
@@ -54,19 +54,19 @@ public class UserProfileEdit {
         EditText phoneBuff = (EditText) solo.getView(R.id.edit_phone);
         emailBuff.setText("");
         phoneBuff.setText("");
-        solo.enterText(emailBuff, "edited" + email);
+        solo.enterText(emailBuff, "plshelp" + email);
         solo.enterText(phoneBuff, "69" + phone);
         solo.clickOnText("OK");
     }
 
     private void checkProfEdit() {
-        assertTrue("Email not found", solo.searchText("edited" + email));
+        assertTrue("Email not found", solo.searchText("plshelp" + email));
         assertTrue("Phone number not found", solo.searchText("69" + phone));
     }
 
     private void revert() {
         solo.clickOnButton("Edit Profile");
-        assertTrue("fragment did not display", solo.searchText("Edit Contact Information"));
+        assertTrue("Fragment did not display", solo.searchText("Edit Contact Information"));
         EditText emailBuff = (EditText) solo.getView(R.id.edit_email);
         EditText phoneBuff = (EditText) solo.getView(R.id.edit_phone);
         emailBuff.setText("");

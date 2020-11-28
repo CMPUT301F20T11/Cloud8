@@ -10,7 +10,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class AddBookQuery extends BookQuery {
     private BookCollection bookList;
@@ -34,6 +33,7 @@ public class AddBookQuery extends BookQuery {
     }
 
     public AddBookQuery() {}
+
     /**
      * This will add the book to the adapter and the database if its not
      * already there
@@ -47,13 +47,12 @@ public class AddBookQuery extends BookQuery {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot res = task.getResult();
-                        if (Objects.requireNonNull(res).exists()) {
+                        if (res.exists()) {
                             // book is already in the database
                             if (queryOutput != null) {
                                 queryOutput.setOutput("Book is already " +
                                         "owned by someone");
-                                outputCallback.displayQueryResult("not " +
-                                        "successful");
+                                outputCallback.displayQueryResult("Unsuccessful");
                             }
                         } else {
                             loadUsername(newBook);
@@ -61,7 +60,7 @@ public class AddBookQuery extends BookQuery {
                         }
                     } else {
                         queryOutput.setOutput("Error when adding book");
-                        outputCallback.displayQueryResult("not successful");
+                        outputCallback.displayQueryResult("Unsuccessful");
                     }
                 });
     }
@@ -95,11 +94,11 @@ public class AddBookQuery extends BookQuery {
      */
     public void addToDb(Book newBook) {
         HashMap<String, Object> data = getData(newBook);
-        final CollectionReference bookCollection = db.collection("books");
+        CollectionReference bookCollection = db.collection("books");
         bookCollection
                 .document(newBook.getIsbn())
                 .set(data).addOnCompleteListener(task -> {
-                    final DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
+                    DocumentReference bookReference = bookCollection.document(newBook.getIsbn());
                     HashMap<String, Object> userBook = new HashMap<>();
                     userBook.put("bookReference", bookReference);
                     if (!newBook.getStatus().equals("")) {
@@ -113,12 +112,12 @@ public class AddBookQuery extends BookQuery {
                             .set(userBook).addOnSuccessListener(aVoid -> {
                         if (queryOutput != null) {
                             queryOutput.setOutput("Added book successfully");
-                            outputCallback.displayQueryResult("successful");
+                            outputCallback.displayQueryResult("Successful");
                         }
                     }).addOnFailureListener(e -> {
                         if (queryOutput != null) {
-                            queryOutput.setOutput("couldn't add book");
-                            outputCallback.displayQueryResult("not successful");
+                            queryOutput.setOutput("Couldn't add book");
+                            outputCallback.displayQueryResult("Unsuccessful");
                         }
                     });
                 });

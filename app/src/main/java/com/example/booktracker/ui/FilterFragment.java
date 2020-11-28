@@ -14,13 +14,13 @@ import androidx.fragment.app.DialogFragment;
 import com.example.booktracker.R;
 
 public class FilterFragment extends DialogFragment {
-    Button lent;
-    Button requested;
-    Button myBooks;
-    Button available;
-    Button borrowed;
-    View view;
-    MyBooksFragment parentActivity;
+    private Button lent;
+    private Button requested;
+    private Button myBooks;
+    private Button available;
+    private Button borrowed;
+    private View view;
+    private MyBooksFragment parentActivity;
 
     /**
      * Set the parent activity which is MyBooksFragment to use its methods
@@ -69,6 +69,7 @@ public class FilterFragment extends DialogFragment {
         borrowed_listener();
         available_listener();
     }
+
     /**
      * set listener for accepted books filter
      */
@@ -78,6 +79,7 @@ public class FilterFragment extends DialogFragment {
             getDialog().dismiss();
         });
     }
+
     /**
      * set listener for requested books filter
      */
@@ -87,6 +89,7 @@ public class FilterFragment extends DialogFragment {
             getDialog().dismiss();
         });
     }
+
     /**
      * set listener for no filter books filter
      */
@@ -96,6 +99,7 @@ public class FilterFragment extends DialogFragment {
             getDialog().dismiss();
         });
     }
+
     /**
      * set listener for borrowed books filter
      */
@@ -105,6 +109,7 @@ public class FilterFragment extends DialogFragment {
             getDialog().dismiss();
         });
     }
+
     /**
      * set listener for available books filter
      */

@@ -38,7 +38,7 @@ public class RequestCollection {
      * @param position
      * @return Request
      */
-    public Request getRequest(int position){
+    public Request getRequest(int position) {
         return adapter.getItem(position);
     }
 
@@ -50,7 +50,7 @@ public class RequestCollection {
         adapter = new RequestAdapter(context, argRequestList);
     }
 
-    public void deleteRequest(Request toRemove){
+    public void deleteRequest(Request toRemove) {
         adapter.remove(toRemove);
         adapter.notifyDataSetChanged();
     }

@@ -40,8 +40,7 @@
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
-        <activity android:name=".ui.ScanActivity"
-            />
+        <activity android:name=".ui.ScanActivity" />
         <activity android:name=".ui.SetGeoActivity" />
         <activity android:name=".ui.HomeActivity" />
         <activity android:name=".ui.ViewBookActivity"/>

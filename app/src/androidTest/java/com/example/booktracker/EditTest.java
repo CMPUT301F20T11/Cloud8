@@ -33,7 +33,7 @@ public class EditTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-     * Initialize solo to be used by tests. And add book to be tested in db.
+     * Initialize solo to be used by tests and add book to be tested in db
      *
      * @throws Exception
      */
@@ -47,21 +47,21 @@ public class EditTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity",
                 HomeActivity.class);
     }
 
     /**
-     * set the EditText for author,title, and description in EditBookActivity.
+     * set the EditText for author, title, and description in EditBookActivity.
      */
     private void mockEdit() {
-        solo.assertCurrentActivity("Wrong activity should be AddBookActivity"
+        solo.assertCurrentActivity("Wrong activity, should be AddBookActivity"
                 , EditBookActivity.class);
         EditBookActivity activity =
                 (EditBookActivity) solo.getCurrentActivity();

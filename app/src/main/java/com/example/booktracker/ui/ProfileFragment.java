@@ -108,9 +108,9 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         docRef
                 .update("phone", phone,
                         "email", email)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Phone number " +
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Phone and email " +
                         "successfully changed!"))
-                .addOnFailureListener(e -> Log.d(TAG, "Phone number failed to" +
+                .addOnFailureListener(e -> Log.d(TAG, "Phone and email failed to" +
                         " change!" + e.toString()));
         loadProfile(loginEmail);
     }

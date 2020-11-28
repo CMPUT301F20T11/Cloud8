@@ -56,7 +56,6 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_incoming_req, container, false);
-
         listView = view.findViewById(R.id.incoming_requests_list);
         setHasOptionsMenu(true);
         HomeActivity activity = (HomeActivity) getActivity();
@@ -69,35 +68,29 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         query.emptyNotif(activity.getUserEmail(),"incomingCount");
         activity.notifRefresh();
 
-        /*
-          Accepting a book request prompts the option to attach a geo
-          location where book can be picked up
+        /**
+         * Accepting a book request prompts the option to attach a geo
+         * location where book can be picked up
          */
-        Button acceptReqBtn = (Button) view.findViewById(R.id.accept_req_button);
-        acceptReqBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(selected_request != null){
-                    AlertDialog.Builder geoPrompt = new AlertDialog.Builder(view.getContext());
-                    geoPrompt.setMessage("Set location for book pickup?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
-                } else {
-                    Toast.makeText(getContext(), "No request selected", Toast.LENGTH_SHORT).show();
-                }
+        Button acceptReqBtn = view.findViewById(R.id.accept_req_button);
+        acceptReqBtn.setOnClickListener(view -> {
+            if(selected_request != null){
+                AlertDialog.Builder geoPrompt = new AlertDialog.Builder(view.getContext());
+                geoPrompt.setMessage("Set location for book pickup?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            } else {
+                Toast.makeText(getContext(), "No request selected", Toast.LENGTH_SHORT).show();
             }
         });
 
 
-        Button declineReqBtn = (Button) view.findViewById(R.id.decline_req_button);
-        declineReqBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_request != null) {
-                    String isbn = selected_request.getBook().getIsbn();
-                    delQuery.deleteBookRequested(isbn,selected_request.getFromEmail());
-                    delQuery.deleteBookIncoming(isbn,selected_request.getFromEmail(),selected_request.getToEmail());
-                    requestQuery.getRequests("incomingRequests");
-                }
+        Button declineReqBtn = view.findViewById(R.id.decline_req_button);
+        declineReqBtn.setOnClickListener(view -> {
+            if (selected_request != null) {
+                String isbn = selected_request.getBook().getIsbn();
+                delQuery.deleteBookRequested(isbn, selected_request.getFromEmail());
+                delQuery.deleteBookIncoming(isbn, selected_request.getFromEmail(), selected_request.getToEmail());
+                requestQuery.getRequests("incomingRequests");
             }
         });
 
@@ -107,17 +100,16 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which){
+            switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
                     startActivityForResult(new Intent(getActivity(), SetGeoActivity.class), LAUNCH_GEO);
                     break;
-
                 case DialogInterface.BUTTON_NEGATIVE:
                     // .. request accepted .. don't attach location
                     HashMap<String, Object> dataRes = new HashMap<>();
-                    dataRes.put("status","accepted");
+                    dataRes.put("status", "accepted");
                     selected_book = selected_request.getBook();
-                    query.updateBook(selected_book,instance,dataRes,queryOutput);
+                    query.updateBook(selected_book, instance, dataRes, queryOutput);
                     query.changeBookStatus(selected_book.getIsbn() + "-" + selected_request.getFromEmail(), selected_book.getIsbn(),"accepted", selected_request.getToEmail(),"incomingRequests");
                     query.changeBookStatus(selected_book.getIsbn(), selected_book.getIsbn(),"accepted", selected_request.getFromEmail(),"requested");
                     requestCollection.deleteRequest(selected_request);
@@ -200,7 +192,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void displayQueryResult(String result){
-        Toast.makeText(instance.getContext(),queryOutput.getOutput(),Toast.LENGTH_LONG).show();
+        Toast.makeText(instance.getContext(), queryOutput.getOutput(), Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -214,7 +206,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 HashMap<String, Object> dataRes = new HashMap<>();
                 dataRes.put("lat", lat);
                 dataRes.put("lon", lon);
-                dataRes.put("status","accepted");
+                dataRes.put("status", "accepted");
                 selected_book = selected_request.getBook();
                 query.updateBook(selected_book, instance, dataRes, queryOutput);
                 query.changeBookStatus(selected_book.getIsbn() + "-" + selected_request.getFromEmail(), selected_book.getIsbn(),"accepted", selected_request.getToEmail(),"incomingRequests");

@@ -30,7 +30,7 @@ public class DeleteTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-     * Initialize solo to be used by tests.And add book to be tested in db.
+     * Initialize solo to be used by tests and add book to be tested in db
      *
      * @throws Exception
      */
@@ -60,13 +60,13 @@ public class DeleteTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity",
                 HomeActivity.class);
     }
 
@@ -78,7 +78,7 @@ public class DeleteTest {
         login();
         solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.delete_book_button));
-        assertFalse("book was not deleted", solo.searchText("/pol/ " +
+        assertFalse("Book was not deleted", solo.searchText("/pol/ " +
                 "Manifesto"));
     }
 }

@@ -37,6 +37,7 @@ public class RequestQuery {
     private String curFromEmail;
     private String curFromUsername;
     private int outputSize;
+
     /**
      * constructor will connect to database and initialized document
      * pertaining to user
@@ -104,18 +105,18 @@ public class RequestQuery {
                         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                             DocumentReference docRef = (DocumentReference) document.get("bookReference");
                             DocumentReference userRef = (DocumentReference) document.get("from");
-                            Task bookDoc = docRef.get();
-                            Task userDoc = userRef.get();
-                            Tasks.whenAllComplete(bookDoc,userDoc).addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                            Task bookTask = docRef.get();
+                            Task userTask = userRef.get();
+                            Tasks.whenAllComplete(bookTask, userTask).addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                                 @Override
                                 public void onComplete(@NonNull Task<List<Task<?>>> task) {
                                     ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
-                                    DocumentSnapshot res1 = (DocumentSnapshot) res.get(0).getResult(); //this is the book
-                                    DocumentSnapshot res2 = (DocumentSnapshot) res.get(1).getResult(); //this is the user
-                                    curFromEmail = (String)res2.get("email");
-                                    curFromUsername = (String) res2.getString("username");
+                                    DocumentSnapshot bookDoc = (DocumentSnapshot) res.get(0).getResult(); // this is the book
+                                    DocumentSnapshot userDoc = (DocumentSnapshot) res.get(1).getResult(); // this is the user
+                                    curFromEmail = userDoc.getString("email");
+                                    curFromUsername = userDoc.getString("username");
                                     book = new Book();
-                                    parseBook(res1, book);
+                                    parseBook(bookDoc, book);
                                     Request request = new Request(curFromEmail, toEmail, book, context);
                                     request.setFromUsername(curFromUsername);
                                     outputRequests.add(request);

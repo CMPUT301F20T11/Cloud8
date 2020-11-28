@@ -10,7 +10,6 @@ public abstract class Notification {
     protected String serverKey = "key=AAAAl96duTc:APA91bEKW32AUHrIY88CsZ-o2M58X0JfSnfXs2j8HBpW-p5SdxYjsDX9OV6RKGc43qgoGS7T0ocW2dIBjWDuFER_OqenB8pGWVmJZaQDKw5p1LEadZSC3KnM3X0fjQXZbYyUW7Bahndc";
     protected String contentType = "application/json";
 
-
     /**
      * Contructor for the abstract notification class
      * Initializes the firestore references

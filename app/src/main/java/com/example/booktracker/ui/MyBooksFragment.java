@@ -8,8 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,7 +20,6 @@ import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.NotificationCircle;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +43,7 @@ public class MyBooksFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //=============set attributes=======================
+        // =======================set attributes=======================
         view = inflater.inflate(R.layout.fragment_my_books, container, false);
         HomeActivity activity = (HomeActivity) getActivity();
         bookList = view.findViewById(R.id.my_book_list);
@@ -59,11 +56,11 @@ public class MyBooksFragment extends Fragment {
         getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
         activity.notifRefresh();
-        //======================================================
+        // ======================================================
         setSelectListener();
         setDeleteListener();
         setViewListener();
-        //setFilterListener();
+        // setFilterListener();
         ImageButton addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -103,13 +100,15 @@ public class MyBooksFragment extends Fragment {
             }
         });
     }
-/*
+
+    /*
     private void setFilterListener() {
         Button filterBtn = view.findViewById(R.id.filter_button);
         filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
                 "Filter"));
     }
-*/
+    */
+
     /**
      * Set the callback function to be executed when a book need to be deleted
      */

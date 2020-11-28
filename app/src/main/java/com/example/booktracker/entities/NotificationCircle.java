@@ -16,7 +16,7 @@ public class NotificationCircle implements Callback {
     private TextView incoming;
     private TextView accepted;
 
-    public NotificationCircle(String argEmail, TextView argView,TextView incoming,TextView accepted){
+    public NotificationCircle(String argEmail, TextView argView, TextView incoming, TextView accepted) {
         getBookQuery = new GetBookQuery();
         count = new NotifCount();
         email = argEmail;
@@ -27,22 +27,25 @@ public class NotificationCircle implements Callback {
     }
 
     public void checkNotification() {
-        getBookQuery.getNotif(this,count,(email));
+        getBookQuery.getNotif(this, count, (email));
     }
-    private void raiseIncoming(){
+
+    private void raiseIncoming() {
         incoming.setVisibility(View.VISIBLE);
         incoming.setText(Long.toString(count.getIncoming()));
     }
-    private void raiseAccepted(){
+
+    private void raiseAccepted() {
         accepted.setVisibility(View.VISIBLE);
         accepted.setText(Long.toString(count.getAccepted()));
     }
-    private void raiseTotal(){
+
+    private void raiseTotal() {
         view.setVisibility(View.VISIBLE);
         view.setText(Long.toString(count.getTotal()));
     }
 
-    private void clearNotif(){
+    private void clearNotif() {
         view.setVisibility(View.GONE);
         incoming.setVisibility(View.GONE);
         accepted.setVisibility(View.GONE);

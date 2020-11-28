@@ -17,7 +17,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * @author Edlee Ducay
  */
 public class UserQuery {
-
     protected DocumentReference userDoc;
     protected FirebaseFirestore db;
     protected String email, username, phone, token;

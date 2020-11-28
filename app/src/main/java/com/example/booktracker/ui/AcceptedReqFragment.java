@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.BundleCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
@@ -30,7 +29,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
-
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
@@ -58,7 +56,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
         bookList = new ArrayList<>();
         bookCollection = new BookCollection(bookList, listView, email, view.getContext());
         getBookQuery = new GetBookQuery(activity.getUserEmail(), bookCollection,view.getContext());
-        setButtonListener((Button) view.findViewById(R.id.view_geo_button));
+        setButtonListener(view.findViewById(R.id.view_geo_button));
         setSelectListener();
         viewButton = view.findViewById(R.id.view_button_accepted);
         setViewListener();
@@ -70,25 +68,19 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     }
 
     private void setViewListener() {
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null) {
-                    Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                    startActivity(intent);
-                }
+        viewButton.setOnClickListener(view -> {
+            if (selected_book != null) {
+                Intent intent = new Intent(view.getContext(),ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                startActivity(intent);
             }
         });
     }
 
     private void setButtonListener(Button geoButton){
-        geoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selected_book != null) {
-                    getBookQuery.getLatLong(instance, selected_book);
-                }
+        geoButton.setOnClickListener(v -> {
+            if (selected_book != null) {
+                getBookQuery.getLatLong(instance, selected_book);
             }
         });
     }
@@ -132,10 +124,9 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     public void executeCallback(){
         Double lat = selected_book.getLat();
         Double lon = selected_book.getLon();
-        if(lat == null || lon == null){
+        if (lat == null || lon == null) {
             Toast.makeText(getContext(), "No location attached to location", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Bundle pickupLoc = new Bundle();
             pickupLoc.putDouble("pickupLat", lat);
             pickupLoc.putDouble("pickupLng", lon);

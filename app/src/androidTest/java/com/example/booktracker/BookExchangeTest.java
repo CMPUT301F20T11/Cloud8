@@ -10,13 +10,11 @@ import androidx.test.rule.ActivityTestRule;
 import com.example.booktracker.boundary.AddBookQuery;
 import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.Request;
 import com.example.booktracker.ui.HomeActivity;
 import com.example.booktracker.ui.SetGeoActivity;
 import com.example.booktracker.ui.SignInActivity;
 import com.example.booktracker.ui.ViewBookActivity;
 import com.example.booktracker.ui.ViewGeoActivity;
-import com.google.android.gms.maps.model.LatLng;
 import com.robotium.solo.Solo;
 
 import org.junit.After;
@@ -54,16 +52,16 @@ public class BookExchangeTest {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),
                 rule.getActivity());
         DeleteBookQuery del = new DeleteBookQuery();
-        del.deleteBookList("incomingRequests",email1);
-        del.deleteBookList("available",email1);
-        del.deleteBookList("accepted",email1);
-        del.deleteBookList("MyBooks",email1);
-        del.deleteBookList("lent",email1);
+        del.deleteBookList("incomingRequests", email1);
+        del.deleteBookList("available", email1);
+        del.deleteBookList("accepted", email1);
+        del.deleteBookList("MyBooks", email1);
+        del.deleteBookList("lent", email1);
         addBookToDb(email1);
 
-        del.deleteBookList("borrowed",email2);
-        del.deleteBookList("requested",email2);
-        del.deleteBookList("accepted",email2);
+        del.deleteBookList("borrowed", email2);
+        del.deleteBookList("requested", email2);
+        del.deleteBookList("accepted", email2);
     }
 
 
@@ -71,7 +69,7 @@ public class BookExchangeTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login(String email) {
-        solo.assertCurrentActivity("Wrong activity should be SignInActivity",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
@@ -82,12 +80,11 @@ public class BookExchangeTest {
     /**
      * Log out of current account
      */
-    private void logout(){
+    private void logout() {
         navDrawer("Profile");
         solo.clickOnView(solo.getView(R.id.logout_btn));
         checkActivity(SignInActivity.class, "SignInActivity");
     }
-
 
     /**
      * Delete the book that was used from firestore.
@@ -124,9 +121,9 @@ public class BookExchangeTest {
         SearchView searchview = (SearchView) solo.getView(R.id.book_search);
         searchview.setQuery("Test 69",true);
         assertTrue("Book not appearing in Find Books", solo.searchText("Requesting 69"));
-        //click on book
+        // click on book
         solo.clickOnText("Requesting 69");
-        //request book
+        // request book
         solo.clickOnView(solo.getView(R.id.request_book_button));
     }
 
@@ -143,7 +140,7 @@ public class BookExchangeTest {
      * and specifies a pickupLocation
      */
     private void acceptRequest() {
-        //accept request
+        // accept request
         navDrawer("Incoming Requests");
         assertTrue("Book not appearing in Incoming requests", solo.searchText("Requesting 69"));
         solo.clickOnText("Requesting 69");
@@ -178,7 +175,6 @@ public class BookExchangeTest {
         solo.sleep(1000);
         solo.clickOnView(solo.getView(R.id.view_geo_done_button));
         checkActivity(HomeActivity.class, "HomeActivity");
-
     }
 
     /**
@@ -203,7 +199,6 @@ public class BookExchangeTest {
         checkActivity(ViewBookActivity.class, "ViewBookActivity");
         solo.clickOnView(solo.getView(R.id.give_book_button));
         exitActivity();
-
     }
 
 
@@ -211,7 +206,7 @@ public class BookExchangeTest {
      * Book should appear with status borrowed in MyBooks
      * TODO check fails - status should be borrowed as both sides have confirmed
      */
-    private void checkBorrowedStatus(){
+    private void checkBorrowedStatus() {
         assertTrue("Book not appearing in My Books", solo.searchText("Requesting 69"));
         solo.clickOnText("Requesting 69");
         solo.clickOnView(solo.getView(R.id.view_book_button));
@@ -222,7 +217,7 @@ public class BookExchangeTest {
     /**
      * Book should appear in user2 borrowed books
      */
-    private void checkBorrowedBook(){
+    private void checkBorrowedBook() {
         navDrawer("Borrowed Books");
         assertTrue("Book not appearing in borrowed books", solo.searchText("Requesting 69"));
     }
@@ -238,10 +233,8 @@ public class BookExchangeTest {
         solo.clickOnText("Requesting 69");
         solo.clickOnView(solo.getView(R.id.view_button_borrowed));
         checkActivity(ViewBookActivity.class, "ViewBookActivity");
-
         solo.clickOnView(solo.getView(R.id.return_book_button));
         exitActivity();
-
     }
 
     /**
@@ -254,7 +247,7 @@ public class BookExchangeTest {
         solo.clickOnText("Requesting 69");
         solo.clickOnView(solo.getView(R.id.view_book_button));
         checkActivity(ViewBookActivity.class, "ViewBookActivity");
-        //probably fails iono
+        // probably fails iono
         solo.clickOnView(solo.getView(R.id.receive_book_button));
         exitActivity();
     }
@@ -301,7 +294,6 @@ public class BookExchangeTest {
         solo.clickOnText(fragment);
     }
 
-
     /**
      * Delete book form db
      */
@@ -309,15 +301,14 @@ public class BookExchangeTest {
     public final void tearDown() {
         deleteBook(email1);
         DeleteBookQuery del = new DeleteBookQuery();
-        del.deleteBookList("incomingRequests",email1);
-        del.deleteBookList("lent",email1);
-        del.deleteBookList("accepted",email1);
-        del.deleteBookList("MyBooks",email2);
-        del.deleteBookList("borrowed",email2);
-        del.deleteBookList("requested",email2);
-        del.deleteBookList("accepted",email2);
+        del.deleteBookList("incomingRequests", email1);
+        del.deleteBookList("lent", email1);
+        del.deleteBookList("accepted", email1);
+        del.deleteBookList("MyBooks", email2);
+        del.deleteBookList("borrowed", email2);
+        del.deleteBookList("requested", email2);
+        del.deleteBookList("accepted", email2);
     }
-
 
     @Test
     public void ExchangeTest() {
@@ -363,7 +354,7 @@ public class BookExchangeTest {
         login(email1);
         // receive book from user2
         // receiveBook();
-        //book should appear available in My Books
+        // book should appear available in My Books
         // checkMyBooks("Test69");
         // DONE
     }

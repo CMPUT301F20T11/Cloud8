@@ -29,10 +29,9 @@ public class ScanActivity extends AppCompatActivity {
      * https://github.com/zxing/zxing/wiki/Scanning-Via-Intent
      * @author Andrew Wood <awood@ualberta.ca>
      */
-    private void scanCode(){
+    private void scanCode() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(CaptureAct.class);
-
         integrator.setOrientationLocked(false);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setPrompt("Scanning Code");
@@ -64,11 +63,11 @@ public class ScanActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (getCallingActivity() != null){
-                            //==========code to pass data back to parent activity======
+                            // ==========code to pass data back to parent activity======
                             Intent data = new Intent();
                             data.setData(Uri.parse(result.getContents()));
                             setResult(RESULT_OK,data);
-                            //=========================================================
+                            // =========================================================
                             finish();
                         } else {
                             Intent intent = new Intent(ref,ViewBookActivity.class);

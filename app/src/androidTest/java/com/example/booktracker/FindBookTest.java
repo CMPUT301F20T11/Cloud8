@@ -35,19 +35,22 @@ public class FindBookTest {
     @Rule
     public ActivityTestRule<SignInActivity> rule =
             new ActivityTestRule<>(SignInActivity.class,true,true);
+
     /**
      * Initialize solo to be used by tests.
      * @throws Exception
      */
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         addToDb();
         solo = new Solo(InstrumentationRegistry.getInstrumentation(),rule.getActivity());
     }
+
     @After
     public void tearDown(){
         deleteBook();
     }
+
     /**
      * Delete the book that was used from firestore.
      */
@@ -58,6 +61,7 @@ public class FindBookTest {
         book1.setStatus("available");
         del.deleteBook(book1);
     }
+
     /**
      * Add test book to db
      */
@@ -72,10 +76,11 @@ public class FindBookTest {
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
+
     /**
      * Initialize entries in the AddBookActivity edit text.
      */
-    private void mockBook(){
+    private void mockBook() {
         solo.enterText((EditText) solo.getView(R.id.addbook_title),"/pol/ Manifesto");
         solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
@@ -85,19 +90,20 @@ public class FindBookTest {
     /**
      * Sign in and set the current activity to HomeActivity.
      */
-    private void login(){
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",SignInActivity.class);
+    private void login() {
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity", SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field),email);
         solo.enterText((EditText) solo.getView(R.id.password_field),pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",HomeActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
+
     /**
      * Test the add book functionality of AddBookActivity.
      */
     @Test
-    public void findBook() throws InterruptedException{
+    public void findBook() throws InterruptedException {
         login();
         solo.clickOnView(solo.getView(R.id.nav_find));
         solo.clickOnImageButton(0);

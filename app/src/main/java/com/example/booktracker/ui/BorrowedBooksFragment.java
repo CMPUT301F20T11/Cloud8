@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -18,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.boundary.GetBookQuery;
-import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,13 +29,13 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
 import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class BorrowedBooksFragment extends Fragment {
-    Book selected_book = null;
+    private Book selected_book = null;
     private ListView listView;
     private ArrayList<Book> bookList;
     private GetBookQuery getBookQuery;
     private BookCollection books;
     private View view;
-    private final Request selected_request = null;
+    private Request selected_request = null;
     private String email, userSelected;
     private HomeActivity activity;
     private Button viewButton;

@@ -57,7 +57,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     private QueryOutput toast_output;
     private String downloadUrl;
     private UpdateQuery updateQuery;
-    private final EditBookActivity instance = this;
+    private EditBookActivity instance = this;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,6 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-
             //============================================================
         });
 
@@ -171,17 +170,14 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
             // Get the uri from selected image and set into the image view
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
                 imageView.setImageURI(imageUri);
             }
         }
-
         if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
         }
@@ -194,7 +190,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             Toast.makeText(EditBookActivity.this, toast_output.getOutput(),
                     Toast.LENGTH_LONG).show();
         }
-        if (result.equals("successful")) {
+        if (result.equals("Successful")) {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
@@ -230,8 +226,8 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
             StorageReference ref =
                     storageReference.child("images/users/" + uid + "/" + localUri);
             UploadTask uploadTask = ref.putFile(imageUri);
-            // Register observers to listen for when the download is done or
-            // if it fails
+            // Register observers to listen for when the download
+            // is done or if it fails
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
@@ -244,7 +240,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
                         downloadUrl = uri.toString();
                         newBook.setUri(downloadUrl);
                         HashMap<String, Object> data =
-                                EditBookActivity.this.createData(newBook.getTitle(),
+                                createData(newBook.getTitle(),
                                         newBook.getAuthor(),
                                         newBook.getDescription(),
                                         newBook.getUri(),

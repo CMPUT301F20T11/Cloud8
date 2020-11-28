@@ -19,7 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText new_username_field, editTextPassword, editTextEmailAddress, editTextPhone;
     private Button confirmSignUp;
     private FirebaseAuth mAuth;
@@ -27,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseFirestore db;
     private CollectionReference collectionReference;
     //===============================
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,54 +51,58 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.sign_up_send:
-                registerUser();
+        if (v.getId() == R.id.sign_up_send) {
+            registerUser();
         }
     }
+
         private void registerUser () {
             final String username = new_username_field.getText().toString().trim();
             final String email = editTextEmailAddress.getText().toString().trim();
             final String phoneNumber = editTextPhone.getText().toString().trim();
-            String password = editTextPassword.getText().toString().trim();
+            final String password = editTextPassword.getText().toString().trim();
 
             if (username.isEmpty()) {
                 new_username_field.setError("A name is required!");
                 new_username_field.requestFocus();
                 return;
             }
+
             if (phoneNumber.isEmpty()) {
                 editTextPhone.setError("A phone number is required for contact.");
                 editTextPhone.requestFocus();
                 return;
             }
+
             if (email.isEmpty()) {
                 editTextEmailAddress.setError("An email is required!");
                 editTextEmailAddress.requestFocus();
                 return;
             }
+
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 editTextEmailAddress.setError("Please provide a valid email!");
                 editTextEmailAddress.requestFocus();
                 return;
             }
+
             if (password.isEmpty()) {
                 editTextPassword.setError("A password is required!");
                 editTextPassword.requestFocus();
                 return;
             }
+
             if (password.length() < 6) {
                 editTextPassword.setError("Password needs to be at least 6 characters.");
                 editTextPassword.requestFocus();
                 return;
             }
+
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            //======================store user data in firestore================================
+                            // ====================== store user data in firestore ======================
                             HashMap<String, String> data = new HashMap<>();
-
-
                             FirebaseMessaging.getInstance().getToken()
                                     .addOnCompleteListener(task1 -> {
                                         if (!task1.isSuccessful()) {
@@ -108,7 +113,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                     task1.getException());
                                             return;
                                         }
-
                                         // Get new FCM registration token
                                         String token = task1.getResult();
                                         if (email.length() > 0) {
@@ -119,28 +123,24 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                                     .document(email)
                                                     .set(data).addOnSuccessListener(aVoid -> {
                                                 Toast.makeText(SignUpActivity.this, "User successfully registered!", Toast.LENGTH_LONG).show();
-                                                //====Ivan: made it so that
-                                                // the activity automatically
-                                                // exits==
+                                                // Ivan made it so that the
+                                                // activity automatically exits
                                                 try {
                                                     Thread.sleep(2000);
                                                 } catch (InterruptedException e) {
                                                     Thread.currentThread().interrupt();
                                                 }
                                                 finish();
-                                                //============================================================
+                                                // ==================================================
                                             }).addOnFailureListener(e -> Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show());
                                         }
-                                        //==========================================================
+                                        // ==========================================================
                                         else {
                                             Toast.makeText(SignUpActivity.this, "Failed to register user, please try again.", Toast.LENGTH_LONG).show();
                                         }
-
                                     });
-
                         }
                     });
         }
-
 }
 

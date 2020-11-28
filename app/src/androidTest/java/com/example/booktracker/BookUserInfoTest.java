@@ -52,6 +52,7 @@ public class BookUserInfoTest {
     public void tearDown(){
         deleteBook();
     }
+
     /**
      * Delete the book that was used from firestore.
      */
@@ -62,16 +63,17 @@ public class BookUserInfoTest {
         book1.setStatus("available");
         del.deleteBook(book1);
     }
+
     /**
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy", SignInActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity", SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity", HomeActivity.class);
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
 
     /**
@@ -88,12 +90,13 @@ public class BookUserInfoTest {
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
+
     @Test
     public void testUserInfo() {
         solo.clickOnText("/pol/ Manifesto");
         solo.clickOnMenuItem("View User");
-        assertTrue("cant find username",solo.searchText(username));
-        assertTrue("cant find email",solo.searchText(email));
-        assertTrue("cant find phone number",solo.searchText(phone));
+        assertTrue("Cannot find username", solo.searchText(username));
+        assertTrue("Cannot find email", solo.searchText(email));
+        assertTrue("Cannot find phone number", solo.searchText(phone));
     }
 }

@@ -19,12 +19,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookAdapter;
-import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.entities.NotificationCircle;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -47,7 +45,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private String userSelected, searchText, userEmail;
     private GetBookQuery query;
     private UpdateQuery updateQuery;
-    private final FindBooksFragment instance = this;
+    private FindBooksFragment instance = this;
     private HomeActivity home;
     private Button viewButton;
 
@@ -88,16 +86,13 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
 
         Button requestBtn = view.findViewById(R.id.request_book_button);
-        requestBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null) {
-                    Request request = new Request(userEmail, userSelected, selected_book, getContext());
-                    updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
-                    request.sendRequest();
-                } else {
-                    Toast.makeText(view.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
-                }
+        requestBtn.setOnClickListener(v -> {
+            if (selected_book != null) {
+                Request request = new Request(userEmail, userSelected, selected_book, getContext());
+                updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
+                request.sendRequest();
+            } else {
+                Toast.makeText(v.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -105,17 +100,15 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     private void setViewListener() {
-        viewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selected_book != null) {
-                    Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
-                    intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
-                    startActivity(intent);
-                }
+        viewButton.setOnClickListener(view -> {
+            if (selected_book != null) {
+                Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, selected_book.getIsbn());
+                startActivity(intent);
             }
         });
     }
+
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
@@ -202,10 +195,8 @@ public class FindBooksFragment extends Fragment implements Callback {
         String username = userDoc.getString("username");
         String email = userDoc.getString("email");
         String phone = userDoc.getString("phone");
-        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
-                email, phone);
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username, email, phone);
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW BOOK USER");
     }
-
 }

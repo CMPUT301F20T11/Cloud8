@@ -303,7 +303,7 @@ public class Book implements Serializable {
      * @param lon
      * @param lat
      */
-    public void setLatLon(Double lon,Double lat){
+    public void setLatLon(Double lon, Double lat) {
         this.lon = lon;
         this.lat = lat;
     }

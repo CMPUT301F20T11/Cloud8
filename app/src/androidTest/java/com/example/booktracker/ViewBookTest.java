@@ -61,13 +61,13 @@ public class ViewBookTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity",
                 HomeActivity.class);
     }
 

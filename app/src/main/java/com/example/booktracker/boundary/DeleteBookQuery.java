@@ -2,15 +2,11 @@ package com.example.booktracker.boundary;
 
 import android.net.Uri;
 
-import androidx.annotation.NonNull;
-
 import com.example.booktracker.entities.Book;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 
 public class DeleteBookQuery extends BookQuery {
@@ -30,7 +26,7 @@ public class DeleteBookQuery extends BookQuery {
         db.collection("books")
                 .document(book.getIsbn())
                 .delete();
-        if (book.getStatus() != "" && book.getStatus() != null) {
+        if (!book.getStatus().equals("") && book.getStatus() != null) {
             userDoc.collection(book.getStatus())
                     .document(book.getIsbn())
                     .delete();
@@ -64,6 +60,7 @@ public class DeleteBookQuery extends BookQuery {
                 .document(id)
                 .delete();
     }
+
     /**
      * This will delete a book from the requested collection of the user
      * @param isbn isbn of the book to be deleted
@@ -72,6 +69,7 @@ public class DeleteBookQuery extends BookQuery {
     public void deleteBookRequested(String isbn, String email){
         delBookRef("requested", isbn, email);
     }
+
     /**
      * This will delete a book from the incoming request collection
      * @param isbn isbn of the book to be deleted
@@ -81,18 +79,16 @@ public class DeleteBookQuery extends BookQuery {
     public void deleteBookIncoming(String isbn, String requesterEmail, String ownerEmail){
         delBookRef("incomingRequests",isbn+"-"+requesterEmail, ownerEmail);
     }
+
     public void deleteBookList(String category,String email){
-        CollectionReference collec = db.collection("users").document(email).collection(category);
-        collec.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot res = task.getResult();
-                        for (DocumentSnapshot doc:res){
-                            String id = doc.getId();
-                            if (id != null){
-                                collec.document(id).delete();
-                            }
+        CollectionReference colRef = db.collection("users").document(email).collection(category);
+        colRef.get()
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot res = task.getResult();
+                    for (DocumentSnapshot doc : res){
+                        String id = doc.getId();
+                        if (id != null){
+                            colRef.document(id).delete();
                         }
                     }
                 });
