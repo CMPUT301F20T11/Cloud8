@@ -125,7 +125,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
     private void setSelectListener() {
         listView.setOnItemClickListener((adapter, v, position, id) -> {
             selected_request = requestCollection.getRequest(position);
-            userSelected = selected_request.getFromUsername();
+            userSelected = selected_request.getFromEmail();
             if (userSelected != null) {
                 getUserDoc(userSelected);
             }
@@ -175,7 +175,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return true;
+                return false;
             }
         }
         return super.onOptionsItemSelected(item);

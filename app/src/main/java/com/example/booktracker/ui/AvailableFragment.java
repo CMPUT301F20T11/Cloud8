@@ -43,7 +43,7 @@ public class AvailableFragment extends Fragment {
         bookList = new ArrayList<>();
         listView = view.findViewById(R.id.my_book_list);
         viewButton = view.findViewById(R.id.view_button_accepted);
-        book = new BookCollection(bookList,listView,email,view.getContext());
+        book = new BookCollection(bookList, listView, email, view.getContext());
         getBookQuery = new GetBookQuery(activity.getUserEmail(), book,view.getContext());
         setViewListener();
         setSelectListener();
