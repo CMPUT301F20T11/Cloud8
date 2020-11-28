@@ -23,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UserQuery;
 import com.example.booktracker.control.Callback;
@@ -62,7 +63,10 @@ public class HomeActivity extends AppCompatActivity {
         //=====================================================================
         notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count));
         getUsername();
-
+        //=============test===============
+//        DeleteBookQuery del = new DeleteBookQuery();
+//        del.deleteBookList("myBooks",userEmail);
+        //==============test==============-
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);

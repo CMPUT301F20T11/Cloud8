@@ -93,7 +93,7 @@ public class AddBookQuery extends BookQuery {
      * @param newBook book to add to firestore
      * @author Ivan Penales
      */
-    private void addToDb(Book newBook) {
+    public void addToDb(Book newBook) {
         HashMap<String, Object> data = getData(newBook);
         final CollectionReference bookCollection = db.collection("books");
         bookCollection

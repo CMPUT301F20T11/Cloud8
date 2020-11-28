@@ -32,7 +32,7 @@
             android:background="@drawable/custom_button_blue_round"
             android:textColor="@color/white"
             android:layout_margin="5dp"
-            android:text="Cancel" />
+            android:text="Done" />
 
     </LinearLayout>
 </RelativeLayout>

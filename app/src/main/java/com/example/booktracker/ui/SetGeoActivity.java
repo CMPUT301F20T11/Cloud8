@@ -143,8 +143,8 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
         mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Location location = task.getResult();
-                Double lat = location.getLatitude();
-                Double lon = location.getLongitude();
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
                 LatLng userCurrentPosition = new LatLng(lat, lon);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
                 Log.d(TAG, "lat: " + lat);

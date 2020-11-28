@@ -23,8 +23,8 @@ public class Book implements Serializable {
     private String borrower;
     //======================
     private String status;
-    private Double lat;
-    private Double lon;
+    private Double lat = null;
+    private Double lon = null;
 
     /**
      * constructor for initializing an empty book
