@@ -47,8 +47,8 @@
         android:label="@string/menu_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/nav_notifications"
-        android:name="com.example.booktracker.ui.NotificationsFragment"
-        android:label="@string/menu_notifications"
+        android:id="@+id/nav_available"
+        android:name="com.example.booktracker.ui.AvailableFragment"
+        android:label="@string/menu_available"
         tools:layout="@layout/fragment_notifications" />
 </navigation>

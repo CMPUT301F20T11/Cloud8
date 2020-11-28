@@ -21,6 +21,12 @@
                     android:title="@string/menu_borrowed"
                     />
                 <item
+                    android:icon="@drawable/ic_book"
+                    android:id="@+id/nav_available"
+                    android:checkable="true"
+                    android:title="@string/menu_available"
+                    />
+                <item
                     android:icon="@drawable/ic_search"
                     android:id="@+id/nav_find"
                     android:checkable="true"
@@ -67,11 +73,6 @@
                     android:id="@+id/nav_profile"
                     android:checkable="true"
                     android:title="@string/menu_profile" />
-                <item
-                    android:icon="@drawable/ic_notification"
-                    android:id="@+id/nav_notifications"
-                    android:checkable="true"
-                    android:title="@string/menu_notifications" />
             </menu>
         </item>
 
