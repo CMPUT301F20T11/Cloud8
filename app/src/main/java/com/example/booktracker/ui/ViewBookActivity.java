@@ -1,6 +1,9 @@
 package com.example.booktracker.ui;
 
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.ViewManager;
 import android.widget.Button;
@@ -23,11 +26,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import static androidx.fragment.app.DialogFragment.STYLE_NO_TITLE;
 
 public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, QueryOutputCallback, Callback {
     private String isbn;
@@ -44,6 +52,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private UpdateQuery updateQuery;
     private QueryOutput queryOutput;
     private ViewBookActivity instance = this;
+    private DocumentSnapshot userDoc;
 
     //========= Text Views ==============
     private TextView isbnView;
@@ -98,7 +107,51 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         query.getABook(isbn, emptyBook, this);
         //=====================================================
     }
+    private Boolean getUserDoc(String owner) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        if (owner == null) {
+            return false;
+        } else {
+            DocumentReference docRef = db.collection("users").document(owner);
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if (doc != null) {
+                        showUserDialog(doc);
+                    }
+                }
+            });
+        }
+        return true;
+    }
+    private void showUserDialog(DocumentSnapshot userDoc) {
+        String username = userDoc.getString("username");
+        String email = userDoc.getString("email");
+        String phone = userDoc.getString("phone");
+        ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
+                email, phone);
 
+        userDialog.setStyle(STYLE_NO_TITLE, 0);
+        userDialog.show(getSupportFragmentManager(), "VIEW USER");
+    }
+    private void addUserListener(){
+        ownerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getUserDoc(emptyBook.getOwnerEmail());
+                view.invalidate();
+            }
+        });
+        if (emptyBook.getBorrower() != null && !emptyBook.getBorrower().equals("") && !emptyBook.getBorrower().equals("none")){
+            borrowerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getUserDoc(emptyBook.getBorrower());
+                    view.invalidate();
+                }
+            });
+        }
+    }
     /**
      * This method will select which buttons to display to the screen
      */
@@ -139,7 +192,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         ownerView = findViewById(R.id.viewbook_owner);
         borrowerView = findViewById(R.id.viewbook_borrower);
         descView = findViewById(R.id.viewbook_desc);
-        keywordView = findViewById(R.id.viewbook_keyword);
         titleView = findViewById(R.id.viewbook_title);
         authorView = findViewById(R.id.viewbook_author);
         statusView = findViewById(R.id.viewbook_status);
@@ -147,6 +199,18 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    /**
+     * This method will change the owner and borrower string so it can be clicked
+     */
+    private void linkUsers(){
+
+        Pattern ownerPattern = Pattern.compile(emptyBook.getOwnerEmail());
+        Linkify.addLinks(ownerView,ownerPattern,"privacy");
+        if (emptyBook.getBorrower() != null && !emptyBook.getBorrower().equals("") && !emptyBook.getBorrower().equals("none")){
+            Pattern borrowerPattern = Pattern.compile(emptyBook.getBorrower());
+            Linkify.addLinks(borrowerView,borrowerPattern,"privacy");
+        }
+    }
     /**
      * Helper method to set the contents of the text views to the contents of
      * the book
@@ -170,7 +234,14 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         }
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
-        authorView.setText(book.getAuthor().get(0));
+        StringBuilder authors = new StringBuilder();
+        for (int i = 0; i < book.getAuthor().size();i++) {
+            authors.append(book.getAuthor().get(i));
+            if (i < book.getAuthor().size()-1){
+                authors.append(", ");
+            }
+        }
+        authorView.setText(authors);
         keywordView.setText("Keywords: " + book.getKeywords());
         statusView.setText(book.getStatus());
         String status = book.getStatus();
@@ -207,7 +278,9 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         } else {
             updateTextViews(emptyBook);
         }
+        linkUsers();
         selectButton();
+        addUserListener();
     }
 
     @Override

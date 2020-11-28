@@ -111,8 +111,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")) {
                 isbnView.setError("ISBN must have 13 digits");
             } else {
-                authors.add(author);
-                Book newBook = new Book(owner, authors, title, isbn, desc, keywords);
+                ArrayList<String> listAuth = toArrayList(author.split(","));
+                Book newBook = new Book(owner, listAuth, title, isbn, desc, keywords);
                 addQuery.loadUsername(newBook);
                 upload(newBook);
             }
@@ -130,7 +130,13 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             imageUri = null;
         });
     }
-
+    private ArrayList<String> toArrayList(String[] arg){
+        ArrayList<String> out = new ArrayList<>();
+        for (String str:arg){
+            out.add(str);
+        }
+        return  out;
+    }
     /**
      * Launches the 3rd party AndroidImageCropper activity
      * Uses a fixed aspect ratio of 1200x1200
@@ -176,7 +182,14 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         if (bookArray.size() > 0) {
             Book newBook = bookArray.get(0); // get first book of the query
             titleView.setText(newBook.getTitle());
-            authorView.setText(newBook.getAuthor().get(0));
+            StringBuilder authors = new StringBuilder();
+            for (int i = 0; i < newBook.getAuthor().size();i++) {
+                authors.append(newBook.getAuthor().get(i));
+                if (i < newBook.getAuthor().size()-1){
+                    authors.append(", ");
+                }
+            }
+            authorView.setText(authors);
             isbnView.setText(newBook.getIsbn());
             descView.setText(newBook.getDescription());
             keywordView.setText(newBook.getKeywords());
