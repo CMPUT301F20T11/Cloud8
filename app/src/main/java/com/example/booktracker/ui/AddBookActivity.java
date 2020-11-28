@@ -36,6 +36,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,7 +96,6 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
         addBtn.setOnClickListener(v -> {
-            List<String> authors = new ArrayList<>();
             String title = titleView.getText().toString();
             String author = authorView.getText().toString();
             String isbn = isbnView.getText().toString();
@@ -105,8 +105,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")) {
                 isbnView.setError("ISBN must have 13 digits");
             } else {
-                authors.add(author);
-                Book newBook = new Book(owner, authors, title, isbn, desc);
+                ArrayList<String> listAuth = toArrayList(author.split(","));
+                Book newBook = new Book(owner, listAuth, title, isbn, desc);
                 addQuery.loadUsername(newBook);
                 upload(newBook);
             }
@@ -124,7 +124,13 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             imageUri = null;
         });
     }
-
+    private ArrayList<String> toArrayList(String[] arg){
+        ArrayList<String> out = new ArrayList<>();
+        for (String str:arg){
+            out.add(str);
+        }
+        return  out;
+    }
     /**
      * Launches the 3rd party AndroidImageCropper activity
      * Uses a fixed aspect ratio of 1200x1200
@@ -170,7 +176,14 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         if (bookArray.size() > 0) {
             Book newBook = bookArray.get(0); // get first book of the query
             titleView.setText(newBook.getTitle());
-            authorView.setText(newBook.getAuthor().get(0));
+            StringBuilder authors = new StringBuilder();
+            for (int i = 0; i < newBook.getAuthor().size();i++) {
+                authors.append(newBook.getAuthor().get(i));
+                if (i < newBook.getAuthor().size()-1){
+                    authors.append(", ");
+                }
+            }
+            authorView.setText(authors);
             isbnView.setText(newBook.getIsbn());
             descView.setText(newBook.getDescription());
         } else {
