@@ -47,7 +47,7 @@ public class DeleteTest {
      */
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
-        ArrayList<String> author = new ArrayList<>();
+        List<String> author = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
         keywords.add("Dank");
         HashMap<String, String> owner = new HashMap<>();

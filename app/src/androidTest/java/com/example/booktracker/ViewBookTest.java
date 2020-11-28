@@ -48,14 +48,15 @@ public class ViewBookTest {
      * Initialize entries in the AddBookActivity edit text.
      */
     private void mockBook() {
-        solo.enterText((EditText) solo.getView(R.id.addbook_title), "The " +
-                "/pol/ Manifesto");
+        solo.enterText((EditText) solo.getView(R.id.addbook_title), "/pol/ Manifesto");
         solo.enterText((EditText) solo.getView(R.id.addbook_author), "Karl " +
                 "Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),
                 "6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),
                 "Test book");
+        solo.enterText((EditText) solo.getView(R.id.addbook_keywords),
+                "Dank");
     }
 
     /**
@@ -76,14 +77,12 @@ public class ViewBookTest {
      * Test if correct information is displayed in ViewBookActivity.
      */
     private void testView() {
-        assertTrue("title cant be found", solo.searchText("/pol/ " +
-                "Manifesto"));
+        assertTrue("title cant be found", solo.searchText("/pol/ Manifesto"));
         assertTrue("Author cannot be found", solo.searchText("Karl Pogs"));
         assertTrue("Isbn cannot be found", solo.searchText("6980671678814"));
         assertTrue("Description cannot be found", solo.searchText("Test book"));
         assertTrue("Owner cannot be found", solo.searchText("test@gmail.com"));
-        assertTrue("Status cannot be found", solo.searchText("Test book"));
-        assertTrue("Keywords cannot be found", solo.searchText("Dank"));
+        assertTrue("Keyword cannot be found", solo.searchText("Dank"));
     }
 
     /**
@@ -102,7 +101,7 @@ public class ViewBookTest {
      */
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
-        ArrayList<String> author = new ArrayList<>();
+        List<String> author = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
         keywords.add("Dank");
         author.add("Karl Pogs");

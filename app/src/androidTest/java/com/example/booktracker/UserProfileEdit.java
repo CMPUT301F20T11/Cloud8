@@ -49,7 +49,7 @@ public class UserProfileEdit {
 
     private void editProfile() {
         solo.clickOnButton("Edit Profile");
-        assertTrue("fragment did not display", solo.searchText("Edit Contact Information"));
+        assertTrue("Fragment did not display", solo.searchText("Edit Contact Information"));
         EditText emailBuff = (EditText) solo.getView(R.id.edit_email);
         EditText phoneBuff = (EditText) solo.getView(R.id.edit_phone);
         emailBuff.setText("");
