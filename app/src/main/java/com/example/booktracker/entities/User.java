@@ -1,5 +1,11 @@
 package com.example.booktracker.entities;
 
+/**
+ * Class for Users within the application
+ *
+ * @author Edlee Ducay
+ * 10/228/2020
+ */
 public class User {
     public String name;
     public String email;
@@ -9,12 +15,26 @@ public class User {
     public User() {
 
     }
+
+    /**
+     * Constructor for User class without token
+     * @param name
+     * @param email
+     * @param phoneNumber
+     */
     public User(String name, String email, String phoneNumber){
         this.email = email;
         this.name = name;
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Constructor for User class with token
+     * @param name
+     * @param email
+     * @param phoneNumber
+     * @param argToken
+     */
     public User(String name, String email, String phoneNumber, String argToken){
         this.email = email;
         this.name = name;
@@ -23,22 +43,42 @@ public class User {
     }
     //=========Ivan===============
 
+    /**
+     * Gets the email
+     * @return
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Gets the username of the user
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get's the user's phone number
+     * @return
+     */
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    /**
+     * Get's the user's token
+     * @return
+     */
     public String getToken() {
         return token;
     }
 
+    /**
+     * Set's the user's token
+     * @param token
+     */
     public void setToken(String token) {
         this.token = token;
     }

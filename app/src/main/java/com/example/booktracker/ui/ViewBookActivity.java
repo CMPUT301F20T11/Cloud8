@@ -161,17 +161,31 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(instance, "Book is not in database", Toast.LENGTH_SHORT).show();
             finish();
         }
-        isbnView.setText(isbn);
+        isbnView.setText("ISBN: " + isbn);
         if (book.getOwner() != null) {
-            ownerView.setText(book.getOwnerEmail());
+            ownerView.setText("Owner: " + book.getOwnerEmail());
         } else {
-            ownerView.setText(book.getStringOwner());
+            ownerView.setText("Owner: " + book.getStringOwner());
         }
-        borrowerView.setText(book.getBorrower());
+        if (book.getBorrower() != null || book.getBorrower() == "none") {
+            borrowerView.setText("Borrower: " + book.getBorrower());
+        } else {
+            borrowerView.setText("Borrower: none");
+        }
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
+        String status = book.getStatus();
+        if (status.equals("available")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_available, null));
+        } else if (status.equals("borrowed")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_borrowed, null));
+        } else if (status.equals("requested")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_requested, null));
+        } else if (status.equals("accepted")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_accepted, null));
+        }
         if (book.getUri() != null) {
             Glide.with(this).load(book.getUri()).into(imageView);
         }
@@ -264,24 +278,5 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
-    /**
-     * setHopperUpdates will be called after the user clicks one of the buttons to give, borrow,
-     * receive, or accept a book. After the button is pressed, it changes the book attributes and
-     * setHopperUpdates will save the changes to the database.
-     */
-    private void setHopperUpdates(){
-        hopperUpdates = new HashMap<>();
-        hopperUpdates.put("borrower", borrowerView.getText().toString());
-        hopperUpdates.put("status", statusView.getText().toString());
-        ref.updateChildren(hopperUpdates);
-    }
-
-    private void updateFirebase(){
-        hopperUpdates = new HashMap<>();
-        hopperUpdates.put("borrower", borrowerView.getText().toString());
-        hopperUpdates.put("status", statusView.getText().toString());
-        documentReference.update(hopperUpdates);
-    }
 }
 

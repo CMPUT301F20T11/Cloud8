@@ -68,6 +68,7 @@ public class GetBookQuery extends BookQuery {
         List<String> authors = (List<String>) document.get("author");
         HashMap<String, String> owner = (HashMap<String, String>) document.get("owner");
         Book book = new Book(owner, authors, (String) document.get("title"), document.getId(), (String) document.get("description"));
+        book.setStatus(document.getString("status"));
         if (document.get("image_uri") != null) {
             Uri imageUri = Uri.parse((String) document.get("image_uri"));
             book.setUri(imageUri.toString());

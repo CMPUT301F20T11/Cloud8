@@ -320,7 +320,9 @@ public class BookExchangeTest {
     }
 
 
-    //@Test
+/*
+    @Test
+>>>>>>> master
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
         login(email2);
@@ -371,5 +373,6 @@ public class BookExchangeTest {
 
 
 
+*/
 
 }
