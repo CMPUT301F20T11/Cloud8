@@ -80,6 +80,7 @@ public class AddBookQuery extends BookQuery {
         data.put("owner", nestedData);
         data.put("borrower", newBook.getBorrower());
         data.put("description", newBook.getDescription());
+        data.put("keywords", newBook.getKeywordList());
         data.put("author", newBook.getAuthor());
         data.put("image_uri", newBook.getUri());
         data.put("local_image_uri", newBook.getLocalUri());
@@ -121,7 +122,6 @@ public class AddBookQuery extends BookQuery {
                         }
                     });
                 });
-
     }
 
     /**

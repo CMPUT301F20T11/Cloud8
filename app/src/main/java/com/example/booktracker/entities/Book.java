@@ -1,7 +1,10 @@
 package com.example.booktracker.entities;
 
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,7 @@ public class Book implements Serializable {
     private String title;
     private String isbn;
     private String description;
+    private List<String> keyword;
     private String uri;
     private String localUri;
     //=======These will be emails=========
@@ -30,9 +34,15 @@ public class Book implements Serializable {
      * constructor for initializing an empty book
      */
     public Book() {
+        List<String> authors = new ArrayList<>();
+        authors.add("");
+        this.author = authors;
         this.title = "";
         this.isbn = "";
         this.description = "";
+        List<String> keywords = new ArrayList<>();
+        keywords.add("");
+        this.keyword = keywords;
         Map<String, String> nestedData = new HashMap<>();
         nestedData.put("", "");
         this.owner = nestedData;
@@ -49,13 +59,15 @@ public class Book implements Serializable {
      * @param argTitle
      * @param argIsbn
      * @param argDesc
+     * @param argKeyword
      */
     public Book(HashMap<String, String> argOwner, List<String> argAuthor,
-                String argTitle, String argIsbn, String argDesc) {
+                String argTitle, String argIsbn, String argDesc, List<String> argKeyword) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.description = argDesc;
+        this.keyword = argKeyword;
         this.owner = argOwner;
         this.status = "available";
         this.borrower = null;
@@ -164,6 +176,28 @@ public class Book implements Serializable {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Gets the book's keyword(s)
+     *
+     * @return List of keyword(s)
+     */
+    public List<String> getKeywordList() {
+        return keyword;
+    }
+
+    public String getKeywords() {
+        return TextUtils.join(", ", keyword);
+    }
+
+    /**
+     * Sets the book's keyword(s)
+     *
+     * @param keywords
+     */
+    public void setKeywords(List<String> keywords) {
+        this.keyword = keywords;
     }
 
     /**

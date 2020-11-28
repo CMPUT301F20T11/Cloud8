@@ -27,8 +27,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Map;
-
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class ViewBookActivity extends AppCompatActivity implements View.OnClickListener, QueryOutputCallback, Callback {
@@ -41,7 +39,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private String loginEmail;
     private FirebaseDatabase database;
     private DatabaseReference ref;
-    private Map<String, Object> hopperUpdates;
     private DocumentReference documentReference;
     private FirebaseFirestore db;
     private UpdateQuery updateQuery;
@@ -53,6 +50,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private TextView ownerView;
     private TextView borrowerView;
     private TextView descView;
+    private TextView keywordView;
     private TextView titleView;
     private TextView authorView;
     private TextView statusView;
@@ -141,6 +139,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         ownerView = findViewById(R.id.viewbook_owner);
         borrowerView = findViewById(R.id.viewbook_borrower);
         descView = findViewById(R.id.viewbook_desc);
+        keywordView = findViewById(R.id.viewbook_keyword);
         titleView = findViewById(R.id.viewbook_title);
         authorView = findViewById(R.id.viewbook_author);
         statusView = findViewById(R.id.viewbook_status);
@@ -172,6 +171,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));
+        keywordView.setText("Keywords: " + book.getKeywords());
         statusView.setText(book.getStatus());
         String status = book.getStatus();
         switch (status) {

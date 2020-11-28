@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -68,12 +69,14 @@ public class EditTest {
         EditText title = activity.findViewById(R.id.editbook_title);
         EditText author = activity.findViewById(R.id.editbook_author);
         EditText description = activity.findViewById(R.id.editbook_description);
+        EditText keyword = activity.findViewById(R.id.editbook_keywords);
         title.setText("");
         author.setText("");
         description.setText("");
         solo.enterText(title, "The /b/ Manifesto");
         solo.enterText(author, "Karl Mar/x/");
         solo.enterText(description, "Edited Test book");
+        solo.enterText(keyword, "Pog");
     }
 
     /**
@@ -82,11 +85,13 @@ public class EditTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("Dank");
         author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book");
+                "6980671678814", "Test book", keywords);
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -95,9 +100,10 @@ public class EditTest {
      * check if the edit was properly applied.
      */
     private void checkEdit() {
-        assertTrue("title cant be found", solo.searchText("The /b/ Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Karl Mar/x/"));
-        assertTrue("description was not edited", solo.searchText("Edited Test book"));
+        assertTrue("Title was not edited", solo.searchText("The /b/ Manifesto"));
+        assertTrue("Author was not edited", solo.searchText("Karl Mar/x/"));
+        assertTrue("Description was not edited", solo.searchText("Edited Test book"));
+        assertTrue("Keyword was not edited", solo.searchText("Pog"));
     }
 
     /**

@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -77,11 +78,12 @@ public class ViewBookTest {
     private void testView() {
         assertTrue("title cant be found", solo.searchText("/pol/ " +
                 "Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Karl Pogs"));
-        assertTrue("isbn cant be found", solo.searchText("6980671678814"));
-        assertTrue("description cant be found", solo.searchText("Test book"));
-        assertTrue("owner cant be found", solo.searchText("test@gmail.com"));
-        assertTrue("status cant be found", solo.searchText("Test book"));
+        assertTrue("Author cannot be found", solo.searchText("Karl Pogs"));
+        assertTrue("Isbn cannot be found", solo.searchText("6980671678814"));
+        assertTrue("Description cannot be found", solo.searchText("Test book"));
+        assertTrue("Owner cannot be found", solo.searchText("test@gmail.com"));
+        assertTrue("Status cannot be found", solo.searchText("Test book"));
+        assertTrue("Keywords cannot be found", solo.searchText("Dank"));
     }
 
     /**
@@ -101,11 +103,13 @@ public class ViewBookTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         ArrayList<String> author = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("Dank");
         author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book");
+                "6980671678814", "Test book", keywords);
         addBook.loadUsername(book);
         addBook.addBook(book);
     }

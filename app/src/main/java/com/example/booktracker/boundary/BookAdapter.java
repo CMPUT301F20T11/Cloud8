@@ -66,6 +66,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
             authors.append(s);
             authors.append(", ");
         }
+
         String title = book.getTitle();
         String desc = book.getDescription();
         String status = book.getStatus();

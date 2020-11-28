@@ -36,6 +36,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private EditText authorView;
     private EditText isbnView;
     private EditText descView;
+    private EditText keywordView;
 
     private StorageReference storageReference;
     private FirebaseAuth auth;
@@ -81,6 +83,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         authorView = findViewById(R.id.addbook_author);
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
+        keywordView = findViewById(R.id.addbook_keywords);
         imageView = findViewById(R.id.addbook_image);
 
         //============Ivan===============
@@ -100,13 +103,16 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             String author = authorView.getText().toString();
             String isbn = isbnView.getText().toString();
             String desc = descView.getText().toString();
+            String keyInput = keywordView.getText().toString();
+            String[] keyArray = keyInput.split("\\s*,\\s*");
+            List<String> keywords = Arrays.asList(keyArray);
             HashMap<String, String> owner = new HashMap<>();
             owner.put(email, "");
             if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")) {
                 isbnView.setError("ISBN must have 13 digits");
             } else {
                 authors.add(author);
-                Book newBook = new Book(owner, authors, title, isbn, desc);
+                Book newBook = new Book(owner, authors, title, isbn, desc, keywords);
                 addQuery.loadUsername(newBook);
                 upload(newBook);
             }
@@ -173,6 +179,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             authorView.setText(newBook.getAuthor().get(0));
             isbnView.setText(newBook.getIsbn());
             descView.setText(newBook.getDescription());
+            keywordView.setText(newBook.getKeywords());
         } else {
             Toast.makeText(AddBookActivity.this, "Book is not in GoogleBooks"
                     , Toast.LENGTH_LONG).show();
