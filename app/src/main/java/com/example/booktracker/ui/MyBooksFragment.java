@@ -128,6 +128,10 @@ public class MyBooksFragment extends Fragment {
                     userSelected = selected_book.getStringOwner();
                     del.deleteBook(selected_book);
                     collection.deleteBook(selected_book);
+                }else{
+                    Toast.makeText(view.getContext(),
+                            "Book cannot be deleted since you do not own it",
+                            Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(view.getContext(), "Book cant be deleted",

@@ -44,7 +44,11 @@
             />
         <activity android:name=".ui.SetGeoActivity" />
         <activity android:name=".ui.HomeActivity" />
-        <activity android:name=".ui.ViewBookActivity"/>
+        <activity android:name=".ui.ViewBookActivity">
+            <intent-filter>
+                <data android:scheme="privacy"></data>
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.ViewGeoActivity"/>
         <activity
             android:name=".ui.AddBookActivity"

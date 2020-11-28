@@ -76,6 +76,7 @@
 
     <TextView
         android:id="@+id/viewbook_owner"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -88,6 +89,8 @@
 
     <TextView
         android:id="@+id/viewbook_borrower"
+        android:state_enabled="false"
+        android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
