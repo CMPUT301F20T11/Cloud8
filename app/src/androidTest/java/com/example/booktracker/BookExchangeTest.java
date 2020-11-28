@@ -319,7 +319,7 @@ public class BookExchangeTest {
         del.deleteBookList("accepted",email2);
     }
 
-
+/*
     @Test
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
@@ -370,6 +370,6 @@ public class BookExchangeTest {
     }
 
 
-
+*/
 
 }
