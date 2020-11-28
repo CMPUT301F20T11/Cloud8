@@ -5,6 +5,7 @@
 
     <string name="menu_home">My Books</string>
     <string name="menu_borrowed">Borrowed Books</string>
+    <string name="menu_available">Available Books</string>
     <string name="menu_find">Find Books</string>
     <string name="menu_scan">Scan Book</string>
     <string name="menu_incoming">Incoming Requests</string>
@@ -23,5 +24,4 @@
     <string name="receive_book_text">Receive Book</string>
     <string name="borrow_book_text">Borrow Book</string>
     <string name="give_book_text">Give Book</string>
-
 </resources>
