@@ -150,10 +150,15 @@ public class UpdateQuery {
                                         HashMap<String,Object> data = new HashMap<String,Object>();
                                         data.put("borrower",borrower);
                                         data.put("borrowerStatus","unavailable");
-                                        data.put("status","unavailable");
+                                        data.put("status","borrowed");
                                         db.collection("books").document(isbn).update(data);
+
                                         changeBookStatus(isbn,isbn,"borrowed",borrower,"accepted");
                                         HashMap<String,String> owner = (HashMap<String,String>)res.get("owner");
+                                        db.collection("users")
+                                                .document(getEmail(owner))
+                                                .collection("available")
+                                                .document(isbn).delete();
                                         changeBookStatus(isbn,isbn,"lent",getEmail(owner),"accepted");
                                         queryOutput.setOutput("Book successfully borrowed");
                                         outputCallback.displayQueryResult("successful");
@@ -193,8 +198,13 @@ public class UpdateQuery {
                                     if ( borrowerStatus != null && borrowerStatus.equals("unavailable")){
                                         HashMap<String,Object> data = new HashMap<String,Object>();
                                         data.put("ownerStatus","unavailable");
-                                        data.put("status","unavailable");
+                                        data.put("status","borrowed");
+                                        data.put("borrower",res.getString("potentialBorrower"));
                                         db.collection("books").document(isbn).update(data);
+                                        db.collection("users")
+                                                .document(owner)
+                                                .collection("available")
+                                                .document(isbn).delete();
                                         changeBookStatus(isbn,isbn,"lent",owner,"accepted");
                                         changeBookStatus(isbn,isbn,"borrowed",res.getString("potentialBorrower"),"accepted");
                                         queryOutput.setOutput("Book successfully lent");
@@ -227,7 +237,7 @@ public class UpdateQuery {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot res = task.getResult();
-                            if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("unavailable")){
+                            if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("borrowed")){
                                 HashMap<String,Object> data = new HashMap<String,Object>();
                                 data.put("borrower","none");
                                 data.put("status","available");
@@ -266,7 +276,7 @@ public class UpdateQuery {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot res = task.getResult();
-                            if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("unavailable")){
+                            if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("borrowed")){
                                 HashMap<String,Object> data = new HashMap<String,Object>();
                                 userRef.collection("borrowed").document(isbn).delete();
                                 db.collection("users").document(res.getString("borrower"))

@@ -78,6 +78,60 @@ public class GetBookQuery extends BookQuery {
         }
         return book;
     }
+
+    /**
+     * This will query the database for the specified books and display the status
+     * @param reference
+     * @param status
+     */
+    private void getStatus(CollectionReference reference,String status){
+        reference.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        final int querySize = task.getResult().size();
+                        outputBooks = new ArrayList<>();
+                        for (QueryDocumentSnapshot document :
+                                Objects.requireNonNull(task.getResult())) {
+                            DocumentReference bookRef = (DocumentReference) document.get("bookReference");
+                            if (bookRef != null){
+                                bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot doc = task.getResult();
+                                        if (task.isSuccessful()){
+                                            if (doc.exists()) {
+                                                outputBooks.add(docToBook(doc));
+
+                                            } else {
+                                                reference.document(bookRef.getId()).delete();
+                                            }
+                                        }
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    //every step of the loop check if the list of books is full
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (querySize == outputBooks.size() && outputBooks.size() > 0) {
+                                            bookList.displayBooksStatus(status,outputBooks);
+                                            outputBooks = new ArrayList();
+                                            //empty outputBooks to clear results from last query
+                                        } else {
+                                            //in case there no matches clear the current
+                                            // list
+                                            bookList.clearList();
+                                        }
+                                    }
+                                });
+                            }
+
+
+                        }
+                    } else {
+                        throw new RuntimeException("Error getting books");
+                    }
+
+                });
+    }
     /**
      * get will get all contents of the specified collection reference and output it
      * @param reference
@@ -152,7 +206,9 @@ public class GetBookQuery extends BookQuery {
     public void getMyBooks(String category) throws RuntimeException {
         get(userDoc.collection(category));
     }
-
+    public void getBooksCategory(String category) throws RuntimeException {
+        getStatus(userDoc.collection(category),category);
+    }
     /**
      * This will fill up the contents of an empty book by querying firestore
      * for a book.

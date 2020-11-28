@@ -46,6 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     private String userEmail;
     private NotificationCircle notif;
     private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +61,11 @@ public class HomeActivity extends AppCompatActivity {
             userEmail = getIntent().getStringExtra(EXTRA_MESSAGE);
         }
         //=====================================================================
-        notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count));
+
         getUsername();
-        //=============test===============
-//        DeleteBookQuery del = new DeleteBookQuery();
-//        del.deleteBookList("myBooks",userEmail);
-        //==============test==============-
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -84,6 +82,7 @@ public class HomeActivity extends AppCompatActivity {
                 mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count),(TextView) navigationView.getMenu().findItem(R.id.nav_incoming).getActionView(),(TextView)navigationView.getMenu().findItem(R.id.nav_accepted).getActionView());
     }
 
     /**

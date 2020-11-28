@@ -35,8 +35,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class BookExchangeTest {
     private Solo solo;
-    private String email1 = "testrequest1@gmail.com";
-    private String email2 = "testrequest2@gmail.com";
+    private String email1 = "test@gmail.com";
+    private String email2 = "test69@gmail.com";
     private String pass = "password";
 
 
@@ -76,7 +76,7 @@ public class BookExchangeTest {
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
-        solo.clickOnButton("Sign In");
+        solo.clickOnView(solo.getView(R.id.sign_in_button));
         checkActivity(HomeActivity.class, "HomeActivity");
     }
 
@@ -85,7 +85,7 @@ public class BookExchangeTest {
      */
     private void logout(){
         navDrawer("Profile");
-        solo.clickOnText("Logout");
+        solo.clickOnView(solo.getView(R.id.logout_btn));
         checkActivity(SignInActivity.class, "SignInActivity");
     }
 
@@ -111,7 +111,7 @@ public class BookExchangeTest {
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "request69 Test title",
-                "1234123412349", "descr69");
+                "7777777777777", "descr69");
         addBook.loadUsername(book);
         addBook.addBook(book);
         addBook.addToDb(book);
@@ -148,7 +148,7 @@ public class BookExchangeTest {
         navDrawer("Incoming Requests");
         assertTrue("Book not appearing in Incoming requests", solo.searchText("request69"));
         solo.clickOnText("request69");
-        solo.clickOnText("Accept");
+        solo.clickOnView(solo.getView(R.id.accept_req_button));
         solo.clickOnText("Yes");
         checkActivity(SetGeoActivity.class, "SetGeoActivity");
         setGeo();
@@ -174,10 +174,10 @@ public class BookExchangeTest {
         navDrawer("Accepted Requests");
         assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
         solo.clickOnText("request69");
-        solo.clickOnButton("View Pickup Location");
+        solo.clickOnView(solo.getView(R.id.view_geo_button));
         checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
         solo.sleep(1000);
-        solo.clickOnButton("Done");
+        solo.clickOnView(solo.getView(R.id.view_geo_done_button));
         checkActivity(HomeActivity.class, "HomeActivity");
 
     }
@@ -202,7 +202,7 @@ public class BookExchangeTest {
         solo.clickOnText("request69");
         solo.clickOnView(solo.getView(R.id.view_book_button));
         checkActivity(ViewBookActivity.class, "ViewBookActivity");
-        solo.clickOnButton("Give Book");
+        solo.clickOnView(solo.getView(R.id.give_book_button));
         exitActivity();
 
     }
@@ -319,8 +319,8 @@ public class BookExchangeTest {
         del.deleteBookList("accepted",email2);
     }
 
-    /*
-    @Test
+
+    //@Test
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
         login(email2);
@@ -370,6 +370,6 @@ public class BookExchangeTest {
     }
 
 
-     */
+
 
 }
