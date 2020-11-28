@@ -1,10 +1,7 @@
 package com.example.booktracker.entities;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
 
 public abstract class Notification {
     protected DocumentReference userDoc;
@@ -12,7 +9,6 @@ public abstract class Notification {
     protected String toEmail, fromEmail, toToken;
     protected String serverKey = "key=AAAAl96duTc:APA91bEKW32AUHrIY88CsZ-o2M58X0JfSnfXs2j8HBpW-p5SdxYjsDX9OV6RKGc43qgoGS7T0ocW2dIBjWDuFER_OqenB8pGWVmJZaQDKw5p1LEadZSC3KnM3X0fjQXZbYyUW7Bahndc";
     protected String contentType = "application/json";
-
 
     /**
      * Contructor for the abstract notification class

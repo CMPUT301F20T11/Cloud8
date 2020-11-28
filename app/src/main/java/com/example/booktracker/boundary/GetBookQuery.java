@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class GetBookQuery extends BookQuery {
-    private ArrayList<Book> outputBooks = new ArrayList();
+    private ArrayList<Book> outputBooks = new ArrayList<>();
     private Book output;
     private CountDownLatch done = new CountDownLatch(1);
     private boolean isDone = false;
@@ -35,7 +35,7 @@ public class GetBookQuery extends BookQuery {
      * This will call its parent constructor from BookQuery
      *
      * @param userEmail
-     * @param argBookList Book collectoin containing listView
+     * @param argBookList Book collection containing listView
      */
     public GetBookQuery(String userEmail, BookCollection argBookList,
                         Context argContext) {
@@ -60,16 +60,18 @@ public class GetBookQuery extends BookQuery {
     public GetBookQuery() {
         super();
     }
+
     /**
      * This will turn the document that resulted from a query to a Book object
      * @param document Document from firestore query
      * @return
      */
-    private Book docToBook(DocumentSnapshot document){
+    private Book docToBook(DocumentSnapshot document) {
         List<String> authors = (List<String>) document.get("author");
-        HashMap<String, String> owner = (HashMap<String, String>) document.get("owner");
-        Book book = new Book(owner, authors, (String) document.get("title"), document.getId(), (String) document.get("description"));
-        book.setStatus(document.getString("status"));
+        HashMap<String, String> owner =
+                (HashMap<String, String>) document.get("owner");
+        Book book = new Book(owner, authors, (String) document.get("title"),
+                document.getId(), (String) document.get("description"));
         if (document.get("image_uri") != null) {
             Uri imageUri = Uri.parse((String) document.get("image_uri"));
             book.setUri(imageUri.toString());
@@ -86,11 +88,11 @@ public class GetBookQuery extends BookQuery {
      * @param reference
      * @param status
      */
-    private void getStatus(CollectionReference reference,String status){
+    private void getStatus(CollectionReference reference, String status) {
         reference.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        final int querySize = task.getResult().size();
+                        int querySize = task.getResult().size();
                         outputBooks = new ArrayList<>();
                         for (QueryDocumentSnapshot document :
                                 Objects.requireNonNull(task.getResult())) {
@@ -110,23 +112,21 @@ public class GetBookQuery extends BookQuery {
                                         }
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    //every step of the loop check if the list of books is full
+                                    // every step of the loop check if the list of books is full
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.displayBooksStatus(status,outputBooks);
-                                            outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            outputBooks = new ArrayList<>();
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     } else {
                         throw new RuntimeException("Error getting books");
@@ -134,6 +134,7 @@ public class GetBookQuery extends BookQuery {
 
                 });
     }
+
     /**
      * get will get all contents of the specified collection reference and output it
      * @param reference
@@ -142,7 +143,7 @@ public class GetBookQuery extends BookQuery {
         reference.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        final int querySize = task.getResult().size();
+                        int querySize = task.getResult().size();
                         outputBooks = new ArrayList<>();
                         for (QueryDocumentSnapshot document :
                                 Objects.requireNonNull(task.getResult())) {
@@ -155,43 +156,40 @@ public class GetBookQuery extends BookQuery {
                                         if (task.isSuccessful()){
                                             if (doc.exists()) {
                                                 outputBooks.add(docToBook(doc));
-
                                             } else {
                                                 reference.document(bookRef.getId()).delete();
                                             }
                                         }
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    //every step of the loop check if the list of books is full
+                                    // every step of the loop check if the list of books is full
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
-                                            outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            outputBooks = new ArrayList<>();
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     } else {
                         throw new RuntimeException("Error getting books");
                     }
-
                 });
     }
+
     /**
      * get will get all contents of the specified collection reference and output it
      * @param email email of the user who owns the book collection
      */
-    public void getAvailable(String email){
+    public void getAvailable(String email) {
         CollectionReference reference = db.collection("users")
                 .document(email).collection("myBooks");
         reference.get()
@@ -210,31 +208,28 @@ public class GetBookQuery extends BookQuery {
                                         if (task.isSuccessful()){
                                             if (doc.exists() && doc.getString("status").equals("available")) {
                                                 outputBooks.add(docToBook(doc));
-
                                             } else {
                                                 reference.document(bookRef.getId()).delete();
                                             }
                                         }
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    //every step of the loop check if the list of books is full
+                                    // every step of the loop check if the list of books is full
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
-                                            outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            outputBooks = new ArrayList<>();
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     } else {
                         throw new RuntimeException("Error getting books");
@@ -242,46 +237,46 @@ public class GetBookQuery extends BookQuery {
 
                 });
     }
-    private ArrayList<QueryDocumentSnapshot> concatQueries(QuerySnapshot query1,QuerySnapshot query2){
-        ArrayList<QueryDocumentSnapshot> out = new ArrayList<QueryDocumentSnapshot>();
-        for (QueryDocumentSnapshot doc : query1){
+
+    private ArrayList<QueryDocumentSnapshot> concatQueries(QuerySnapshot query1, QuerySnapshot query2) {
+        ArrayList<QueryDocumentSnapshot> out = new ArrayList<>();
+        for (QueryDocumentSnapshot doc : query1) {
             out.add(doc);
         }
-        for (QueryDocumentSnapshot doc : query2){
+        for (QueryDocumentSnapshot doc : query2) {
             out.add(doc);
         }
         return out;
     }
+
     /**
      * getAll will get all the borrowed and owned books
      * @param email email of user that owns the collection
      */
-    public void getAll(String email){
+    public void getAll(String email) {
         DocumentReference reference = db.collection("users").document(email);
         Task all = reference.collection("myBooks").get();
         Task borrowed = reference.collection("borrowed").get();
-        Tasks.whenAllComplete(all,borrowed)
+        Tasks.whenAllComplete(all, borrowed)
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Task<?>>> task) {
                         ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
-
                         QuerySnapshot res1 = (QuerySnapshot) res.get(0).getResult();
                         QuerySnapshot res2 = (QuerySnapshot) res.get(1).getResult();
-                        ArrayList<QueryDocumentSnapshot> res3 = concatQueries(res1,res2);
+                        ArrayList<QueryDocumentSnapshot> res3 = concatQueries(res1, res2);
                         int querySize = res3.size();
                         outputBooks = new ArrayList<>();
                         for (QueryDocumentSnapshot document : res3) {
                             DocumentReference bookRef = (DocumentReference) document.get("bookReference");
-                            if (bookRef != null){
+                            if (bookRef != null) {
                                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot doc = task.getResult();
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             if (doc.exists()) {
                                                 outputBooks.add(docToBook(doc));
-
                                             } else {
                                                 reference.collection("myBooks").document(bookRef.getId()).delete();
                                                 reference.collection("borrowed").document(bookRef.getId()).delete();
@@ -296,21 +291,20 @@ public class GetBookQuery extends BookQuery {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
                                             outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     }
                 });
     }
+
     /**
      * This will query the data base and use Book Collection object to modify
      * the listView
@@ -332,9 +326,11 @@ public class GetBookQuery extends BookQuery {
     public void getMyBooks(String category) throws RuntimeException {
         get(userDoc.collection(category));
     }
+
     public void getBooksCategory(String category) throws RuntimeException {
         getStatus(userDoc.collection(category),category);
     }
+
     /**
      * This will fill up the contents of an empty book by querying firestore
      * for a book.
@@ -347,50 +343,41 @@ public class GetBookQuery extends BookQuery {
      *                  query.
      */
     public void getABook(String isbn, Book emptyBook, Callback callback) {
-        db
-                .collection("books")
-                .document(isbn)
+        db.collection("books").document(isbn)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot res = task.getResult();
                         if (res.exists()) {
-                            if (res != null) {
-                                if (res.get("image_uri") != null) {
-                                    Uri imageUri =
-                                            Uri.parse((String) res.get(
-                                                    "image_uri"));
-                                    emptyBook.setUri(imageUri.toString());
-                                }
-                                if (res.get("local_image_uri") != null) {
-                                    Uri localImageUri =
-                                            Uri.parse((String) res.get(
-                                                    "local_image_uri"));
-                                    emptyBook.setLocalUri(localImageUri.toString());
-                                }
-                                List<String> authors =
-                                        (List<String>) res.get("author");
-
-                                if (res.get("owner") instanceof String) {
-                                    String stringOwner =
-                                            (String) res.get("owner");
-                                    emptyBook.setStringOwner(stringOwner);
-                                } else {
-                                    HashMap<String, String> owner =
-                                            (HashMap<String, String>) res.get("owner");
-                                    emptyBook.setOwner(owner);
-                                }
-                                emptyBook.setAuthor(authors);
-                                emptyBook.setIsbn(isbn);
-                                emptyBook.setTitle((String) res.get(
-                                        "title"));
-                                emptyBook.setDescription((String) res.get(
-                                        "description"));
-                                emptyBook.setStatus((String) res.get(
-                                        "status"));
-                                emptyBook.setBorrower(res.getString("borrower"));
-                                callback.executeCallback();
+                            if (res.get("image_uri") != null) {
+                                Uri imageUri =
+                                        Uri.parse((String) res.get(
+                                                "image_uri"));
+                                emptyBook.setUri(imageUri.toString());
                             }
+                            if (res.get("local_image_uri") != null) {
+                                Uri localImageUri =
+                                        Uri.parse((String) res.get(
+                                                "local_image_uri"));
+                                emptyBook.setLocalUri(localImageUri.toString());
+                            }
+                            List<String> authors =
+                                    (List<String>) res.get("author");
+                            if (res.get("owner") != null) {
+                                HashMap<String, String> owner =
+                                        (HashMap<String, String>) res.get("owner");
+                                emptyBook.setOwner(owner);
+                            }
+                            emptyBook.setAuthor(authors);
+                            emptyBook.setIsbn(isbn);
+                            emptyBook.setTitle((String) res.get(
+                                    "title"));
+                            emptyBook.setDescription((String) res.get(
+                                    "description"));
+                            emptyBook.setStatus((String) res.get(
+                                    "status"));
+                            emptyBook.setBorrower(res.getString("borrower"));
+                            callback.executeCallback();
                         }
                     }
                 });
@@ -402,33 +389,27 @@ public class GetBookQuery extends BookQuery {
      * @param bookList This will be the list of books the will get populated with all
      *                 the books in the database
      */
-    public void getBooks(Callback callback,ArrayList<Book> bookList){
+    public void getBooks(Callback callback, ArrayList<Book> bookList) {
         db.collection("books").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        QuerySnapshot res = task.getResult();
-                        for (DocumentSnapshot doc:res){
-                            bookList.add(docToBook(doc));
-                        }
-                        callback.executeCallback();
+                .addOnCompleteListener(task -> {
+                    QuerySnapshot res = task.getResult();
+                    for (DocumentSnapshot doc:res){
+                        bookList.add(docToBook(doc));
                     }
+                    callback.executeCallback();
                 });
     }
-    public void getNotif(Callback callback, NotifCount count,String email){
-        db.collection("users").document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot res = task.getResult();
-                if (res.get("incomingCount") != null){
-                    count.setIncoming((long) res.get("incomingCount"));
-                }
-                if (res.get("acceptedCount") != null){
-                    count.setAccepted((long) res.get("acceptedCount"));
-                }
 
-                callback.executeCallback();
+    public void getNotif(Callback callback, NotifCount count, String email){
+        db.collection("users").document(email).get().addOnCompleteListener(task -> {
+            DocumentSnapshot res = task.getResult();
+            if (res.get("incomingCount") != null) {
+                count.setIncoming((long) res.get("incomingCount"));
             }
+            if (res.get("acceptedCount") != null) {
+                count.setAccepted((long) res.get("acceptedCount"));
+            }
+            callback.executeCallback();
         });
     }
 
@@ -437,18 +418,15 @@ public class GetBookQuery extends BookQuery {
      * @param callback called when book is filled
      * @param book book to be filled
      */
-    public void getLatLong(Callback callback,Book book){
-        db.collection("books").document(book.getIsbn()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot res = task.getResult();
-                Double lat = res.getDouble("lat");
-                Double lon = res.getDouble("lon");
-                if (lat != null && lon != null){
-                    book.setLat(lat);
-                    book.setLon(lon);
-                    callback.executeCallback();
-                }
+    public void getLatLong(Callback callback, Book book) {
+        db.collection("books").document(book.getIsbn()).get().addOnCompleteListener(task -> {
+            DocumentSnapshot res = task.getResult();
+            Double lat = res.getDouble("lat");
+            Double lon = res.getDouble("lon");
+            if (lat != null && lon != null) {
+                book.setLat(lat);
+                book.setLon(lon);
+                callback.executeCallback();
             }
         });
     }
