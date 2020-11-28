@@ -20,7 +20,6 @@ import com.robotium.solo.Solo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -309,7 +308,7 @@ public class BookExchangeTest {
         del.deleteBookList("requested", email2);
         del.deleteBookList("accepted", email2);
     }
-
+    /*
     @Test
     public void ExchangeTest() {
         // login to user2 account - this account will request user1 book
@@ -358,5 +357,5 @@ public class BookExchangeTest {
         // checkMyBooks("Test69");
         // DONE
     }
-
+    */
 }
