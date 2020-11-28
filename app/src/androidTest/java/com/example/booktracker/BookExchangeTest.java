@@ -159,20 +159,31 @@ public class BookExchangeTest {
      * Sets pickup location on map
      */
     private void setGeo(){
-        if(solo.searchText("GPS") || solo.searchText("Deny")){
-            //location permissions not enabled .. dont set geo
+        if(solo.searchText("GPS")){
+            //gps permissions not enabled .. dont set geo
             solo.goBack();
+        }
+        else if(solo.searchText("Allow")){
+            //gps permissions are on, but location permissions not yet confirmed for app
+            //allow permissions for this from within app and set location
+            solo.clickOnText("Allow");
+            setLocation();
         }
         else{
             //set location
-            solo.clickOnView(solo.getView(R.id.map));
-            solo.clickLongOnScreen(420,420,2000);
-            solo.clickOnView(solo.getView(R.id.geo_confirm_button));
-            solo.sleep(1000);
-            pickupLocation = true;
+            setLocation();
         }
         checkActivity(HomeActivity.class, "HomeActivity");
     }
+
+    private void setLocation() {
+        solo.clickOnView(solo.getView(R.id.map));
+        solo.clickLongOnScreen(420,420,2000);
+        solo.clickOnView(solo.getView(R.id.geo_confirm_button));
+        solo.sleep(1000);
+        pickupLocation = true;
+    }
+
 
     /**
      * test1@gmail.com accepts book request from test2@gmail.com
