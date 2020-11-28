@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.booktracker.R;
@@ -21,7 +22,6 @@ import com.example.booktracker.control.Callback;
 import com.example.booktracker.control.Email;
 import com.example.booktracker.control.QueryOutputCallback;
 import com.example.booktracker.entities.Book;
-import com.example.booktracker.boundary.BookCollection;
 import com.example.booktracker.entities.QueryOutput;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,7 +47,6 @@ import java.util.List;
  */
 public class AddBookActivity extends AppCompatActivity implements Callback,
         QueryOutputCallback {
-
     private Uri imageUri;
     private BookCollection bookList;
     private String email;
@@ -57,10 +56,10 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private IsbnReq req;
     private ArrayList<Book> bookArray;
 
-    EditText titleView;
-    EditText authorView;
-    EditText isbnView;
-    EditText descView;
+    private EditText titleView;
+    private EditText authorView;
+    private EditText isbnView;
+    private EditText descView;
 
     private StorageReference storageReference;
     private FirebaseAuth auth;
@@ -68,7 +67,6 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private String uid;
     private QueryOutput toast_output;
     private String downloadUrl;
-    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +83,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         isbnView = findViewById(R.id.addbook_isbn);
         descView = findViewById(R.id.addbook_description);
         imageView = findViewById(R.id.addbook_image);
-        //============Ivan===============
 
+        //============Ivan===============
         Button scanBtn = findViewById(R.id.scan_btn);
         scanBtn.setOnClickListener(view -> startActivityForResult(new Intent(view.getContext(),
                 ScanActivity.class), SCAN_RQ));
@@ -117,7 +115,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
         Button cancelBtn = findViewById(R.id.addbook_cancelbtn);
         cancelBtn.setOnClickListener(v -> finish());
 
-        imageView.setOnClickListener(v -> pickFromGallery(v));
+        imageView.setOnClickListener(this::pickFromGallery);
 
         Button clearPhotoBtn = findViewById(R.id.addbook_rmPhoto_btn);
         clearPhotoBtn.setOnClickListener(v -> {
@@ -176,7 +174,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     @Override
     public void executeCallback() {
         if (bookArray.size() > 0) {
-            Book newBook = bookArray.get(0);//get first book of the query
+            Book newBook = bookArray.get(0); // get first book of the query
             titleView.setText(newBook.getTitle());
             StringBuilder authors = new StringBuilder();
             for (int i = 0; i < newBook.getAuthor().size();i++) {
@@ -198,7 +196,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     public void displayQueryResult(String result) {
         Toast.makeText(AddBookActivity.this, toast_output.getOutput(),
                 Toast.LENGTH_LONG).show();
-        if (result.equals("successful")) {
+        if (result.equals("Successful")) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -216,7 +214,6 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
      * @param newBook
      */
     public void upload(Book newBook) {
-
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading");
         progressDialog.show();
@@ -227,15 +224,28 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             UploadTask uploadTask = ref.putFile(imageUri);
             // Register observers to listen for when the download is done or
             // if it fails
-            uploadTask.addOnFailureListener(exception -> toast_output.setOutput("Upload failed")).addOnCompleteListener(task -> ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                downloadUrl = uri.toString();
-                toast_output.setOutput("Upload successful");
-                newBook.setUri(downloadUrl);
-                newBook.setLocalUri(imageUri.toString());
-                addQuery.loadUsername(newBook);
-                addQuery.addBook(newBook);
-                progressDialog.dismiss();
-            }));
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    toast_output.setOutput("Upload failed");
+                }
+            }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            downloadUrl = uri.toString();
+                            toast_output.setOutput("Upload successful");
+                            newBook.setUri(downloadUrl);
+                            newBook.setLocalUri(imageUri.toString());
+                            addQuery.loadUsername(newBook);
+                            addQuery.addBook(newBook);
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+            });
         } else {
             newBook.setUri(null);
             addQuery.loadUsername(newBook);

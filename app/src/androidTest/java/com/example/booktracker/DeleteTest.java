@@ -30,7 +30,7 @@ public class DeleteTest {
             new ActivityTestRule<>(SignInActivity.class, true, true);
 
     /**
-     * Initialize solo to be used by tests.And add book to be tested in db.
+     * Initialize solo to be used by tests and add book to be tested in db
      *
      * @throws Exception
      */
@@ -49,9 +49,9 @@ public class DeleteTest {
         ArrayList<String> author = new ArrayList<>();
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
-        author.add("Karl Marx");
-        book = new Book(owner, author, "The Communist Manifesto",
-                "9780671678814", "Test book");
+        author.add("Karl Pogs");
+        book = new Book(owner, author, "/pol/ Manifesto",
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -60,13 +60,13 @@ public class DeleteTest {
      * Sign in and set the current activity to HomeActivity.
      */
     private void login() {
-        solo.assertCurrentActivity("Wrong activity should be SignInAcitiviy",
+        solo.assertCurrentActivity("Wrong activity, should be SignInActivity",
                 SignInActivity.class);
         solo.enterText((EditText) solo.getView(R.id.email_field), email);
         solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
-        solo.assertCurrentActivity("Wrong activity should be HomeActivity",
+        solo.assertCurrentActivity("Wrong activity, should be HomeActivity",
                 HomeActivity.class);
     }
 
@@ -76,9 +76,9 @@ public class DeleteTest {
     @Test
     public void deleteBook() {
         login();
-        solo.clickOnText("The Communist Manifesto");
+        solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.delete_book_button));
-        assertFalse("book was not deleted", solo.searchText("The Communist " +
+        assertFalse("Book was not deleted", solo.searchText("/pol/ " +
                 "Manifesto"));
     }
 }

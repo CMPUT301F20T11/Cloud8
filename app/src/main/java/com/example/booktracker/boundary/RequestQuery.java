@@ -2,17 +2,14 @@ package com.example.booktracker.boundary;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -20,15 +17,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class RequestQuery{
+public class RequestQuery {
     protected DocumentReference userDoc;
     protected FirebaseFirestore db;
     protected String toEmail;
@@ -42,6 +37,7 @@ public class RequestQuery{
     private String curFromEmail;
     private String curFromUsername;
     private int outputSize;
+
     /**
      * constructor will connect to database and initialized document
      * pertaining to user
@@ -66,7 +62,7 @@ public class RequestQuery{
      * @param res result of get query
      * @param emptyBook book to be filled up by data attained from query
      */
-    private void parseBook(DocumentSnapshot res,Book emptyBook){
+    private void parseBook(DocumentSnapshot res, Book emptyBook) {
         if (res.get("image_uri") != null) {
             Uri imageUri =
                     Uri.parse((String) res.get(
@@ -81,12 +77,7 @@ public class RequestQuery{
         }
         List<String> authors =
                 (List<String>) res.get("author");
-
-        if (res.get("owner") instanceof String) {
-            String stringOwner =
-                    (String) res.get("owner");
-            emptyBook.setStringOwner(stringOwner);
-        } else {
+        if (res.get("owner") != null) {
             HashMap<String, String> owner =
                     (HashMap<String, String>) res.get("owner");
             emptyBook.setOwner(owner);
@@ -98,6 +89,7 @@ public class RequestQuery{
                 "description"));
         emptyBook.setStatus((String) res.get("status"));
     }
+
     /**
      * This will get the list of books that is in the incomingRequests collection
      */
@@ -109,24 +101,22 @@ public class RequestQuery{
                 if (task.isSuccessful()) {
                     outputRequests = new ArrayList<>();
                     outputSize = task.getResult().size();
-                    if (task.getResult().size() > 0 ){
-
+                    if (task.getResult().size() > 0 ) {
                         for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-
                             DocumentReference docRef = (DocumentReference) document.get("bookReference");
                             DocumentReference userRef = (DocumentReference) document.get("from");
-                            Task bookDoc = docRef.get();
-                            Task userDoc = userRef.get();
-                            Tasks.whenAllComplete(bookDoc,userDoc).addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                            Task bookTask = docRef.get();
+                            Task userTask = userRef.get();
+                            Tasks.whenAllComplete(bookTask, userTask).addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                                 @Override
                                 public void onComplete(@NonNull Task<List<Task<?>>> task) {
                                     ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
-                                    DocumentSnapshot res1 = (DocumentSnapshot) res.get(0).getResult(); //this is the book
-                                    DocumentSnapshot res2 = (DocumentSnapshot) res.get(1).getResult(); //this is the user
-                                    curFromEmail = (String)res2.get("email");
-                                    curFromUsername = (String) res2.getString("username");
+                                    DocumentSnapshot bookDoc = (DocumentSnapshot) res.get(0).getResult(); // this is the book
+                                    DocumentSnapshot userDoc = (DocumentSnapshot) res.get(1).getResult(); // this is the user
+                                    curFromEmail = userDoc.getString("email");
+                                    curFromUsername = userDoc.getString("username");
                                     book = new Book();
-                                    parseBook(res1,book);
+                                    parseBook(bookDoc, book);
                                     Request request = new Request(curFromEmail, toEmail, book, context);
                                     request.setFromUsername(curFromUsername);
                                     outputRequests.add(request);
@@ -138,13 +128,11 @@ public class RequestQuery{
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         requestCollection.clearList();
                     }
                 }
             }
         });
     }
-
-
 }

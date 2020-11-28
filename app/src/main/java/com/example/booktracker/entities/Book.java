@@ -19,7 +19,6 @@ public class Book implements Serializable {
     private String uri;
     private String localUri;
     //=======These will be emails=========
-    private String stringOwner;
     private Map<String, String> owner;
     private String borrower;
     //======================
@@ -58,17 +57,6 @@ public class Book implements Serializable {
         this.isbn = argIsbn;
         this.description = argDesc;
         this.owner = argOwner;
-        this.status = "available";
-        this.borrower = null;
-    }
-
-    public Book(String argOwner, List<String> argAuthor, String argTitle,
-                String argIsbn, String argDesc) {
-        this.author = argAuthor;
-        this.title = argTitle;
-        this.isbn = argIsbn;
-        this.description = argDesc;
-        this.stringOwner = argOwner;
         this.status = "available";
         this.borrower = null;
     }
@@ -205,10 +193,6 @@ public class Book implements Serializable {
         return (HashMap<String, String>) owner;
     }
 
-    public String getStringOwner() {
-        return stringOwner;
-    }
-
     public String getOwnerEmail() {
         Map.Entry<String, String> entry = owner.entrySet().iterator().next();
         return entry.getKey();
@@ -226,10 +210,6 @@ public class Book implements Serializable {
      */
     public void setOwner(Map<String, String> owner) {
         this.owner = owner;
-    }
-
-    public void setStringOwner(String owner) {
-        this.stringOwner = owner;
     }
 
     /**
@@ -323,7 +303,7 @@ public class Book implements Serializable {
      * @param lon
      * @param lat
      */
-    public void setLatLon(Double lon,Double lat){
+    public void setLatLon(Double lon, Double lat) {
         this.lon = lon;
         this.lat = lat;
     }
