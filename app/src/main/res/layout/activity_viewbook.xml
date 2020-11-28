@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/viewbook_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="210dp"
         android:layout_marginTop="32dp"
         android:foreground="@drawable/addbook_photo_border"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +36,7 @@
         android:id="@+id/viewbook_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:text="Book Author"
         android:textSize="20dp"
