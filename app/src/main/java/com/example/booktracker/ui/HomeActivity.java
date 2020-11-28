@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_borrowed, R.id.nav_find,
                 R.id.nav_scan, R.id.nav_incoming,
                 R.id.nav_accepted, R.id.nav_requested, R.id.nav_profile,
-                R.id.nav_notifications)
+                R.id.nav_available)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this,
@@ -91,7 +91,6 @@ public class HomeActivity extends AppCompatActivity {
     public void notifRefresh(){
         notif.checkNotification();
     }
-
     public String getUserEmail() {
         return userEmail;
     }

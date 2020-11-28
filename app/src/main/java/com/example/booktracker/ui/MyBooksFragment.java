@@ -172,11 +172,7 @@ public class MyBooksFragment extends Fragment {
         // goes back to the
         // home activity
         super.onResume();
-        if (lastStatus.equals("")) {
-            getQuery.getMyBooks();
-        } else {
-            getQuery.getMyBooks(lastStatus);
-        }
+        getQuery.getAll(userEmail);
     }
 
     public void setStatus(String newStatus) {

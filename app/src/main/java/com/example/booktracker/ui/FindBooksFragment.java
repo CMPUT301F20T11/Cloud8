@@ -130,7 +130,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     private void searchBooks(String searchText) {
         ArrayList<Book> results = new ArrayList<>();
         for (Book found : bookDataList) {
-            if (containsKeyword(found.getDescription(), searchText)) {
+            if (containsKeyword(found.getDescription(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
                 results.add(found);
             }
         }
