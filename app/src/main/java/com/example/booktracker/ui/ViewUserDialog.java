@@ -2,7 +2,9 @@ package com.example.booktracker.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,12 +56,18 @@ public class ViewUserDialog extends DialogFragment {
         TextView phoneText = view.findViewById(R.id.view_Phone);
         phoneText.setText(profilePhone);
 
+        Button button = view.findViewById(R.id.view_user_exit_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getDialog().dismiss();
+            }
+        });
+
         final AlertDialog.Builder builder =
-                new AlertDialog.Builder(getActivity());
+                new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme);
         return builder
                 .setView(view)
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                })
                 .create();
     }
 
@@ -68,6 +76,7 @@ public class ViewUserDialog extends DialogFragment {
         super.onResume();
         final AlertDialog dialog = (AlertDialog) getDialog();
         if (dialog != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             Button okButton = dialog.getButton(Dialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(view -> dialog.dismiss());
         }
