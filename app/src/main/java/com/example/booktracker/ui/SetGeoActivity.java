@@ -147,12 +147,12 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onComplete(@NonNull Task<Location> task) {
                 if (task.isSuccessful()) {
                     Location location = task.getResult();
-                    Double lat = location.getLatitude();
-                    Double lon = location.getLongitude();
+                    double lat = location.getLatitude();
+                    double lon = location.getLongitude();
                     LatLng userCurrentPosition = new LatLng(lat, lon);
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(userCurrentPosition, 15));
-                    Log.d(TAG, "lat: " + lat);
-                    Log.d(TAG, "lon: " + lon);
+                    Log.d(TAG, "setgeo lat: " + lat);
+                    Log.d(TAG, "setgeo lon: " + lon);
                 }
             }
         });

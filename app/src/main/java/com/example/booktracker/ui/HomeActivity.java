@@ -63,8 +63,8 @@ public class HomeActivity extends AppCompatActivity {
         notif = new NotificationCircle(userEmail,findViewById(R.id.hamburger_count));
         getUsername();
         //=============test===============
-        DeleteBookQuery del = new DeleteBookQuery();
-        del.deleteBookList("myBooks",userEmail);
+//        DeleteBookQuery del = new DeleteBookQuery();
+//        del.deleteBookList("myBooks",userEmail);
         //==============test==============-
         ((Email) this.getApplication()).setEmail(userEmail);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
