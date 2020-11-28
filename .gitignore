@@ -118,3 +118,4 @@ build/
 .navigation
 captures/
 output.json 
+local.properties
