@@ -55,34 +55,41 @@ public class BookAdapter extends ArrayAdapter<Book> {
         }
         Book book = bookList.get(position);
 
-        ImageView imageView = view.findViewById(R.id.book_image);
-        TextView titleView = view.findViewById(R.id.book_title);
-        TextView descView = view.findViewById(R.id.book_desc);
-        TextView ownerView = view.findViewById(R.id.book_owner);
-        TextView statusView = view.findViewById(R.id.book_status);
-
-        String title = book.getTitle();
-        titleView.setText(title);
-
-        String desc = book.getDescription();
-        descView.setText(desc);
-
-        String owner = book.getOwnerName();
-        ownerView.setText(owner);
-
-        String status = book.getStatus();
-        statusView.setText(status);
+        ImageView imageView = view.findViewById(R.id.imageView);
+        TextView titleView = view.findViewById(R.id.book_adapter_title);
+        TextView ownerView = view.findViewById(R.id.book_adapter_owner);
+        TextView descView = view.findViewById(R.id.book_adapter_desc);
+        TextView statusView = view.findViewById(R.id.book_adapter_status);
 
         StringBuilder authors = new StringBuilder();
         for (String s : book.getAuthor()) {
             authors.append(s);
             authors.append(", ");
         }
+        String title = book.getTitle();
+        String desc = book.getDescription();
+        String status = book.getStatus();
+        if (status.equals("available")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_available, null));
+        } else if (status.equals("borrowed")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_borrowed, null));
+        } else if (status.equals("requested")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_requested, null));
+        } else if (status.equals("accepted")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_accepted, null));
+        }
 
-        if (book.getUri() != null) {
-            Glide.with(view).load(book.getUri()).into(imageView);
-        } else {
-            Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+        if (book.getOwner() != null) {
+            String owner = book.getOwnerName();
+            titleView.setText(title);
+            ownerView.setText(owner);
+            descView.setText(desc);
+            statusView.setText(status);
+            if (book.getUri() != null) {
+                Glide.with(view).load(book.getUri()).into(imageView);
+            } else {
+                Glide.with(view).load(R.drawable.ic_stock_book_photo_foreground).into(imageView);
+            }
         }
 
         return view;

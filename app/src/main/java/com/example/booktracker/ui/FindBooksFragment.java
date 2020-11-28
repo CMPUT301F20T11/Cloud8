@@ -18,11 +18,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
-import com.example.booktracker.boundary.GetBookQuery;
+import com.example.booktracker.boundary.BookAdapter;
 import com.example.booktracker.boundary.ResultAdapter;
+import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
 import com.example.booktracker.entities.Book;
+import com.example.booktracker.entities.NotificationCircle;
 import com.example.booktracker.entities.Request;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -114,7 +116,6 @@ public class FindBooksFragment extends Fragment implements Callback {
             }
         });
     }
-
     private void setSelectListener() {
         bookList.setOnItemClickListener((adapter, v, position, id) -> {
             selected_book = resAdapter.getItem(position);
@@ -152,7 +153,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     private void updateBookList(ArrayList<Book> newList) {
-        resAdapter = new ResultAdapter(getContext(), newList);
+        resAdapter = new BookAdapter(getContext(), newList);
         bookList.setAdapter(resAdapter);
         resAdapter.notifyDataSetChanged();
     }

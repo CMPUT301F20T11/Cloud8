@@ -46,6 +46,7 @@ public class MyBooksFragment extends Fragment {
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //=============set attributes=======================
@@ -202,7 +203,7 @@ public class MyBooksFragment extends Fragment {
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return false;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);

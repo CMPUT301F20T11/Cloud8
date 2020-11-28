@@ -83,7 +83,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         documentReference = db.collection("books").document(isbn);
         updateQuery = new UpdateQuery();
         queryOutput = new QueryOutput();
-
         // Creating buttons
         Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
@@ -125,20 +124,33 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      */
     private void updateTextViews(Book book) {
         //uses the first author
-        isbnView.setText(isbn);
+        isbnView.setText("ISBN: " + isbn);
         if (book.getOwner() != null) {
-            ownerView.setText(book.getOwnerEmail());
+            ownerView.setText("Owner: " + book.getOwnerEmail());
         }
-        borrowerView.setText(book.getBorrower());
+        if (book.getBorrower() != null || book.getBorrower() == "none") {
+            borrowerView.setText("Borrower: " + book.getBorrower());
+        } else {
+            borrowerView.setText("Borrower: none");
+        }
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
+        String status = book.getStatus();
+        if (status.equals("available")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_available, null));
+        } else if (status.equals("borrowed")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_borrowed, null));
+        } else if (status.equals("requested")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_requested, null));
+        } else if (status.equals("accepted")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_accepted, null));
+        }
         if (book.getUri() != null) {
             Glide.with(this).load(book.getUri()).into(imageView);
         }
     }
-
     /**
      * This method will be called by the query
      */
@@ -151,7 +163,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     public void displayQueryResult(String result) {
         Toast.makeText(instance, queryOutput.getOutput(), Toast.LENGTH_SHORT).show();
     }
-
     /**
      * This method decides which onClick functionality to execute according
      * to the ID of the button

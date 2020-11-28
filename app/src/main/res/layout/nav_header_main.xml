@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="175dp"
+    android:layout_height="150dp"
     android:gravity="bottom"
     android:orientation="vertical"
     android:background="@color/colorPrimary"
@@ -14,16 +14,16 @@
 
     <ImageView
         android:id="@+id/cloud8_logo"
-        android:layout_width="187.5dp"
-        android:layout_height="75dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
         android:paddingLeft="8dp"
-        app:srcCompat="@drawable/cloud8logo_drawable" />
+        app:srcCompat="@drawable/booktracker_banner" />
 
     <TextView
         android:id="@+id/nav_header_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
+        android:layout_marginTop="-20dp"
         android:paddingLeft="16dp"
         android:text="@string/nav_header_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

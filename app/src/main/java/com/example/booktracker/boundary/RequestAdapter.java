@@ -17,6 +17,8 @@ import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**

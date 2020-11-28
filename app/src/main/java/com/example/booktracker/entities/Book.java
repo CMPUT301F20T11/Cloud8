@@ -266,21 +266,43 @@ public class Book implements Serializable {
         this.localUri = localUri;
     }
 
+    /**
+     * Get the book's latitude
+     * @return lat (double)
+     */
     public Double getLat() {
         return lat;
     }
 
+    /**
+     * Get the book's longitude
+     * @return lon (double)
+     */
     public Double getLon() {
         return lon;
     }
 
+    /**
+     * Set the book's latitude
+     * @param lat
+     */
     public void setLat(Double lat) {
         this.lat = lat;
     }
 
+    /**
+     * Set the book's longitude
+     * @param lon
+     */
     public void setLon(Double lon) {
         this.lon = lon;
     }
+
+    /**
+     * Set the book's longitude and latitude
+     * @param lon
+     * @param lat
+     */
     public void setLatLon(Double lon,Double lat){
         this.lon = lon;
         this.lat = lat;
