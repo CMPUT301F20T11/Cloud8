@@ -38,6 +38,7 @@ public class BookExchangeTest {
     private String email1 = "testrequest1@gmail.com";
     private String email2 = "testrequest2@gmail.com";
     private String pass = "password";
+    boolean pickupLocation = false;
 
 
     private Book book;
@@ -158,11 +159,18 @@ public class BookExchangeTest {
      * Sets pickup location on map
      */
     private void setGeo(){
-        //set location
-        solo.clickOnView(solo.getView(R.id.map));
-        solo.clickLongOnScreen(420,420,2000);
-        solo.clickOnView(solo.getView(R.id.geo_confirm_button));
-        solo.sleep(1000);
+        if(solo.searchText("GPS") || solo.searchText("Deny")){
+            //location permissions not enabled .. dont set geo
+            solo.goBack();
+        }
+        else{
+            //set location
+            solo.clickOnView(solo.getView(R.id.map));
+            solo.clickLongOnScreen(420,420,2000);
+            solo.clickOnView(solo.getView(R.id.geo_confirm_button));
+            solo.sleep(1000);
+            pickupLocation = true;
+        }
         checkActivity(HomeActivity.class, "HomeActivity");
     }
 
@@ -171,14 +179,16 @@ public class BookExchangeTest {
      * and specifies a pickupLocation
      */
     private void viewLocation() {
-        navDrawer("Accepted Requests");
-        assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
-        solo.clickOnText("request69");
-        solo.clickOnButton("View Pickup Location");
-        checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
-        solo.sleep(1000);
-        solo.clickOnButton("Done");
-        checkActivity(HomeActivity.class, "HomeActivity");
+        if(pickupLocation){
+            navDrawer("Accepted Requests");
+            assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
+            solo.clickOnText("request69");
+            solo.clickOnButton("View Pickup Location");
+            checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
+            solo.sleep(1000);
+            solo.clickOnButton("Done");
+            checkActivity(HomeActivity.class, "HomeActivity");
+        }
 
     }
 

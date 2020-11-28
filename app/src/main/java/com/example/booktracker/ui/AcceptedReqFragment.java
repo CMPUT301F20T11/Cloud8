@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.BundleCompat;
@@ -95,14 +96,18 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     public void executeCallback(){
         Double lat = selected_book.getLat();
         Double lon = selected_book.getLon();
-        Bundle pickupLoc = new Bundle();
-        pickupLoc.putDouble("pickupLat", lat);
-        pickupLoc.putDouble("pickupLng", lon);
-        Log.d(TAG, "acceptedReq lat: " + lat);
-        Log.d(TAG, "acceptedReq lon: " + lon);
-        Intent viewGeo = new Intent(getContext(), ViewGeoActivity.class);
-        viewGeo.putExtras(pickupLoc);
-        startActivity(viewGeo);
-
+        if(lat == null || lon == null){
+            Toast.makeText(getContext(), "No location attached to location", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Bundle pickupLoc = new Bundle();
+            pickupLoc.putDouble("pickupLat", lat);
+            pickupLoc.putDouble("pickupLng", lon);
+            Log.d(TAG, "acceptedReq lat: " + lat);
+            Log.d(TAG, "acceptedReq lon: " + lon);
+            Intent viewGeo = new Intent(getContext(), ViewGeoActivity.class);
+            viewGeo.putExtras(pickupLoc);
+            startActivity(viewGeo);
+        }
     }
 }
