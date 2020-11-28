@@ -135,7 +135,7 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     private void pickFromGallery(View v) {
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1200, 1200)
+                .setAspectRatio(1000, 1400)
                 .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .start(AddBookActivity.this);
     }

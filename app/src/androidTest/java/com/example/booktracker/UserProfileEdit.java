@@ -56,7 +56,7 @@ public class UserProfileEdit {
         phoneBuff.setText("");
         solo.enterText(emailBuff, "plshelp" + email);
         solo.enterText(phoneBuff, "69" + phone);
-        solo.clickOnText("OK");
+        solo.clickOnText("Confirm");
     }
 
     private void checkProfEdit() {
@@ -73,7 +73,7 @@ public class UserProfileEdit {
         phoneBuff.setText("");
         solo.enterText(emailBuff, email);
         solo.enterText(phoneBuff, phone);
-        solo.clickOnText("OK");
+        solo.clickOnText("Confirm");
     }
 
     @Test
