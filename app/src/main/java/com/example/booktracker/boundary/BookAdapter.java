@@ -2,7 +2,6 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -73,11 +70,15 @@ public class BookAdapter extends ArrayAdapter<Book> {
         String desc = book.getDescription();
         String status = book.getStatus();
         if (status.equals("available")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.available_background, null));
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_available, null));
+        } else if (status.equals("borrowed")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_borrowed, null));
+        } else if (status.equals("requested")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_requested, null));
+        } else if (status.equals("accepted")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_accepted, null));
         }
-        if (status.equals("unavailable")) {
-            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.unavailable_background, null));
-        }
+
         if (book.getOwner() != null) {
             String owner = book.getOwnerName();
             titleView.setText(title);

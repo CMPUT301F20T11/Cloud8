@@ -142,6 +142,16 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));
         statusView.setText(book.getStatus());
+        String status = book.getStatus();
+        if (status.equals("available")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_available, null));
+        } else if (status.equals("borrowed")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_borrowed, null));
+        } else if (status.equals("requested")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_requested, null));
+        } else if (status.equals("accepted")) {
+            statusView.setBackground(this.getResources().getDrawable(R.drawable.status_accepted, null));
+        }
         if (book.getUri() != null) {
             Glide.with(this).load(book.getUri()).into(imageView);
         }

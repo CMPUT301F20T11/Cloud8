@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
+import com.example.booktracker.boundary.BookAdapter;
 import com.example.booktracker.boundary.ResultAdapter;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
@@ -153,7 +154,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     private void updateBookList(ArrayList<Book> newList) {
-        resAdapter = new ResultAdapter(getContext(), newList);
+        resAdapter = new BookAdapter(getContext(), newList);
         bookList.setAdapter(resAdapter);
         resAdapter.notifyDataSetChanged();
     }
