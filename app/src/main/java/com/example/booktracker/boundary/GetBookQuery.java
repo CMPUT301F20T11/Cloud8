@@ -60,6 +60,7 @@ public class GetBookQuery extends BookQuery {
     public GetBookQuery() {
         super();
     }
+
     /**
      * This will turn the document that resulted from a query to a Book object
      * @param document Document from firestore query
@@ -81,7 +82,6 @@ public class GetBookQuery extends BookQuery {
         }
         return book;
     }
-
 
     /**
      * This will query the database for the specified books and display the status
@@ -189,7 +189,7 @@ public class GetBookQuery extends BookQuery {
      * get will get all contents of the specified collection reference and output it
      * @param email email of the user who owns the book collection
      */
-    public void getAvailable(String email){
+    public void getAvailable(String email) {
         CollectionReference reference = db.collection("users")
                 .document(email).collection("myBooks");
         reference.get()
@@ -208,31 +208,28 @@ public class GetBookQuery extends BookQuery {
                                         if (task.isSuccessful()){
                                             if (doc.exists() && doc.getString("status").equals("available")) {
                                                 outputBooks.add(docToBook(doc));
-
                                             } else {
                                                 reference.document(bookRef.getId()).delete();
                                             }
                                         }
                                     }
                                 }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    //every step of the loop check if the list of books is full
+                                    // every step of the loop check if the list of books is full
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
-                                            outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            outputBooks = new ArrayList<>();
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     } else {
                         throw new RuntimeException("Error getting books");
@@ -240,46 +237,46 @@ public class GetBookQuery extends BookQuery {
 
                 });
     }
-    private ArrayList<QueryDocumentSnapshot> concatQueries(QuerySnapshot query1,QuerySnapshot query2){
-        ArrayList<QueryDocumentSnapshot> out = new ArrayList<QueryDocumentSnapshot>();
-        for (QueryDocumentSnapshot doc : query1){
+
+    private ArrayList<QueryDocumentSnapshot> concatQueries(QuerySnapshot query1, QuerySnapshot query2) {
+        ArrayList<QueryDocumentSnapshot> out = new ArrayList<>();
+        for (QueryDocumentSnapshot doc : query1) {
             out.add(doc);
         }
-        for (QueryDocumentSnapshot doc : query2){
+        for (QueryDocumentSnapshot doc : query2) {
             out.add(doc);
         }
         return out;
     }
+
     /**
      * getAll will get all the borrowed and owned books
      * @param email email of user that owns the collection
      */
-    public void getAll(String email){
+    public void getAll(String email) {
         DocumentReference reference = db.collection("users").document(email);
         Task all = reference.collection("myBooks").get();
         Task borrowed = reference.collection("borrowed").get();
-        Tasks.whenAllComplete(all,borrowed)
+        Tasks.whenAllComplete(all, borrowed)
                 .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
                     @Override
                     public void onComplete(@NonNull Task<List<Task<?>>> task) {
                         ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
-
                         QuerySnapshot res1 = (QuerySnapshot) res.get(0).getResult();
                         QuerySnapshot res2 = (QuerySnapshot) res.get(1).getResult();
-                        ArrayList<QueryDocumentSnapshot> res3 = concatQueries(res1,res2);
+                        ArrayList<QueryDocumentSnapshot> res3 = concatQueries(res1, res2);
                         int querySize = res3.size();
                         outputBooks = new ArrayList<>();
                         for (QueryDocumentSnapshot document : res3) {
                             DocumentReference bookRef = (DocumentReference) document.get("bookReference");
-                            if (bookRef != null){
+                            if (bookRef != null) {
                                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot doc = task.getResult();
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             if (doc.exists()) {
                                                 outputBooks.add(docToBook(doc));
-
                                             } else {
                                                 reference.collection("myBooks").document(bookRef.getId()).delete();
                                                 reference.collection("borrowed").document(bookRef.getId()).delete();
@@ -294,21 +291,20 @@ public class GetBookQuery extends BookQuery {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
                                             outputBooks = new ArrayList();
-                                            //empty outputBooks to clear results from last query
+                                            // empty outputBooks to clear results from last query
                                         } else {
-                                            //in case there no matches clear the current
+                                            // in case there no matches clear the current
                                             // list
                                             bookList.clearList();
                                         }
                                     }
                                 });
                             }
-
-
                         }
                     }
                 });
     }
+
     /**
      * This will query the data base and use Book Collection object to modify
      * the listView

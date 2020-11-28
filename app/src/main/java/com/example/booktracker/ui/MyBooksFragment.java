@@ -37,7 +37,6 @@ public class MyBooksFragment extends Fragment {
     private View view;
     private DeleteBookQuery del;
     private BookCollection collection;
-    private String lastStatus;
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
 
@@ -51,7 +50,6 @@ public class MyBooksFragment extends Fragment {
         collection = new BookCollection(new ArrayList<>(), bookList,
                 userEmail, view.getContext());
         del = new DeleteBookQuery(userEmail);
-        lastStatus = "";
         instance = this;
         getQuery = (new GetBookQuery(userEmail, collection, view.getContext()));
         setHasOptionsMenu(true);
@@ -176,7 +174,6 @@ public class MyBooksFragment extends Fragment {
     }
 
     public void setStatus(String newStatus) {
-        lastStatus = newStatus;
     }
 
     public GetBookQuery getQuery() {

@@ -61,6 +61,7 @@ public class AddViewTest {
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
+
     /**
      * Delete the book that was used from firestore.
      */
