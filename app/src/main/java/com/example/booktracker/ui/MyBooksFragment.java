@@ -221,6 +221,7 @@ public class MyBooksFragment extends Fragment {
         String phone = userDoc.getString("phone");
         ViewUserDialog userDialog = ViewUserDialog.newInstance(username,
                 email, phone);
+
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }

@@ -17,6 +17,8 @@ import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 /**
@@ -56,15 +58,19 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         }
         Request request = requestList.get(position);
 
-        TextView mainView = view.findViewById(R.id.request_all_text);
         ImageView imageView = view.findViewById(R.id.request_imageView);
+        TextView titleView = view.findViewById(R.id.request_title);
+        TextView authorView = view.findViewById(R.id.request_author);
+        TextView fromView = view.findViewById(R.id.request_from);
 
         Book book = request.getBook();
         String title = book.getTitle();
         String authors = TextUtils.join(",", book.getAuthor());
         String fromUsername = request.getFromUsername();
 
-        mainView.setText(title + "\n" + authors + "\n" + fromUsername);
+        titleView.setText(title);
+        authorView.setText(authors);
+        fromView.setText(fromUsername);
         if (book.getUri() != null) {
             Glide.with(view).load(book.getUri()).into(imageView);
         } else {

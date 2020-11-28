@@ -2,6 +2,7 @@ package com.example.booktracker.boundary;
 
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.booktracker.R;
 import com.example.booktracker.entities.Book;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -55,8 +58,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
         }
         Book book = bookList.get(position);
 
-        TextView mainView = view.findViewById(R.id.all_text);
         ImageView imageView = view.findViewById(R.id.imageView);
+        TextView titleView = view.findViewById(R.id.book_adapter_title);
+        TextView ownerView = view.findViewById(R.id.book_adapter_owner);
+        TextView descView = view.findViewById(R.id.book_adapter_desc);
+        TextView statusView = view.findViewById(R.id.book_adapter_status);
 
         StringBuilder authors = new StringBuilder();
         for (String s : book.getAuthor()) {
@@ -66,10 +72,18 @@ public class BookAdapter extends ArrayAdapter<Book> {
         String title = book.getTitle();
         String desc = book.getDescription();
         String status = book.getStatus();
-
+        if (status.equals("available")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.available_background, null));
+        }
+        if (status.equals("unavailable")) {
+            statusView.setBackground(this.context.getResources().getDrawable(R.drawable.unavailable_background, null));
+        }
         if (book.getOwner() != null) {
             String owner = book.getOwnerName();
-            mainView.setText(title + "\n" + owner + "\n" + desc + "\n" + status);
+            titleView.setText(title);
+            ownerView.setText(owner);
+            descView.setText(desc);
+            statusView.setText(status);
             if (book.getUri() != null) {
                 Glide.with(view).load(book.getUri()).into(imageView);
             } else {
@@ -77,7 +91,10 @@ public class BookAdapter extends ArrayAdapter<Book> {
             }
         } else {
             String stringOwner = book.getStringOwner();
-            mainView.setText(title + "\n" + stringOwner + "\n" + desc + "\n" + status);
+            titleView.setText(title);
+            ownerView.setText(stringOwner);
+            descView.setText(desc);
+            statusView.setText(status);
             if (book.getUri() != null) {
                 Glide.with(view).load(book.getUri()).into(imageView);
             } else {

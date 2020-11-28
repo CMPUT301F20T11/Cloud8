@@ -1,120 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/viewbook_status"
-        android:layout_width="405dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="392dp"
-        android:gravity="center"
-        android:text="Status"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_borrower"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewbook_isbn"
-        android:layout_width="411dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="560dp"
-        android:gravity="center"
-        android:text="Isbn"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewbook_owner"
-        android:layout_width="401dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="508dp"
-        android:gravity="center"
-        android:text="Owner"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_isbn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewbook_borrower"
-        android:layout_width="405dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="452dp"
-        android:gravity="center"
-        android:text="Borrower"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_owner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewbook_desc"
-        android:layout_width="405dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="344dp"
-        android:gravity="center"
-        android:text="Description"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_status"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/viewbook_title"
-        android:layout_width="407dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="248dp"
-        android:gravity="center"
-        android:text="Book Title"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_author"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/viewbook_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="88dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
         android:foreground="@drawable/addbook_photo_border"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_stock_book_photo_foreground" />
 
     <TextView
+        android:id="@+id/viewbook_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Book Title"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_image" />
+
+    <TextView
         android:id="@+id/viewbook_author"
-        android:layout_width="406dp"
-        android:layout_height="34dp"
-        android:layout_marginTop="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="Book Author"
         android:textSize="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewbook_desc"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_title" />
+
+    <TextView
+        android:id="@+id/viewbook_isbn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Isbn"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_author" />
+
+    <TextView
+        android:id="@+id/viewbook_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Status"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_isbn" />
+
+    <TextView
+        android:id="@+id/viewbook_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Owner"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_status" />
+
+    <TextView
+        android:id="@+id/viewbook_borrower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Borrower"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_owner" />
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -127,51 +107,65 @@
             android:id="@+id/add_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue_round"
-            android:textColor="@color/white"
-            android:layout_margin="3dp"
-            android:text="@string/add_book_text" />
+            android:text="@string/add_book_text"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/return_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue_round"
-            android:textColor="@color/white"
-            android:layout_margin="3dp"
-            android:text="@string/return_book_text" />
+            android:text="@string/return_book_text"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/receive_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue_round"
-            android:textColor="@color/white"
-            android:layout_margin="3dp"
-            android:text="@string/receive_book_text" />
+            android:text="@string/receive_book_text"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/borrow_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue_round"
-            android:textColor="@color/white"
-            android:layout_margin="3dp"
-            android:text="@string/borrow_book_text" />
+            android:text="@string/borrow_book_text"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/give_book_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@drawable/custom_button_blue_round"
-            android:textColor="@color/white"
-            android:layout_margin="3dp"
-            android:text="@string/give_book_text" />
+            android:text="@string/give_book_text"
+            android:textColor="@color/white" />
 
     </LinearLayout>
+
+    <TextView
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:id="@+id/viewbook_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Description"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewbook_borrower" />
 </androidx.constraintlayout.widget.ConstraintLayout>

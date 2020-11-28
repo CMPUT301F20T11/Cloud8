@@ -127,13 +127,17 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      */
     private void updateTextViews(Book book) {
         //uses the first author
-        isbnView.setText(isbn);
+        isbnView.setText("ISBN: " + isbn);
         if (book.getOwner() != null) {
-            ownerView.setText(book.getOwnerEmail());
+            ownerView.setText("Owner: " + book.getOwnerEmail());
         } else {
-            ownerView.setText(book.getStringOwner());
+            ownerView.setText("Owner: " + book.getStringOwner());
         }
-        borrowerView.setText(book.getBorrower());
+        if (book.getBorrower() != null || book.getBorrower() == "none") {
+            borrowerView.setText("Borrower: " + book.getBorrower());
+        } else {
+            borrowerView.setText("Borrower: none");
+        }
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         authorView.setText(book.getAuthor().get(0));

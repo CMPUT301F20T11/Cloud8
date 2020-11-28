@@ -23,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileFragment extends Fragment implements ProfileEditDialog.onEditListener {
     private static final String TAG = ProfileFragment.class.getName();
-    private TextView nameText, idText, emailText, phoneText;
+    private TextView nameText, emailText, phoneText;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -36,7 +36,6 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
         setHasOptionsMenu(true);
 
         nameText = profileView.findViewById(R.id.username);
-        idText = profileView.findViewById(R.id.uid);
         emailText = profileView.findViewById(R.id.email);
         phoneText = profileView.findViewById(R.id.phone);
 
@@ -81,7 +80,6 @@ public class ProfileFragment extends Fragment implements ProfileEditDialog.onEdi
                     userPhone = doc.getString("phone");
 
                     nameText.setText(userName);
-                    idText.setText(userID);
                     if (userEmail != null) {
                         emailText.setText(userEmail);
                     } else {
