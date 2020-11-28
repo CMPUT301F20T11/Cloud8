@@ -1,5 +1,7 @@
 package com.example.booktracker.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -114,15 +116,9 @@ public class MyBooksFragment extends Fragment {
         ImageButton deleteBookBtn = view.findViewById(R.id.delete_book_button);
         deleteBookBtn.setOnClickListener(view -> {
             if (selected_book != null) {
-                if (selected_book.getOwner() != null && selected_book.getOwnerEmail().trim().equals(userEmail.trim())) {
-                    userSelected = selected_book.getOwnerEmail();
-                    del.deleteBook(selected_book);
-                    collection.deleteBook(selected_book);
-                }else{
-                    Toast.makeText(view.getContext(),
-                            "Book cannot be deleted since you do not own it",
-                            Toast.LENGTH_LONG).show();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setMessage("Are you sure you want to delete this book from your library?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             } else {
                 Toast.makeText(view.getContext(), "Book cant be deleted",
                         Toast.LENGTH_LONG).show();
@@ -210,4 +206,29 @@ public class MyBooksFragment extends Fragment {
         userDialog.setStyle(STYLE_NO_TITLE, 0);
         userDialog.show(getParentFragmentManager(), "VIEW USER");
     }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    if (selected_book.getOwner() != null && selected_book.getOwnerEmail().trim().equals(userEmail.trim())) {
+                        userSelected = selected_book.getOwnerEmail();
+                        del.deleteBook(selected_book);
+                        collection.deleteBook(selected_book);
+                    }else{
+                        Toast.makeText(view.getContext(),
+                                "Book cannot be deleted since you do not own it",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //Do not delete book. return to MyBooks
+                    break;
+            }
+        }
+    };
+
+
 }

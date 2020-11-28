@@ -14,6 +14,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -22,6 +24,7 @@ import static android.content.ContentValues.TAG;
 public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
     private Double pickupLat = null;
     private Double pickupLng = null;
+    private static final float HUE_BLUE = 200f;
 
     /**
      *  ViewGeo creation - retrieve pickupLoc and display on map
@@ -50,6 +53,7 @@ public class ViewGeoActivity extends AppCompatActivity implements OnMapReadyCall
         LatLng pickupLoc = new LatLng(pickupLat, pickupLng);
         map.addMarker(new MarkerOptions()
                 .position(pickupLoc)
+                .icon(BitmapDescriptorFactory.defaultMarker(HUE_BLUE))
                 .title("Pickup Location"));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(pickupLoc, 15));
 
