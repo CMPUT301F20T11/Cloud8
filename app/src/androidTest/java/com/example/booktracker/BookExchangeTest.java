@@ -38,7 +38,6 @@ public class BookExchangeTest {
     private String email1 = "testrequest1@gmail.com";
     private String email2 = "testrequest2@gmail.com";
     private String pass = "password";
-    boolean pickupLocation = false;
 
 
     private Book book;
@@ -159,47 +158,27 @@ public class BookExchangeTest {
      * Sets pickup location on map
      */
     private void setGeo(){
-        if(solo.searchText("GPS")){
-            //gps permissions not enabled .. dont set geo
-            solo.goBack();
-        }
-        else if(solo.searchText("Allow")){
-            //gps permissions are on, but location permissions not yet confirmed for app
-            //allow permissions for this from within app and set location
-            solo.clickOnText("Allow");
-            setLocation();
-        }
-        else{
-            //set location
-            setLocation();
-        }
-        //checkActivity(HomeActivity.class, "HomeActivity");
-    }
-
-    private void setLocation() {
+        //set location
         solo.clickOnView(solo.getView(R.id.map));
         solo.clickLongOnScreen(420,420,2000);
         solo.clickOnView(solo.getView(R.id.geo_confirm_button));
         solo.sleep(1000);
-        pickupLocation = true;
+        checkActivity(HomeActivity.class, "HomeActivity");
     }
-
 
     /**
      * test1@gmail.com accepts book request from test2@gmail.com
      * and specifies a pickupLocation
      */
     private void viewLocation() {
-        if(pickupLocation){
-            navDrawer("Accepted Requests");
-            assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
-            solo.clickOnText("request69");
-            solo.clickOnButton("View Pickup Location");
-            checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
-            solo.sleep(1000);
-            solo.clickOnButton("Done");
-            checkActivity(HomeActivity.class, "HomeActivity");
-        }
+        navDrawer("Accepted Requests");
+        assertTrue("Book not appearing in Accepted requests", solo.searchText("request69"));
+        solo.clickOnText("request69");
+        solo.clickOnButton("View Pickup Location");
+        checkActivity(ViewGeoActivity.class, "ViewGeoActivity");
+        solo.sleep(1000);
+        solo.clickOnButton("Done");
+        checkActivity(HomeActivity.class, "HomeActivity");
 
     }
 
@@ -340,9 +319,7 @@ public class BookExchangeTest {
         del.deleteBookList("accepted",email2);
     }
 
-    /**
-     *
-     */
+    /*
     @Test
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
@@ -391,5 +368,8 @@ public class BookExchangeTest {
 //        checkMyBooks("descr69");
         //DONE
     }
+
+
+     */
 
 }
