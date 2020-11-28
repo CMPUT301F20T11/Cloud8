@@ -107,3 +107,4 @@ Thumbs.db
 .gradle
 .navigation
 output.json 
+local.properties
