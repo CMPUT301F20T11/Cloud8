@@ -35,8 +35,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class BookExchangeTest {
     private Solo solo;
-    private String email1 = "testrequest1@gmail.com";
-    private String email2 = "testrequest2@gmail.com";
+    private String email1 = "test@gmail.com";
+    private String email2 = "test69@gmail.com";
     private String pass = "password";
 
 
@@ -111,7 +111,7 @@ public class BookExchangeTest {
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "request69 Test title",
-                "1234123412349", "descr69");
+                "7777777777777", "descr69");
         addBook.loadUsername(book);
         addBook.addBook(book);
         addBook.addToDb(book);
@@ -319,8 +319,10 @@ public class BookExchangeTest {
         del.deleteBookList("accepted",email2);
     }
 
+
 /*
     @Test
+>>>>>>> master
     public void ExchangeTest() {
         //login to user2 account - this account will request user1 book
         login(email2);
@@ -368,6 +370,7 @@ public class BookExchangeTest {
 //        checkMyBooks("descr69");
         //DONE
     }
+
 
 
 */

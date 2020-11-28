@@ -2,6 +2,7 @@ package com.example.booktracker.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private ImageView imageView;
     //===================================
 
+    private Button borrowButton,giveButton,returnButton,receiveButton;
+
     /**
      * query database for book data
      *
@@ -72,7 +75,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         emptyBook = new Book();
         setTextViews();
 
-
         auth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         user = auth.getCurrentUser();
@@ -85,17 +87,14 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         updateQuery = new UpdateQuery();
         queryOutput = new QueryOutput();
         // Creating buttons
-        Button borrowButton = (Button) findViewById(R.id.borrow_book_button);
+        borrowButton = (Button) findViewById(R.id.borrow_book_button);
         borrowButton.setOnClickListener(this);
-        Button giveButton = (Button) findViewById(R.id.give_book_button);
+        giveButton = (Button) findViewById(R.id.give_book_button);
         giveButton.setOnClickListener(this);
-        Button returnButton = (Button) findViewById(R.id.return_book_button);
+        returnButton = (Button) findViewById(R.id.return_book_button);
         returnButton.setOnClickListener(this);
-        Button receiveButton = (Button) findViewById(R.id.receive_book_button);
+        receiveButton = (Button) findViewById(R.id.receive_book_button);
         receiveButton.setOnClickListener(this);
-        Button addButton = (Button) findViewById(R.id.add_book_button);
-        addButton.setOnClickListener(this);
-
 
 
         //==============query database for a book==============
@@ -104,6 +103,37 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         //=====================================================
     }
 
+    /**
+     * This method will select which buttons to display to the screen
+     */
+    private void selectButton(){
+        String status = emptyBook.getStatus();
+        String owner = emptyBook.getOwnerEmail();
+        String borrower = emptyBook.getBorrower();
+        if(status.equals("accepted") && owner.equals(loginEmail)){
+            ((ViewManager) returnButton.getParent()).removeView(receiveButton);
+            ((ViewManager) returnButton.getParent()).removeView(borrowButton);
+            ((ViewManager) returnButton.getParent()).removeView(returnButton);
+        }else if(status.equals("accepted") && (borrower == null || borrower.equals("") || borrower.equals("none"))){
+            ((ViewManager) returnButton.getParent()).removeView(giveButton);
+            ((ViewManager) returnButton.getParent()).removeView(receiveButton);
+            ((ViewManager) returnButton.getParent()).removeView(returnButton);
+        }else if(status.equals("borrowed") && owner.equals(loginEmail)){
+            ((ViewManager) returnButton.getParent()).removeView(giveButton);
+            ((ViewManager) returnButton.getParent()).removeView(borrowButton);
+            ((ViewManager) returnButton.getParent()).removeView(returnButton);
+        }else if(status.equals("borrowed") && borrower != null && !borrower.equals("") && !borrower.equals("none") && borrower.equals(borrower)){
+            ((ViewManager) receiveButton.getParent()).removeView(giveButton);
+            ((ViewManager) receiveButton.getParent()).removeView(borrowButton);
+            ((ViewManager) receiveButton.getParent()).removeView(receiveButton);
+        }else {
+            ((ViewManager) returnButton.getParent()).removeView(giveButton);
+            ((ViewManager) returnButton.getParent()).removeView(borrowButton);
+            ((ViewManager) returnButton.getParent()).removeView(receiveButton);
+            ((ViewManager) returnButton.getParent()).removeView(returnButton);
+        }
+
+    }
     /**
      * Helper method to set the references for the text views
      */
@@ -127,6 +157,10 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      */
     private void updateTextViews(Book book) {
         //uses the first author
+        if (book.getIsbn() == null){
+            Toast.makeText(instance, "Book is not in database", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         isbnView.setText("ISBN: " + isbn);
         if (book.getOwner() != null) {
             ownerView.setText("Owner: " + book.getOwnerEmail());
@@ -160,8 +194,17 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      * This method will be called by the query
      */
     @Override
-    public void executeCallback() {
-        updateTextViews(emptyBook);
+    public void executeCallback(){
+        String prevStatus = emptyBook.getStatus();
+        String from = getIntent().getStringExtra("from");
+        if ( from != null && from.equals("requested")){
+            emptyBook.setStatus("requested");
+            updateTextViews(emptyBook);
+            emptyBook.setStatus(prevStatus);
+        }else{
+            updateTextViews(emptyBook);
+        }
+        selectButton();
     }
 
     @Override
@@ -178,16 +221,13 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.add_book_button:
-                Toast.makeText(this, loginEmail, Toast.LENGTH_SHORT).show();
-                break;
             case R.id.borrow_book_button:
                 // Since we are the borrower in this case, we need to check
                 // for book.borrower == none,
                 // book.status == unavailable, book != null, and then book
                 // .setBorrower("user.email")
-                if ((emptyBook != null) && (emptyBook.getStatus().equals("available"))
-                        && (emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none")) || emptyBook.getBorrower().equals("")) {
+                if ((emptyBook != null) && (emptyBook.getStatus().equals("accepted"))
+                        && (emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none") || emptyBook.getBorrower().equals(""))) {
                     //need to check if the book is already in the list of accepted books for this user
                     updateQuery.borrowBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
@@ -200,8 +240,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // book.owner == user.email
                 // and book.borrower == none, and book.status == available,
                 // and book != null
-                if ((emptyBook != null) && ((emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none")) || emptyBook.getBorrower().equals(""))
-                        && (emptyBook.getStatus().equals("available")) && (emptyBook.getOwner().containsKey(loginEmail))) {
+                if ((emptyBook != null) && ((emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none") || emptyBook.getBorrower().equals("")))
+                        && (emptyBook.getStatus().equals("accepted")) && (emptyBook.getOwner().containsKey(loginEmail))) {
                     updateQuery.lendBook(emptyBook.getIsbn(),emptyBook.getOwnerEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to give book!",
@@ -213,8 +253,10 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // so we must check that
                 // borrower == user, status == unavailable, then set it to
                 // borrower == none
-                if ((emptyBook != null) && emptyBook.getBorrower().equals(loginEmail)
-                        && emptyBook.getStatus().equals("unavailable")) {
+                if ((emptyBook != null) && emptyBook.getBorrower()!= null
+                        && emptyBook.getBorrower().equals(loginEmail)
+                        && emptyBook.getStatus() != null
+                        && emptyBook.getStatus().equals("borrowed")) {
                     updateQuery.returnBook(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Return Failed!", Toast.LENGTH_SHORT).show();
@@ -225,8 +267,8 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 // returned, so we must check
                 // that we own the book, no one is borrowing it, and then set
                 // status to available
-                if ((emptyBook != null) && !(emptyBook.getBorrower().equals("none") || emptyBook.getBorrower() == null || emptyBook.getBorrower().equals(""))
-                        && emptyBook.getOwner().containsKey(loginEmail)) {
+                if ((emptyBook != null) && !(emptyBook.getBorrower() == null || emptyBook.getBorrower().equals("none")   || emptyBook.getBorrower().equals(""))
+                        && emptyBook.getOwner().containsKey(loginEmail) && emptyBook.getStatus().equals("borrowed")) {
                     updateQuery.acceptReturn(emptyBook.getIsbn(),user.getEmail(),instance,queryOutput);
                 } else {
                     Toast.makeText(this, "Failed to receive book!",
@@ -236,24 +278,5 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-
-    /**
-     * setHopperUpdates will be called after the user clicks one of the buttons to give, borrow,
-     * receive, or accept a book. After the button is pressed, it changes the book attributes and
-     * setHopperUpdates will save the changes to the database.
-     */
-    private void setHopperUpdates(){
-        hopperUpdates = new HashMap<>();
-        hopperUpdates.put("borrower", borrowerView.getText().toString());
-        hopperUpdates.put("status", statusView.getText().toString());
-        ref.updateChildren(hopperUpdates);
-    }
-
-    private void updateFirebase(){
-        hopperUpdates = new HashMap<>();
-        hopperUpdates.put("borrower", borrowerView.getText().toString());
-        hopperUpdates.put("status", statusView.getText().toString());
-        documentReference.update(hopperUpdates);
-    }
 }
 
