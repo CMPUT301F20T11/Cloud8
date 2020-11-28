@@ -115,7 +115,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 case DialogInterface.BUTTON_NEGATIVE:
                     // .. request accepted .. don't attach location
                     HashMap<String, Object> dataRes = new HashMap<>();
-                    dataRes.put("status","unavailable");
+                    dataRes.put("status","accepted");
                     selected_book = selected_request.getBook();
                     query.updateBook(selected_book,instance,dataRes,queryOutput);
                     query.changeBookStatus(selected_book.getIsbn() + "-" + selected_request.getFromEmail(), selected_book.getIsbn(),"accepted", selected_request.getToEmail(),"incomingRequests");
@@ -183,7 +183,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         if (id == R.id.action_view_user) {
             if (getUserDoc(userSelected)) {
                 showUserDialog(userDoc);
-                return false;
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
@@ -214,6 +214,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 HashMap<String, Object> dataRes = new HashMap<>();
                 dataRes.put("lat", lat);
                 dataRes.put("lon", lon);
+                dataRes.put("status","accepted");
                 selected_book = selected_request.getBook();
                 query.updateBook(selected_book, instance, dataRes, queryOutput);
                 query.changeBookStatus(selected_book.getIsbn() + "-" + selected_request.getFromEmail(), selected_book.getIsbn(),"accepted", selected_request.getToEmail(),"incomingRequests");

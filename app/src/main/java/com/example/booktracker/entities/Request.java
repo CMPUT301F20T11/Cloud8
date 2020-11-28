@@ -6,22 +6,29 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.booktracker.boundary.UserQuery;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +37,7 @@ import java.util.Map;
  * @author Edlee Ducay
  */
 public class Request extends Notification {
+
     private String FCM_API = "https://fcm.googleapis.com/fcm/send";
     private Book book;
     private Context context;
@@ -55,14 +63,10 @@ public class Request extends Notification {
     /**
      * Main function for sending requests
      * Add's the book into the 'requestedBooks' collection for fromUser,
-     * Add's the request into the 'incomingRequests' collection for toUser,
-     * and sends the push notification
      *
      */
     public void sendRequest() {
         addToRequestedBooks();
-        addToIncomingRequests();
-        sendPushNotification();
     }
 
     /**
@@ -95,7 +99,7 @@ public class Request extends Notification {
             public void onErrorResponse(VolleyError error) {
                 Log.i("REQUEST TAG", "onErrorResponse: Request error");
             }
-        }) {
+        }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> map = new HashMap<>();
@@ -106,18 +110,41 @@ public class Request extends Notification {
         };
 
         mQueue.add(jsonObjectRequest);
+        //MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
     /**
      * Add's the request to 'requested' collection in the user document
+     * Add's the request into the 'incomingRequests' collection for toUser,
+     * and sends the push notification
      */
     public void addToRequestedBooks() {
         DocumentReference bookReference = db.collection("books").document(book.getIsbn());
         HashMap<String, Object> userBook = new HashMap<>();
         userBook.put("bookReference", bookReference);
-        userDoc.collection("requested")
-                .document(book.getIsbn())
-                .set(userBook);
+        Task accepted = userDoc.collection("accepted").document(book.getIsbn()).get();
+        Task borrowed = userDoc.collection("borrowed").document(book.getIsbn()).get();
+        Task requested = userDoc.collection("requested").document(book.getIsbn()).get();
+        Tasks.whenAllComplete(accepted,borrowed,requested)
+                .addOnCompleteListener(new OnCompleteListener<List<Task<?>>>() {
+                    @Override
+                    public void onComplete(@NonNull Task<List<Task<?>>> task) {
+                        ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
+                        DocumentSnapshot res1 = (DocumentSnapshot) res.get(0).getResult(); //this is accepted
+                        DocumentSnapshot res2 = (DocumentSnapshot) res.get(1).getResult(); //this is borrowed
+                        DocumentSnapshot res3 = (DocumentSnapshot) res.get(2).getResult(); //this is requested
+                        if (res1.exists() || res2.exists() || res3.exists()){
+                            Toast.makeText(context, "Book has already been requested", Toast.LENGTH_SHORT).show();
+                        }else {
+                            userDoc.collection("requested")
+                                    .document(book.getIsbn())
+                                    .set(userBook);
+                            addToIncomingRequests();
+                            sendPushNotification();
+                        }
+                    }
+                });
+
     }
 
     /**

@@ -13,46 +13,63 @@ public class NotificationCircle implements Callback {
     private NotifCount count;
     private String email;
     private TextView view;
+    private TextView incoming;
+    private TextView accepted;
 
-    public NotificationCircle(String argEmail, TextView argView){
+    public NotificationCircle(String argEmail, TextView argView,TextView incoming,TextView accepted){
         getBookQuery = new GetBookQuery();
         count = new NotifCount();
         email = argEmail;
         view = argView;
         updateQuery = new UpdateQuery();
+        this.incoming = incoming;
+        this.accepted = accepted;
     }
 
     public void checkNotification() {
         getBookQuery.getNotif(this,count,(email));
     }
-    private void raiseNotif(){
-        view.setText(Long.toString(count.getTotal()));
+    private void raiseIncoming(){
+        incoming.setVisibility(View.VISIBLE);
+        incoming.setText(Long.toString(count.getIncoming()));
+    }
+    private void raiseAccepted(){
+        accepted.setVisibility(View.VISIBLE);
+        accepted.setText(Long.toString(count.getAccepted()));
+    }
+    private void raiseTotal(){
         view.setVisibility(View.VISIBLE);
-        view.bringToFront();
+        view.setText(Long.toString(count.getTotal()));
     }
 
     private void clearNotif(){
         view.setVisibility(View.GONE);
+        incoming.setVisibility(View.GONE);
+        accepted.setVisibility(View.GONE);
     }
 
     @Override
     public void executeCallback() {
-        if (count.getAccepted() > 0 || count.getIncoming() > 0){
-            raiseNotif();
-        }
-
         if (count.getTotal() == 0) {
             clearNotif();
+        } else {
+            raiseTotal();
         }
 
         if (count.getAccepted() == 0) {
             //if count accepted is zero then counter could have never been initialized in db
             updateQuery.emptyNotif(email,"acceptedCount");
+            accepted.setVisibility(View.GONE);
+        } else {
+            raiseAccepted();
         }
 
         if (count.getIncoming() == 0) {
             //if count incoming is zero the counter could have never been initialized in db
             updateQuery.emptyNotif(email,"incomingCount");
+            incoming.setVisibility(View.GONE);
+        } else {
+            raiseIncoming();
         }
     }
 }

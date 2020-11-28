@@ -151,14 +151,19 @@ public class UpdateQuery {
                                     String ownerStat = res.getString("ownerStatus");
                                     if (ownerStat != null && ownerStat.equals("unavailable")) {
                                         //this means that the owner has already scanned the book and lent it
-                                        HashMap<String,Object> data = new HashMap<>();
+                                        HashMap<String, Object> data = new HashMap<>();
                                         data.put("borrower", borrower);
                                         data.put("borrowerStatus", "unavailable");
-                                        data.put("status", "unavailable");
+                                        data.put("status", "borrowed");
                                         db.collection("books").document(isbn).update(data);
+
                                         changeBookStatus(isbn, isbn,"borrowed", borrower, "accepted");
-                                        HashMap<String, String> owner = (HashMap<String, String>)res.get("owner");
-                                        changeBookStatus(isbn, isbn,"lent", getEmail(owner), "accepted");
+                                        HashMap<String, String> owner = (HashMap<String,String>)res.get("owner");
+                                        db.collection("users")
+                                                .document(getEmail(owner))
+                                                .collection("available")
+                                                .document(isbn).delete();
+                                        changeBookStatus(isbn, isbn, "lent", getEmail(owner), "accepted");
                                         queryOutput.setOutput("Book successfully borrowed");
                                         outputCallback.displayQueryResult("successful");
 
@@ -182,7 +187,7 @@ public class UpdateQuery {
         });
     }
 
-    public void lendBook(String isbn,String owner,QueryOutputCallback outputCallback,QueryOutput queryOutput){
+    public void lendBook(String isbn, String owner, QueryOutputCallback outputCallback, QueryOutput queryOutput) {
         db.collection("users").document(owner).collection("accepted")
                 .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -195,13 +200,18 @@ public class UpdateQuery {
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     DocumentSnapshot res = task.getResult();
                                     String borrowerStatus = res.getString("borrowerStatus");
-                                    if (borrowerStatus != null && borrowerStatus.equals("unavailable")) {
+                                    if (borrowerStatus != null && borrowerStatus.equals("unavailable")){
                                         HashMap<String, Object> data = new HashMap<>();
                                         data.put("ownerStatus", "unavailable");
-                                        data.put("status", "unavailable");
+                                        data.put("status", "borrowed");
+                                        data.put("borrower", res.getString("potentialBorrower"));
                                         db.collection("books").document(isbn).update(data);
-                                        changeBookStatus(isbn, isbn,"lent", owner,"accepted");
-                                        changeBookStatus(isbn, isbn,"borrowed", res.getString("potentialBorrower"), "accepted");
+                                        db.collection("users")
+                                                .document(owner)
+                                                .collection("available")
+                                                .document(isbn).delete();
+                                        changeBookStatus(isbn, isbn, "lent", owner, "accepted");
+                                        changeBookStatus(isbn, isbn, "borrowed", res.getString("potentialBorrower"), "accepted");
                                         queryOutput.setOutput("Book successfully lent");
                                         outputCallback.displayQueryResult("successful");
                                     } else {
@@ -221,7 +231,7 @@ public class UpdateQuery {
         });
     }
 
-    public void returnBook(String isbn, String borrower, QueryOutputCallback outputCallback, QueryOutput queryOutput){
+    public void returnBook(String isbn, String borrower, QueryOutputCallback outputCallback, QueryOutput queryOutput) {
         DocumentReference userRef = db.collection("users").document(borrower);
         userRef.collection("borrowed")
                 .document(isbn).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -233,13 +243,13 @@ public class UpdateQuery {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot res = task.getResult();
-                            if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("unavailable")) {
+                            if (res.getString("ownerStatus").equals("available") && res.getString("status").equals("borrowed")) {
                                 HashMap<String, Object> data = new HashMap<>();
                                 data.put("borrower", "none");
                                 data.put("status", "available");
                                 db.collection("books").document(isbn).update(data);
                                 userRef.collection("borrowed").document(isbn).delete();
-                                HashMap<String, String> owner = (HashMap<String,String>)res.get("owner");
+                                HashMap<String, String> owner = (HashMap<String, String>) res.get("owner");
                                 db.collection("users").document(getEmail(owner)).collection("lent").document(isbn).delete();
                                 queryOutput.setOutput("Book successfully returned");
                                 outputCallback.displayQueryResult("successful");
@@ -272,7 +282,7 @@ public class UpdateQuery {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             DocumentSnapshot res = task.getResult();
-                            if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("unavailable")) {
+                            if (res.getString("borrowerStatus").equals("available") && res.get("status").equals("borrowed")) {
                                 HashMap<String, Object> data = new HashMap<>();
                                 userRef.collection("borrowed").document(isbn).delete();
                                 db.collection("users").document(res.getString("borrower"))

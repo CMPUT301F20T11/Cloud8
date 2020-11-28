@@ -96,7 +96,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     @Override
     public void onResume() {
         super.onResume();
-        getBookQuery.getMyBooks("accepted");
+        getBookQuery.getBooksCategory("accepted");
         activity.notifRefresh();
     }
 

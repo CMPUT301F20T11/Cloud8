@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
         <item
             android:id="@+id/group_books"
             android:title="Books">
             <menu>
+
                 <item
                     android:icon="@drawable/ic_book"
                     android:id="@+id/nav_home"
@@ -16,7 +18,8 @@
                     android:icon="@drawable/ic_book"
                     android:id="@+id/nav_borrowed"
                     android:checkable="true"
-                    android:title="@string/menu_borrowed" />
+                    android:title="@string/menu_borrowed"
+                    />
                 <item
                     android:icon="@drawable/ic_search"
                     android:id="@+id/nav_find"
@@ -38,17 +41,20 @@
                     android:icon="@drawable/ic_incoming_arrow"
                     android:id="@+id/nav_incoming"
                     android:checkable="true"
-                    android:title="@string/menu_incoming" />
+                    android:title="@string/menu_incoming"
+                    app:actionLayout="@layout/incoming_notif"/>
                 <item
                     android:icon="@drawable/ic_check"
                     android:id="@+id/nav_accepted"
                     android:checkable="true"
-                    android:title="@string/menu_accepted" />
+                    android:title="@string/menu_accepted"
+                    app:actionLayout="@layout/accepted_notif"/>
                 <item
                     android:icon="@drawable/ic_outgoing_arrow"
                     android:id="@+id/nav_requested"
                     android:checkable="true"
-                    android:title="@string/menu_requested" />
+                    android:title="@string/menu_requested"
+                    />
             </menu>
         </item>
 

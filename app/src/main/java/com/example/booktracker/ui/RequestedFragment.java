@@ -46,7 +46,7 @@ public class RequestedFragment extends Fragment {
         listView = view.findViewById(R.id.requested_booklist);
         bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
         getQuery = (new GetBookQuery(userEmail, bookCollection,view.getContext()));
-        getQuery.getMyBooks("requested");
+        getQuery.getBooksCategory("requested");
         lastStatus = "";
 
         setSelectListener();
@@ -61,6 +61,7 @@ public class RequestedFragment extends Fragment {
             if (selected_book != null) {
                 Intent intent = new Intent(view.getContext(), ViewBookActivity.class);
                 intent.putExtra(EXTRA_MESSAGE,selected_book.getIsbn());
+                intent.putExtra("from","requested");
                 startActivity(intent);
             }
         });
@@ -106,11 +107,7 @@ public class RequestedFragment extends Fragment {
         //this is needed to refresh the list of books displayed when the user goes back to the
         //home activity
         super.onResume();
-        if (lastStatus.equals("")) {
-            getQuery.getMyBooks("requestedBooks");
-        } else {
-            getQuery.getMyBooks(lastStatus);
-        }
+        getQuery.getBooksCategory("requested");
     }
 
     @Override
