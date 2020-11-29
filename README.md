@@ -1,7 +1,8 @@
-# Book Tracker
+<img src="doc/images/booktracker_banner.jpg" />
+# Book Tracker 
 An android application for tracking book sharing.
 
-<img src="doc/images/booktracker_banner.jpg" />
+
 Add books to your collection for other users to find and borrow. 
 
 Book Tracker uses the Firebase Cloud Firestore database to make updates in real time. Users can search for a book using a keyword in relation to the title, author or description and send a request to the original owner to either accept or decline the borrow request.
