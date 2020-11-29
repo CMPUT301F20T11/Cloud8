@@ -55,8 +55,7 @@ public class ViewBookTest {
                 "6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),
                 "Test book");
-        solo.enterText((EditText) solo.getView(R.id.addbook_keywords),
-                "Dank");
+
     }
 
     /**
@@ -82,7 +81,7 @@ public class ViewBookTest {
         assertTrue("Isbn cannot be found", solo.searchText("6980671678814"));
         assertTrue("Description cannot be found", solo.searchText("Test book"));
         assertTrue("Owner cannot be found", solo.searchText("test@gmail.com"));
-        //assertTrue("Keyword cannot be found", solo.searchText("Dank"));
+
     }
 
     /**
@@ -102,13 +101,11 @@ public class ViewBookTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         List<String> author = new ArrayList<>();
-        List<String> keywords = new ArrayList<>();
-        keywords.add("Dank");
         author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book", keywords);
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }

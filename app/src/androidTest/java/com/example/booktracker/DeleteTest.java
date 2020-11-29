@@ -48,13 +48,11 @@ public class DeleteTest {
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
         List<String> author = new ArrayList<>();
-        List<String> keywords = new ArrayList<>();
-        keywords.add("Dank");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         author.add("Karl Pogs");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book", keywords);
+                "6980671678814", "Test book");
         addBook.loadUsername(book);
         addBook.addBook(book);
     }

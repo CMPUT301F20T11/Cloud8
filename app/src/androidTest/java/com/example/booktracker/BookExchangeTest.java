@@ -103,13 +103,11 @@ public class BookExchangeTest {
     private void addBookToDb(String email) {
         AddBookQuery addBook = new AddBookQuery(email);
         List<String> author = new ArrayList<>();
-        List<String> keywords = new ArrayList<>();
-        keywords.add("Dank");
         author.add("author");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "Requesting 69",
-                "4204123412369", "Test 69", keywords);
+                "4204123412369", "Test 69");
         addBook.loadUsername(book);
         addBook.addBook(book);
         addBook.addToDb(book);

@@ -52,15 +52,13 @@ public class Book implements Serializable {
      * @param argTitle
      * @param argIsbn
      * @param argDesc
-     * @param argKeyword
      */
     public Book(HashMap<String, String> argOwner, List<String> argAuthor,
-                String argTitle, String argIsbn, String argDesc, List<String> argKeyword) {
+                String argTitle, String argIsbn, String argDesc) {
         this.author = argAuthor;
         this.title = argTitle;
         this.isbn = argIsbn;
         this.description = argDesc;
-        this.keyword = argKeyword;
         this.owner = argOwner;
         this.status = "available";
         this.borrower = null;

@@ -48,7 +48,6 @@ public class AddViewTest {
         solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
-        //solo.enterText((EditText) solo.getView(R.id.addbook_keywords),"Dank");
     }
 
     /**
