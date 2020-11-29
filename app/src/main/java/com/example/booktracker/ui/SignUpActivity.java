@@ -129,6 +129,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                         if (email.length() > 0) {
                                             data.put("username", username);
                                             data.put("phone", phoneNumber);
+                                            data.put("email", email);
                                             data.put("token", token);
                                             collectionReference
                                                     .document(email)
