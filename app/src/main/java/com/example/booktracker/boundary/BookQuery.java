@@ -18,7 +18,7 @@ public abstract class BookQuery {
     protected String uid;
 
     /**
-     * constructor will connect to database and initialized document
+     * Constructor will connect to database and initialized document
      * pertaining to user
      *
      * @param userEmail this must be a valid email that is in the database

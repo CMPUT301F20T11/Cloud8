@@ -13,8 +13,8 @@ public abstract class Notification {
     /**
      * Contructor for the abstract notification class
      * Initializes the firestore references
-     * @param from
-     * @param to
+     * @param from Email of who it is from
+     * @param to Email of who it is to
      */
     public Notification(String from, String to) {
         fromEmail = from;
