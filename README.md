@@ -14,12 +14,12 @@ Check out the [wiki](https://github.com/CMPUT301F20T11/Cloud8/wiki) for a more i
 ### Meet The Team:
 <table>
    <tr>
-       <td><img src="https://avatars2.githubusercontent.com/u/38020079?v=4" size="200"></td>
+       <td><img src="https://avatars2.githubusercontent.com/u/38020079?v=4" width="200"></td>
        <td><img src="https://avatars3.githubusercontent.com/u/23269446?v=4" width="200"></td>
-<td><img src="https://avatars2.githubusercontent.com/u/55123805?v=4" size="200"></td>
-<td><img src="https://avatars0.githubusercontent.com/u/36421303?v=4" size="200"></td>
-<td><img src="https://avatars0.githubusercontent.com/u/36421303?v=4.png" size="200"></td>
-<td><img src="https://avatars3.githubusercontent.com/u/71898694?v=4" size="200"></td>
+<td><img src="https://avatars2.githubusercontent.com/u/55123805?v=4" width="200"></td>
+<td><img src="https://avatars0.githubusercontent.com/u/36421303?v=4" width="200"></td>
+<td><img src="https://avatars0.githubusercontent.com/u/36421303?v=4.png" width="200"></td>
+<td><img src="https://avatars3.githubusercontent.com/u/71898694?v=4" width="200"></td>
    </tr>
    <tr>
         <td>Ahmad Amali</td>
