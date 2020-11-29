@@ -2,10 +2,15 @@ package com.example.booktracker.boundary;
 
 import android.net.Uri;
 
+import androidx.annotation.NonNull;
+
 import com.example.booktracker.entities.Book;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 
@@ -92,5 +97,22 @@ public class DeleteBookQuery extends BookQuery {
                         }
                     }
                 });
+    }
+    public void deleteAllRequest(String isbn,String email){
+        db.collection("users").document(email)
+                .collection("incomingRequests")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                QuerySnapshot res = task.getResult();
+                for (DocumentSnapshot doc:res){
+                    if (doc.getId().contains(isbn)){
+                        db.collection("users").document(email)
+                                .collection("incomingRequests")
+                                .document(doc.getId()).delete();
+                    }
+                }
+            }
+        });
     }
 }

@@ -47,4 +47,13 @@
         android:layout_marginTop="20dp"
         android:text="Available" />
 
+
+    <Button
+        android:id="@+id/my_books"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button_white_round"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="20dp"
+        android:text="All books" />
 </LinearLayout>

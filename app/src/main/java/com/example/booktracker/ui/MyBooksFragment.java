@@ -42,6 +42,7 @@ public class MyBooksFragment extends Fragment {
     private BookCollection collection;
     private MyBooksFragment instance;
     private DocumentSnapshot userDoc;
+    private String lastStatus = "myBooks";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class MyBooksFragment extends Fragment {
         setDeleteListener();
         setViewListener();
         setFilterListener();
+
         ImageButton addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -86,7 +88,14 @@ public class MyBooksFragment extends Fragment {
 
         return view;
     }
-
+    public String getEmail(){
+        return userEmail;
+    }
+    private void setFilterListener(){
+        ImageButton filterBtn = view.findViewById(R.id.filter_button);
+        filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
+                "Filter"));
+    }
     private void setViewListener() {
         ImageButton viewBookBtn = view.findViewById(R.id.view_book_button);
         viewBookBtn.setOnClickListener(view -> {
@@ -103,10 +112,8 @@ public class MyBooksFragment extends Fragment {
     }
 
 
-    private void setFilterListener() {
-        ImageButton filterBtn = view.findViewById(R.id.filter_button);
-        filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
-                "Filter"));
+    public void setLastStatus(String lastStatus) {
+        this.lastStatus = lastStatus;
     }
 
 
@@ -171,7 +178,20 @@ public class MyBooksFragment extends Fragment {
         // goes back to the
         // home activity
         super.onResume();
-        getQuery.getAll(userEmail);
+        switch (lastStatus){
+            case "myBooks":
+                getQuery().getMyBooks();
+                break;
+            case "accepted":
+                getQuery().getMyBooksStatus(getEmail(),"accepted");
+                break;
+            case "borrowed":
+                getQuery().getMyBooksStatus(getEmail(),"borrowed");
+                break;
+            case "available":
+                getQuery().getMyBooksStatus(getEmail(),"available");
+                break;
+        }
     }
 
     public void setStatus(String newStatus) {
