@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
@@ -127,11 +128,25 @@ public class FindBooksFragment extends Fragment implements Callback {
         super.onResume();
         home.notifRefresh();
     }
-
+    private ArrayList<String> lowerCaseString(List<String> arg){
+        ArrayList<String> out = new ArrayList<String>();
+        for (String auth:arg){
+            out.add(auth.toLowerCase());
+        }
+        return out;
+    }
     private void searchBooks(String searchText) {
         ArrayList<Book> results = new ArrayList<>();
+
         for (Book found : bookDataList) {
-            if (containsKeyword(found.getDescription(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
+            ArrayList<String> auth = lowerCaseString(found.getAuthor());
+            String lowerSearch = searchText.toLowerCase();
+            if ((containsKeyword(found.getDescription().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getTitle().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getIsbn(), lowerSearch) ||
+                    auth.contains(searchText)) &&
+                    !found.getStatus().equals("accepted") &&
+                    !found.getStatus().equals("borrowed")) {
                 results.add(found);
             }
         }
