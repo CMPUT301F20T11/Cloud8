@@ -104,7 +104,7 @@ public class EditTest {
         assertTrue("Title was not edited", solo.searchText("The /b/ Manifesto"));
         assertTrue("Author was not edited", solo.searchText("Karl Mar/x/"));
         assertTrue("Description was not edited", solo.searchText("Edited Test book"));
-        assertTrue("Keyword was not edited", solo.searchText("Pog"));
+        //assertTrue("Keyword was not edited", solo.searchText("Pog"));
     }
 
     /**
