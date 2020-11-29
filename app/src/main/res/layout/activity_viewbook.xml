@@ -69,6 +69,7 @@
         android:paddingLeft="10dp"
         android:text="Status"
         android:textSize="20sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewbook_isbn" />

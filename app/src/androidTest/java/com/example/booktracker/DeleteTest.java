@@ -81,6 +81,7 @@ public class DeleteTest {
         login();
         solo.clickOnText("/pol/ Manifesto");
         solo.clickOnView(solo.getView(R.id.delete_book_button));
+        solo.clickOnText("Yes");
         assertFalse("Book was not deleted", solo.searchText("/pol/ " +
                 "Manifesto"));
     }
