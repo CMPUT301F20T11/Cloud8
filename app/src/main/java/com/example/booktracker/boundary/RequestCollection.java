@@ -3,9 +3,12 @@ package com.example.booktracker.boundary;
 import android.content.Context;
 import android.widget.ListView;
 
+import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.Request;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class RequestCollection {
@@ -46,6 +49,12 @@ public class RequestCollection {
      * @param argRequestList
      */
     public void setRequestList(ArrayList<Request> argRequestList) {
+        Collections.sort(argRequestList, new Comparator<Request>(){
+            public int compare(Request request1, Request request2) {
+                // ## Ascending request2
+                return request1.getBook().getTitle().compareToIgnoreCase(request2.getBook().getTitle()); // To compare string values
+            }
+        });
         adapter = new RequestAdapter(context, argRequestList);
     }
 
