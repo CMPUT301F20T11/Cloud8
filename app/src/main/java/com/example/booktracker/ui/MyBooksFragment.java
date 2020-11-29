@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -60,7 +61,7 @@ public class MyBooksFragment extends Fragment {
         setSelectListener();
         setDeleteListener();
         setViewListener();
-        // setFilterListener();
+        setFilterListener();
         ImageButton addBookBtn = view.findViewById(R.id.add_book_button);
         addBookBtn.setOnClickListener(view -> {
             Intent intent = new Intent(view.getContext(),
@@ -101,13 +102,13 @@ public class MyBooksFragment extends Fragment {
         });
     }
 
-    /*
+
     private void setFilterListener() {
-        Button filterBtn = view.findViewById(R.id.filter_button);
+        ImageButton filterBtn = view.findViewById(R.id.filter_button);
         filterBtn.setOnClickListener(v -> new FilterFragment(instance).show(getParentFragmentManager(),
                 "Filter"));
     }
-    */
+
 
     /**
      * Set the callback function to be executed when a book need to be deleted
