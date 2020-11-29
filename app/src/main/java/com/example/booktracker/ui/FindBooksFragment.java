@@ -80,7 +80,7 @@ public class FindBooksFragment extends Fragment implements Callback {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    bookList.setAdapter(null);
+                    updateBookList(bookDataList);
                 }
                 return false;
             }
@@ -126,6 +126,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     @Override
     public void onResume() {
         super.onResume();
+        query.getBooks(instance, bookDataList);
         home.notifRefresh();
     }
     private ArrayList<String> lowerCaseString(List<String> arg){
@@ -158,8 +159,11 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     public void executeCallback() {
-
-        searchBooks(searchText);
+        if (searchText == null) {
+            updateBookList(bookDataList);
+        } else {
+            searchBooks(searchText);
+        }
     }
 
     private void updateBookList(ArrayList<Book> newList) {
