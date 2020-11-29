@@ -83,6 +83,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
             case "accepted":
                 statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_accepted, null));
                 break;
+            case "pending":
+                statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_pending, null));
+                break;
         }
 
         if (book.getOwner() != null) {

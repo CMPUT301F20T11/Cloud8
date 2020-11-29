@@ -194,7 +194,9 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             authorView.setText(authors);
             isbnView.setText(newBook.getIsbn());
             descView.setText(newBook.getDescription());
-            keywordView.setText(newBook.getKeywords());
+            if (newBook.getKeywords() != null){
+                keywordView.setText(newBook.getKeywords());
+            }
         } else {
             Toast.makeText(AddBookActivity.this, "Book is not in GoogleBooks"
                     , Toast.LENGTH_LONG).show();

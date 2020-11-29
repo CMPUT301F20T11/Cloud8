@@ -102,10 +102,12 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
+                    requestCollection.deleteAllReq(selected_request.getBook());
                     startActivityForResult(new Intent(getActivity(), SetGeoActivity.class), LAUNCH_GEO);
                     break;
                 case DialogInterface.BUTTON_NEGATIVE:
                     // .. request accepted .. don't attach location
+                    requestCollection.deleteAllReq(selected_request.getBook());
                     HashMap<String, Object> dataRes = new HashMap<>();
                     dataRes.put("status", "accepted");
                     selected_book = selected_request.getBook();
@@ -115,12 +117,20 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                     requestCollection.deleteRequest(selected_request);
                     delQuery.deleteAllRequest(selected_book.getIsbn(),userEmail);
                     requestQuery.getRequests("incomingRequests");
+
                     query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
                     break;
             }
         }
     };
 
+    /**
+     * This will delete all the other request to the book in the list view
+     * @param book
+     */
+    private void deleteRequests(Book book){
+
+    }
     /**
      * Set the callback function to keep track of the selected books
      */
@@ -204,7 +214,6 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                 Double lat = data.getDoubleExtra("pickupLat", -1);
                 Double lon = data.getDoubleExtra("pickupLng", -1);
                 //need to change the status of the book to unavailable
-
                 HashMap<String, Object> dataRes = new HashMap<>();
                 dataRes.put("lat", lat);
                 dataRes.put("lon", lon);

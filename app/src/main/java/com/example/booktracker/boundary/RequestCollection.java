@@ -1,6 +1,7 @@
 package com.example.booktracker.boundary;
 
 import android.content.Context;
+import android.widget.Adapter;
 import android.widget.ListView;
 
 import com.example.booktracker.entities.Book;
@@ -55,6 +56,7 @@ public class RequestCollection {
                 return request1.getBook().getTitle().compareToIgnoreCase(request2.getBook().getTitle()); // To compare string values
             }
         });
+        requestList = argRequestList;
         adapter = new RequestAdapter(context, argRequestList);
     }
 
@@ -70,6 +72,29 @@ public class RequestCollection {
         listView.setAdapter(adapter);
     }
 
+    /**
+     * This will delete all the request associated with book
+     *@param book book that was requested and all other requests need to be deleted
+     *
+     */
+    public void deleteAllReq(Book book){
+        ArrayList<Request> reqList = new ArrayList<Request>();
+        for (int i = 0; i < requestList.size() ;i++){
+            Request req = requestList.get(i);
+            if (req.getBook().getIsbn().equals(book.getIsbn())){
+                continue;
+            }
+            reqList.add(requestList.get(i));
+        }
+        Collections.sort(reqList, new Comparator<Request>(){
+            public int compare(Request request1, Request request2) {
+                // ## Ascending request2
+                return request1.getBook().getTitle().compareToIgnoreCase(request2.getBook().getTitle()); // To compare string values
+            }
+        });
+        adapter = new RequestAdapter(context,reqList);
+        listView.setAdapter(adapter);
+    }
     /**
      * Clears all the requests in the adapter and the listview
      */

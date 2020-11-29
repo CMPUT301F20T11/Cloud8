@@ -181,7 +181,12 @@ public class Book implements Serializable {
     }
 
     public String getKeywords() {
-        return TextUtils.join(", ", keyword);
+        if (keyword == null){
+            return null;
+        }else {
+            return TextUtils.join(", ", keyword);
+        }
+
     }
 
     /**

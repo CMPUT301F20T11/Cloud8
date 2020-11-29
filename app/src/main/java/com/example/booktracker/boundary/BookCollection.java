@@ -87,7 +87,16 @@ public class BookCollection {
         adapter = new BookAdapter(context, books);
         displayBooks();
     }
-
+    public void displayBooksList(ArrayList<Book> books){
+        Collections.sort(books, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+            }
+        });
+        adapter = new BookAdapter(context, books);
+        displayBooks();
+    }
     public void setBookList(ArrayList<Book> argBookList) {
         Collections.sort(argBookList, new Comparator<Book>(){
             public int compare(Book book1, Book book2) {

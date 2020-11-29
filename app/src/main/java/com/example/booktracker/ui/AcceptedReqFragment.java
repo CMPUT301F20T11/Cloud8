@@ -102,7 +102,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     @Override
     public void onResume() {
         super.onResume();
-        getBookQuery.getBooksCategory("accepted");
+        getBookQuery.getPending(email);
         activity.notifRefresh();
     }
 
@@ -149,6 +149,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
             Intent viewGeo = new Intent(getContext(), ViewGeoActivity.class);
             viewGeo.putExtras(pickupLoc);
             startActivity(viewGeo);
+            bookCollection.deleteBook(selected_book);
         }
     }
 

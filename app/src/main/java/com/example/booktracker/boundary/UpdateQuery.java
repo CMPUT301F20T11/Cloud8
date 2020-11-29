@@ -155,8 +155,8 @@ public class UpdateQuery {
                                         data.put("borrower", borrower);
                                         data.put("borrowerStatus", "unavailable");
                                         data.put("status", "borrowed");
+                                        data.put("pendingRequest","no");
                                         db.collection("books").document(isbn).update(data);
-
                                         changeBookStatus(isbn, isbn,"borrowed", borrower, "accepted");
                                         HashMap<String, String> owner = (HashMap<String, String>)res.get("owner");
                                         db.collection("users")
@@ -171,10 +171,12 @@ public class UpdateQuery {
                                         HashMap<String, Object> data = new HashMap<>();
                                         data.put("borrowerStatus", "unavailable");
                                         data.put("potentialBorrower", borrower);
+                                        data.put("pendingRequest","yes");
                                         db.collection("books")
                                                 .document(isbn).update(data);
                                         queryOutput.setOutput("Pending to be accepted by the owner");
                                         outputCallback.displayQueryResult("Successful");
+
                                     }
                                 }
                             });
@@ -204,6 +206,7 @@ public class UpdateQuery {
                                         HashMap<String, Object> data = new HashMap<>();
                                         data.put("ownerStatus", "unavailable");
                                         data.put("status", "borrowed");
+                                        data.put("pendingRequest","no");
                                         data.put("borrower", res.getString("potentialBorrower"));
                                         db.collection("books").document(isbn).update(data);
                                         db.collection("users")
@@ -217,9 +220,11 @@ public class UpdateQuery {
                                     } else {
                                         HashMap<String, Object> data = new HashMap<>();
                                         data.put("ownerStatus", "unavailable");
+                                        data.put("pendingRequest","yes");
                                         db.collection("books").document(isbn).update(data);
                                         queryOutput.setOutput("Pending to be accepted by the borrower");
                                         outputCallback.displayQueryResult("Successful");
+
                                     }
                                 }
                             });
@@ -247,6 +252,7 @@ public class UpdateQuery {
                                 HashMap<String, Object> data = new HashMap<>();
                                 data.put("borrower", "none");
                                 data.put("status", "available");
+                                data.put("pendingRequest","no");
                                 db.collection("books").document(isbn).update(data);
                                 userRef.collection("borrowed").document(isbn).delete();
                                 HashMap<String, String> owner = (HashMap<String, String>) res.get("owner");
@@ -259,6 +265,7 @@ public class UpdateQuery {
                             }
                             HashMap<String,Object> newData = new HashMap<>();
                             newData.put("borrowerStatus", "available");
+                            newData.put("pendingRequest","yes");
                             db.collection("books").document(isbn).update(newData);
                         }
                     });
@@ -289,6 +296,7 @@ public class UpdateQuery {
                                         .collection("borrowed").document(isbn).delete();
                                 data.put("status", "available");
                                 data.put("borrower", "none");
+                                data.put("pendingRequest","no");
                                 db.collection("books").document(isbn).update(data);
                                 queryOutput.setOutput("Book successfully accepted");
                                 outputCallback.displayQueryResult("Successful");
@@ -298,6 +306,7 @@ public class UpdateQuery {
                             }
                             HashMap<String, Object> newData = new HashMap<>();
                             newData.put("ownerStatus", "available");
+                            newData.put("pendingRequest","yes");
                             db.collection("books").document(isbn).update(newData);
 
                         }
