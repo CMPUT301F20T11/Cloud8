@@ -25,5 +25,7 @@
     <string name="borrow_book_text">Borrow Book</string>
     <string name="give_book_text">Give Book</string>
     <string name="edit_profile_title"><u>Edit Contact Information</u></string>
+    <string name="filter_books"><u>Filters</u></string>
+
 
 </resources>

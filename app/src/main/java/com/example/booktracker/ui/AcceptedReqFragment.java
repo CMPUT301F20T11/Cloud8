@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.boundary.UpdateQuery;
 import com.example.booktracker.control.Callback;
@@ -38,6 +39,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
     private ArrayList<Book> bookList;
     private GetBookQuery getBookQuery;
     private BookCollection bookCollection;
+    private DeleteBookQuery deleteBookQuery;
     private View view;
     private Book selected_book = null;
     private String email, userSelected;
@@ -48,7 +50,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_accepted_req, container, false);
+        view = inflater.inflate(R.layout.fragment_accepted_req, container, false);
         setHasOptionsMenu(true);
         activity = (HomeActivity) getActivity();
         email = activity.getUserEmail();
@@ -56,8 +58,10 @@ public class AcceptedReqFragment extends Fragment implements Callback {
         bookList = new ArrayList<>();
         bookCollection = new BookCollection(bookList, listView, email, view.getContext());
         getBookQuery = new GetBookQuery(activity.getUserEmail(), bookCollection,view.getContext());
+        deleteBookQuery = new DeleteBookQuery();
         setButtonListener(view.findViewById(R.id.view_geo_button));
         setSelectListener();
+        setCancelListener();
         viewButton = view.findViewById(R.id.view_button_accepted);
         setViewListener();
         updateQuery = new UpdateQuery();
@@ -66,7 +70,17 @@ public class AcceptedReqFragment extends Fragment implements Callback {
 
         return view;
     }
-
+    private void setCancelListener(){
+        Button cancelBtn = view.findViewById(R.id.cancel_accepted);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteBookQuery.deleteBookAccepted(selected_book.getIsbn(),selected_book.getOwnerEmail());
+                deleteBookQuery.deletePotentialBorrower(selected_book);
+                bookCollection.deleteBook(selected_book);
+            }
+        });
+    }
     private void setViewListener() {
         viewButton.setOnClickListener(view -> {
             if (selected_book != null) {

@@ -30,6 +30,7 @@ public class GetBookQuery extends BookQuery {
     private boolean isDone = false;
     private BookCollection bookList;
     private Context context;
+    private int counter = 0;
 
     /**
      * This will call its parent constructor from BookQuery
@@ -81,6 +82,8 @@ public class GetBookQuery extends BookQuery {
             Uri localImageUri = Uri.parse((String) document.get("local_image_uri"));
             book.setLocalUri(localImageUri.toString());
         }
+        book.setStatus(document.getString("status"));
+        book.setBorrower("borrower");
         return book;
     }
 
@@ -105,7 +108,16 @@ public class GetBookQuery extends BookQuery {
                                         DocumentSnapshot doc = task.getResult();
                                         if (task.isSuccessful()){
                                             if (doc.exists()) {
-                                                outputBooks.add(docToBook(doc));
+                                                if (status == "requested"){
+                                                    if (doc.getString("status").equals("available")){
+                                                        outputBooks.add(docToBook(doc));
+                                                    }else{
+                                                        reference.document(doc.getId()).delete();
+                                                    }
+                                                }else {
+                                                    outputBooks.add(docToBook(doc));
+                                                }
+
 
                                             } else {
                                                 reference.document(bookRef.getId()).delete();
@@ -187,6 +199,65 @@ public class GetBookQuery extends BookQuery {
     }
 
     /**
+     * this will query the myBooks collection
+     * @param user
+     * @param status
+     */
+    public void getMyBooksStatus(String user,String status){
+        CollectionReference reference = db.collection("users").document(user)
+                .collection("myBooks");
+        reference.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int querySize = task.getResult().size();
+                        outputBooks = new ArrayList<>();
+                        counter = 0;
+                        for (QueryDocumentSnapshot document :
+                                Objects.requireNonNull(task.getResult())) {
+                            DocumentReference bookRef = (DocumentReference) document.get("bookReference");
+                            if (bookRef != null){
+                                bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        DocumentSnapshot doc = task.getResult();
+                                        if (task.isSuccessful()){
+                                            if (doc.exists()) {
+                                                if (doc.getString("status").equals(status)){
+                                                    outputBooks.add(docToBook(doc));
+
+                                                }
+                                            } else {
+                                                reference.document(bookRef.getId()).delete();
+                                            }
+                                            counter++;
+                                        }
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    // every step of the loop check if the list of books is full
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (querySize == counter && outputBooks.size() > 0) {
+                                            bookList.setBookList(outputBooks);
+                                            bookList.displayBooksStatus(status,outputBooks);
+                                            outputBooks = new ArrayList<>();
+                                            counter = 0;
+                                            // empty outputBooks to clear results from last query
+                                        } else {
+                                            // in case there no matches clear the current
+                                            // list
+                                            bookList.clearList();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        throw new RuntimeException("Error getting books");
+                    }
+
+                });
+    }
+    /**
      * get will get all contents of the specified collection reference and output it
      * @param email email of the user who owns the book collection
      */
@@ -209,8 +280,6 @@ public class GetBookQuery extends BookQuery {
                                         if (task.isSuccessful()){
                                             if (doc.exists() && doc.getString("status").equals("available")) {
                                                 outputBooks.add(docToBook(doc));
-                                            } else {
-                                                reference.document(bookRef.getId()).delete();
                                             }
                                         }
                                     }

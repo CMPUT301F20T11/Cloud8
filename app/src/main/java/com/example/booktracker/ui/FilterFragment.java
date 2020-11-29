@@ -2,6 +2,8 @@ package com.example.booktracker.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,10 @@ import androidx.fragment.app.DialogFragment;
 import com.example.booktracker.R;
 
 public class FilterFragment extends DialogFragment {
-    private Button lent;
-    private Button requested;
-    private Button myBooks;
+    private Button accepted;
     private Button available;
     private Button borrowed;
+    private Button myBooks;
     private View view;
     private MyBooksFragment parentActivity;
 
@@ -42,60 +43,62 @@ public class FilterFragment extends DialogFragment {
                 .inflate(R.layout.fragment_filter,null, false);
         bindViews();
         setAllListeners();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
         return builder
                 .setView(view)
                 .create();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        }
     }
 
     /**
      * This will bind the Button views in fragment_filter.xml to the attributes of FilterFragment
      */
     private void bindViews() {
-        lent = view.findViewById(R.id.lent);
-        requested  = view.findViewById(R.id.requested);
-        myBooks = view.findViewById(R.id.my_books);
+
+        accepted = view.findViewById(R.id.accepted);
         available = view.findViewById(R.id.available);
         borrowed = view.findViewById(R.id.borrowed);
+        myBooks = view.findViewById(R.id.my_books);
     }
 
     /**
      * set listeners for all buttons
      */
     private void setAllListeners() {
-        lent_listener();
-        requested_listener();
-        my_books_listener();
+        all_books_listener();
+        accepted_listener();
         borrowed_listener();
         available_listener();
     }
 
     /**
-     * set listener for accepted books filter
+     * display all books the user owns
      */
-    private void lent_listener() {
-        lent.setOnClickListener(v -> {
-            parentActivity.getQuery().getMyBooks("lent");
+    private void all_books_listener(){
+        myBooks.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooks();
+            parentActivity.setLastStatus("myBooks");
             getDialog().dismiss();
         });
     }
-
-    /**
-     * set listener for requested books filter
-     */
-    private void requested_listener() {
-        requested.setOnClickListener(v -> {
-            parentActivity.getQuery().getMyBooks("requested");
-            getDialog().dismiss();
-        });
-    }
-
     /**
      * set listener for no filter books filter
      */
-    private void my_books_listener() {
-        myBooks.setOnClickListener(v -> {
-            parentActivity.getQuery().getMyBooks();
+    private void accepted_listener() {
+        accepted.setOnClickListener(v -> {
+            parentActivity.getQuery().getMyBooksStatus(parentActivity.getEmail(),"accepted");
+            parentActivity.setLastStatus("accepted");
+
             getDialog().dismiss();
         });
     }
@@ -105,7 +108,8 @@ public class FilterFragment extends DialogFragment {
      */
     private void borrowed_listener() {
         borrowed.setOnClickListener(v -> {
-            parentActivity.getQuery().getMyBooks("borrowed");
+            parentActivity.getQuery().getMyBooksStatus(parentActivity.getEmail(),"borrowed");
+            parentActivity.setLastStatus("borrowed");
             getDialog().dismiss();
         });
     }
@@ -115,7 +119,8 @@ public class FilterFragment extends DialogFragment {
      */
     private void available_listener() {
         available.setOnClickListener(v -> {
-            parentActivity.getQuery().getMyBooks("available");
+            parentActivity.getQuery().getMyBooksStatus(parentActivity.getEmail(),"available");
+            parentActivity.setLastStatus("available");
             getDialog().dismiss();
         });
     }

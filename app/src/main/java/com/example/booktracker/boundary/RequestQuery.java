@@ -115,14 +115,20 @@ public class RequestQuery {
                                 public void onComplete(@NonNull Task<List<Task<?>>> task) {
                                     ArrayList<Task<?>> res = (ArrayList<Task<?>>) task.getResult();
                                     DocumentSnapshot bookDoc = (DocumentSnapshot) res.get(0).getResult(); // this is the book
-                                    DocumentSnapshot userDoc = (DocumentSnapshot) res.get(1).getResult(); // this is the user
-                                    curFromEmail = userDoc.getString("email");
-                                    curFromUsername = userDoc.getString("username");
+                                    DocumentSnapshot userDocSnap = (DocumentSnapshot) res.get(1).getResult(); // this is the user
+                                    curFromEmail = userDocSnap.getString("email");
+                                    curFromUsername = userDocSnap.getString("username");
                                     book = new Book();
                                     parseBook(bookDoc, book);
                                     Request request = new Request(curFromEmail, toEmail, book, context);
                                     request.setFromUsername(curFromUsername);
-                                    outputRequests.add(request);
+                                    if (book.getStatus().equals("available")){
+                                        outputRequests.add(request);
+                                    }else{
+                                        userDoc.collection("incomingRequests")
+                                                .document(book.getIsbn()+"-"+curFromEmail)
+                                                .delete();
+                                    }
                                     if (outputRequests.size() == outputSize && outputRequests.size() > 0) {
                                         requestCollection.setRequestList(outputRequests);
                                         requestCollection.displayRequests();

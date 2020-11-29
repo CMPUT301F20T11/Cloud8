@@ -29,6 +29,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
@@ -65,7 +68,7 @@ public class FindBooksFragment extends Fragment implements Callback {
         viewButton = view.findViewById(R.id.view_button);
         setViewListener();
         setSelectListener();
-
+        query.getBooks(instance, bookDataList);
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -79,7 +82,9 @@ public class FindBooksFragment extends Fragment implements Callback {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    bookList.setAdapter(null);
+                    bookDataList.clear();
+                    searchText = null;
+                    query.getBooks(instance, bookDataList);
                 }
                 return false;
             }
@@ -91,14 +96,26 @@ public class FindBooksFragment extends Fragment implements Callback {
                 Request request = new Request(userEmail, userSelected, selected_book, getContext());
                 updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
                 request.sendRequest();
+                bookDataList = new ArrayList<>();
             } else {
                 Toast.makeText(v.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
         });
-
         return view;
     }
 
+    /**
+     * this will parse book data list
+     */
+    private ArrayList<Book> parseList(ArrayList<Book> books){
+        ArrayList out = new ArrayList<Book>();
+        for (Book book:books){
+            if (book.getStatus().equals("available") && !book.getOwnerEmail().equals(userEmail)){
+                out.add(book);
+            }
+        }
+        return out;
+    }
     private void setViewListener() {
         viewButton.setOnClickListener(view -> {
             if (selected_book != null) {
@@ -121,22 +138,47 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
     }
 
+    /**
+     *This will sort bookDataList by title
+     */
+    private void sortBookList(){
+        Collections.sort(bookDataList, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+                // return Integer.valueOf(obj1.empId).compareTo(Integer.valueOf(obj2.empId)); // To compare integer values
+
+                // ## Descending order
+                // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                // return Integer.valueOf(obj2.empId).compareTo(Integer.valueOf(obj1.empId)); // To compare integer values
+            }
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();
         home.notifRefresh();
     }
-
+    private ArrayList<String> lowerCaseString(List<String> arg){
+        ArrayList<String> out = new ArrayList<String>();
+        for (String auth:arg){
+            out.add(auth.toLowerCase());
+        }
+        return out;
+    }
     private void searchBooks(String searchText) {
         ArrayList<Book> results = new ArrayList<>();
+
         for (Book found : bookDataList) {
-            if (searchDescription(found.getDescription(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
+            ArrayList<String> auth = lowerCaseString(found.getAuthor());
+            String lowerSearch = searchText.toLowerCase();
+            if ((containsKeyword(found.getDescription().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getTitle().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getIsbn(), lowerSearch) ||
+                    auth.contains(searchText)) &&
+                    !found.getStatus().equals("accepted") &&
+                    !found.getStatus().equals("borrowed")) {
                 results.add(found);
-            }
-            if (found.getKeywordList() != null) {
-                if (containsKeyword(found.getKeywords(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
-                    results.add(found);
-                }
             }
         }
         if (results.isEmpty()) {
@@ -147,7 +189,17 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     public void executeCallback() {
-        searchBooks(searchText);
+        if (searchText == null) {
+            Collections.sort(bookDataList, new Comparator<Book>(){
+                public int compare(Book book1, Book book2) {
+                    // ## Ascending order
+                    return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+                }
+            });
+            updateBookList(parseList(bookDataList));
+        } else {
+            searchBooks(searchText);
+        }
     }
 
     private void updateBookList(ArrayList<Book> newList) {

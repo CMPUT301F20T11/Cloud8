@@ -6,6 +6,8 @@ import android.widget.ListView;
 import com.example.booktracker.entities.Book;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class BookCollection {
     //the goal of this class is to add books to adapter and notify changes
@@ -76,11 +78,23 @@ public class BookCollection {
         for (Book book:books) {
             book.setStatus(status);
         }
+        Collections.sort(books, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+            }
+        });
         adapter = new BookAdapter(context, books);
         displayBooks();
     }
 
     public void setBookList(ArrayList<Book> argBookList) {
+        Collections.sort(argBookList, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+            }
+        });
         adapter = new BookAdapter(context, argBookList);
     }
 
