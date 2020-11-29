@@ -44,7 +44,7 @@ public class BookCollection {
     /**
      * This will add the book to the database and the adapter
      *
-     * @param newBook
+     * @param newBook Book to add to database
      */
     public void addBook(Book newBook) {
         AddBookQuery query = new AddBookQuery(email);
@@ -72,7 +72,7 @@ public class BookCollection {
 
     /**
      * will display the books with the specified status
-     * @param status
+     * @param status The status that we are looking for
      */
     public void displayBooksStatus(String status,ArrayList<Book> books){
         for (Book book:books) {
@@ -101,7 +101,7 @@ public class BookCollection {
     /**
      * delete a specific book from the adapter and the listView
      *
-     * @param book
+     * @param book The book we are looking to remove
      */
     public void deleteBook(Book book) {
         adapter.remove(book);
