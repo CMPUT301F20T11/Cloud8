@@ -2,6 +2,7 @@ package com.example.booktracker;
 
 import com.example.booktracker.entities.Book;
 import com.example.booktracker.entities.NotifCount;
+import com.example.booktracker.entities.Notification;
 import com.example.booktracker.entities.User;
 
 import org.junit.Before;
@@ -13,7 +14,11 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class NotifCountTest {
+
+/**
+ * Test getter/setters for NotifCount
+ */
+public class NotifTest {
     NotifCount notifCount;
     long accepted;
     long incoming;
@@ -39,6 +44,11 @@ public class NotifCountTest {
 
     @Test
     public void Total() {
+        assertEquals(notifCount.getTotal(), accepted+incoming);
+    }
+
+    @Test
+    public void Notification() {
         assertEquals(notifCount.getTotal(), accepted+incoming);
     }
 
