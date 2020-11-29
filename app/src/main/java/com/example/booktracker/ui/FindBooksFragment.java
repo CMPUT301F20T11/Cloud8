@@ -82,7 +82,9 @@ public class FindBooksFragment extends Fragment implements Callback {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    updateBookList(bookDataList);
+                    bookDataList.clear();
+                    searchText = null;
+                    query.getBooks(instance, bookDataList);
                 }
                 return false;
             }
@@ -168,13 +170,15 @@ public class FindBooksFragment extends Fragment implements Callback {
         ArrayList<Book> results = new ArrayList<>();
 
         for (Book found : bookDataList) {
-            if (searchDescription(found.getDescription(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
+            ArrayList<String> auth = lowerCaseString(found.getAuthor());
+            String lowerSearch = searchText.toLowerCase();
+            if ((containsKeyword(found.getDescription().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getTitle().toLowerCase(), lowerSearch) ||
+                    containsKeyword(found.getIsbn(), lowerSearch) ||
+                    auth.contains(searchText)) &&
+                    !found.getStatus().equals("accepted") &&
+                    !found.getStatus().equals("borrowed")) {
                 results.add(found);
-            }
-            if (found.getKeywordList() != null) {
-                if (containsKeyword(found.getKeywords(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
-                    results.add(found);
-                }
             }
         }
         if (results.isEmpty()) {
