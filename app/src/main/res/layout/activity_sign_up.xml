@@ -89,7 +89,7 @@
         android:id="@+id/sign_up_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/custom_button_white"
+        android:background="@drawable/custom_button_white_round"
         android:onClick="onClick"
         android:text="Confirm"
         android:textAllCaps="false"

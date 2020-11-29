@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:textAllCaps="false"
-            android:background="@drawable/custom_button_white"
+            android:background="@drawable/custom_button_white_round"
             android:textColor="@color/colorPrimary"
             android:text="Cancel" />
 
@@ -76,7 +76,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:textAllCaps="false"
-            android:background="@drawable/custom_button_white"
+            android:background="@drawable/custom_button_white_round"
             android:textColor="@color/colorPrimary"
             android:text="Confirm" />
     </LinearLayout>

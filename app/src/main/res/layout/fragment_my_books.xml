@@ -45,12 +45,12 @@
 
         <ImageButton
             android:id="@+id/filter_button"
+            android:src="@drawable/ic_filter"
+            android:background="@drawable/custom_button_blue"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_add"
-            android:text="Filter"
-            android:background="@drawable/custom_button_blue" />
+            android:text="Filter" />
 
 
         <ImageButton

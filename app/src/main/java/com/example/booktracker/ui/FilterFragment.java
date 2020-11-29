@@ -2,6 +2,8 @@ package com.example.booktracker.ui;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,16 +43,28 @@ public class FilterFragment extends DialogFragment {
                 .inflate(R.layout.fragment_filter,null, false);
         bindViews();
         setAllListeners();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
         return builder
                 .setView(view)
                 .create();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final AlertDialog dialog = (AlertDialog) getDialog();
+        if (dialog != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        }
     }
 
     /**
      * This will bind the Button views in fragment_filter.xml to the attributes of FilterFragment
      */
     private void bindViews() {
+
         accepted = view.findViewById(R.id.accepted);
         available = view.findViewById(R.id.available);
         borrowed = view.findViewById(R.id.borrowed);
@@ -84,6 +98,7 @@ public class FilterFragment extends DialogFragment {
         accepted.setOnClickListener(v -> {
             parentActivity.getQuery().getMyBooksStatus(parentActivity.getEmail(),"accepted");
             parentActivity.setLastStatus("accepted");
+
             getDialog().dismiss();
         });
     }
