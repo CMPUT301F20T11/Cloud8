@@ -74,7 +74,14 @@ public class DeleteBookQuery extends BookQuery {
     public void deleteBookRequested(String isbn, String email){
         delBookRef("requested", isbn, email);
     }
-
+    /**
+     * This will delete a book from the requested collection of the user
+     * @param isbn isbn of the book to be deleted
+     * @param email email of the user
+     */
+    public void deleteBookAccepted(String isbn, String email){
+        delBookRef("accepted", isbn, email);
+    }
     /**
      * This will delete a book from the incoming request collection
      * @param isbn isbn of the book to be deleted
@@ -114,5 +121,22 @@ public class DeleteBookQuery extends BookQuery {
                 }
             }
         });
+    }
+
+    /**
+     * this will delete the accepted request of the person who requested the book
+     * @param book
+     */
+    public void deletePotentialBorrower(Book book){
+        db.collection("books").document(book.getIsbn()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot res = task.getResult();
+                        if (res.getString("potentialBorrower") != null){
+                            deleteBookAccepted(book.getIsbn(),res.getString("potentialBorrower"));
+                        }
+                    }
+                });
     }
 }

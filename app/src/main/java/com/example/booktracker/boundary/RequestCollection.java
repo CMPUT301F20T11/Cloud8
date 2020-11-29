@@ -41,7 +41,6 @@ public class RequestCollection {
     public Request getRequest(int position) {
         return adapter.getItem(position);
     }
-
     /**
      * Sets the adapter using the inputted request array
      * @param argRequestList

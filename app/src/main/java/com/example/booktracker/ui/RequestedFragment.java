@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.booktracker.R;
 import com.example.booktracker.boundary.BookCollection;
+import com.example.booktracker.boundary.DeleteBookQuery;
 import com.example.booktracker.boundary.GetBookQuery;
 import com.example.booktracker.entities.Book;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,6 +37,7 @@ public class RequestedFragment extends Fragment {
     private View view;
     private Book selected_book = null;
     private DocumentSnapshot userDoc;
+    private DeleteBookQuery deleteBookQuery;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,14 +48,27 @@ public class RequestedFragment extends Fragment {
         listView = view.findViewById(R.id.requested_booklist);
         bookCollection = new BookCollection(new ArrayList<>(), listView, userEmail, view.getContext());
         getQuery = (new GetBookQuery(userEmail, bookCollection,view.getContext()));
-        lastStatus = "";
+        deleteBookQuery = new DeleteBookQuery();
+        setCancelListener();
 
         setSelectListener();
         setViewListener();
 
         return view;
     }
-
+    private void setCancelListener(){
+        Button cancelBtn = view.findViewById(R.id.cancel_request_button);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selected_book != null) {
+                    deleteBookQuery.deleteBookRequested(selected_book.getIsbn(),userEmail);
+                    deleteBookQuery. deleteBookIncoming(selected_book.getIsbn(),userEmail,selected_book.getOwnerEmail());
+                    bookCollection.deleteBook(selected_book);
+                }
+            }
+        });
+    }
     private void setViewListener() {
         Button viewBookBtn = view.findViewById(R.id.requested_view_book_button);
         viewBookBtn.setOnClickListener(view -> {

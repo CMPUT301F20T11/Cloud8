@@ -49,6 +49,16 @@
                 android:layout_margin="5dp"
                 android:text="View" />
 
+            <Button
+                android:id="@+id/cancel_accepted"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/custom_button_blue_round"
+                android:text="Cancel accept"
+                android:textColor="@color/white" />
+
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

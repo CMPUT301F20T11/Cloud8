@@ -101,6 +101,18 @@ public class FindBooksFragment extends Fragment implements Callback {
         return view;
     }
 
+    /**
+     * this will parse book data list
+     */
+    private ArrayList<Book> parseList(ArrayList<Book> books){
+        ArrayList out = new ArrayList<Book>();
+        for (Book book:books){
+            if (book.getStatus().equals("available") && !book.getOwnerEmail().equals(userEmail)){
+                out.add(book);
+            }
+        }
+        return out;
+    }
     private void setViewListener() {
         viewButton.setOnClickListener(view -> {
             if (selected_book != null) {
@@ -160,7 +172,8 @@ public class FindBooksFragment extends Fragment implements Callback {
 
     public void executeCallback() {
         if (searchText == null) {
-            updateBookList(bookDataList);
+
+            updateBookList(parseList(bookDataList));
         } else {
             searchBooks(searchText);
         }

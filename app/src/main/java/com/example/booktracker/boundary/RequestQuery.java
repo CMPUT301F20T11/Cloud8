@@ -126,7 +126,6 @@ public class RequestQuery {
                                                 .document(book.getIsbn()+"-"+curFromEmail)
                                                 .delete();
                                     }
-
                                     if (outputRequests.size() == outputSize && outputRequests.size() > 0) {
                                         requestCollection.setRequestList(outputRequests);
                                         requestCollection.displayRequests();

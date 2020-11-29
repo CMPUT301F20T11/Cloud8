@@ -114,6 +114,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
                     query.changeBookStatus(selected_book.getIsbn(), selected_book.getIsbn(),"accepted", selected_request.getFromEmail(),"requested");
                     requestCollection.deleteRequest(selected_request);
                     delQuery.deleteAllRequest(selected_book.getIsbn(),userEmail);
+                    requestQuery.getRequests("incomingRequests");
                     query.incrementNotif(selected_request.getFromEmail(),"acceptedCount");
                     break;
             }
