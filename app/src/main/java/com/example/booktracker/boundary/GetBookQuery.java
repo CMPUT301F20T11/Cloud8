@@ -357,6 +357,7 @@ public class GetBookQuery extends BookQuery {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
+
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
                                             outputBooks = new ArrayList();
