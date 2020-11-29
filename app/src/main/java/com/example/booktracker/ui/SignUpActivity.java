@@ -19,6 +19,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 
+/**
+ * creates a new user in the database.
+ *
+ * @author Ahmad Amali
+ */
+
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText new_username_field, editTextPassword, editTextEmailAddress, editTextPhone;
     private Button confirmSignUp;
@@ -55,6 +61,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             registerUser();
         }
     }
+    /**
+     * intializes all the fields, includes the main logic for input validation, database insertion and user creation.
+     *
+     *
+     */
 
         private void registerUser () {
             final String username = new_username_field.getText().toString().trim();
