@@ -91,11 +91,12 @@ public class FindBooksFragment extends Fragment implements Callback {
                 Request request = new Request(userEmail, userSelected, selected_book, getContext());
                 updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
                 request.sendRequest();
+                bookDataList = new ArrayList<>();
+                query.getBooks(instance, bookDataList);
             } else {
                 Toast.makeText(v.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
         });
-
         return view;
     }
 
@@ -142,6 +143,7 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     public void executeCallback() {
+
         searchBooks(searchText);
     }
 
