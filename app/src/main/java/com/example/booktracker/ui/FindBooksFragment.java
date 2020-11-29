@@ -140,15 +140,13 @@ public class FindBooksFragment extends Fragment implements Callback {
         ArrayList<Book> results = new ArrayList<>();
 
         for (Book found : bookDataList) {
-            ArrayList<String> auth = lowerCaseString(found.getAuthor());
-            String lowerSearch = searchText.toLowerCase();
-            if ((containsKeyword(found.getDescription().toLowerCase(), lowerSearch) ||
-                    containsKeyword(found.getTitle().toLowerCase(), lowerSearch) ||
-                    containsKeyword(found.getIsbn(), lowerSearch) ||
-                    auth.contains(searchText)) &&
-                    !found.getStatus().equals("accepted") &&
-                    !found.getStatus().equals("borrowed")) {
+            if (searchDescription(found.getDescription(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
                 results.add(found);
+            }
+            if (found.getKeywordList() != null) {
+                if (containsKeyword(found.getKeywords(), searchText) && !found.getStatus().equals("accepted") && !found.getStatus().equals("borrowed")) {
+                    results.add(found);
+                }
             }
         }
         if (results.isEmpty()) {
@@ -172,9 +170,14 @@ public class FindBooksFragment extends Fragment implements Callback {
         resAdapter.notifyDataSetChanged();
     }
 
-    private boolean containsKeyword(String source, String input) {
+    private boolean searchDescription(String desc, String input) {
         return Pattern.compile(Pattern.quote(input),
-                Pattern.CASE_INSENSITIVE).matcher(source).find();
+                Pattern.CASE_INSENSITIVE).matcher(desc).find();
+    }
+
+    private boolean containsKeyword(String keywords, String input) {
+        return Pattern.compile("\\b" + input + "\\b",
+                Pattern.CASE_INSENSITIVE).matcher(keywords).find();
     }
 
     private Boolean getUserDoc(String owner) {

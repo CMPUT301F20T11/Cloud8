@@ -14,6 +14,11 @@ import com.example.booktracker.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
+/**
+ * authenticates the user's provided credentials against the database and logs them successfully if entered correctly
+ *
+ * @author Ahmad Amali
+ */
 
 public class SignInActivity extends AppCompatActivity {
     private Button signInButton;
@@ -21,6 +26,11 @@ public class SignInActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText;
     private FirebaseAuth mAuth;
     private long lastClickTime = 0;
+    /**
+     * onCreate method for SignInActivity class
+     *
+     * intializes all the buttons and textviews for the activity and get the text from the user.
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +58,12 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+    /**
+     * Logic for authenticating the input under a set of criteria including existing previously in the data base.
+     * @param email
+     * @param password
+     *
+     */
 
     private void userLogin(String email, String password) {
         if (email.isEmpty()) {
