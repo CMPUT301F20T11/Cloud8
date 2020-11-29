@@ -56,7 +56,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
     private TextView ownerView;
     private TextView borrowerView;
     private TextView descView;
-    private TextView keywordView;
     private TextView titleView;
     private TextView authorView;
     private TextView statusView;
@@ -193,7 +192,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         ownerView = findViewById(R.id.viewbook_owner);
         borrowerView = findViewById(R.id.viewbook_borrower);
         descView = findViewById(R.id.viewbook_desc);
-        keywordView = findViewById(R.id.viewbook_keyword);
         titleView = findViewById(R.id.viewbook_title);
         authorView = findViewById(R.id.viewbook_author);
         statusView = findViewById(R.id.viewbook_status);
@@ -244,16 +242,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
             }
         }
         authorView.setText(authors);
-        if (book.getKeywordList() != null) {
-            StringBuilder keywords = new StringBuilder();
-            for (int i = 0; i < book.getKeywordList().size(); i++) {
-                keywords.append(book.getKeywordList().get(i));
-                if (i < book.getKeywordList().size() - 1) {
-                    keywords.append(", ");
-                }
-            }
-            keywordView.setText(keywords);
-        }
+
         statusView.setText(book.getStatus());
         String status = book.getStatus();
         switch (status) {
