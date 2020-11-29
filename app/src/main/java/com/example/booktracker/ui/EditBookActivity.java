@@ -82,7 +82,9 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
 
         titleView.setText(book.getTitle());
         authorView.setText(TextUtils.join(", ", book.getAuthor()));
-        keywordView.setText(book.getKeywords());
+        if (book.getKeywordList() != null) {
+            keywordView.setText(book.getKeywords());
+        }
         descView.setText(book.getDescription());
         toast_output = new QueryOutput();
         updateQuery = new UpdateQuery();
@@ -100,15 +102,15 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         Button addBtn = findViewById(R.id.editbook_addbtn);
         addBtn.setOnClickListener(v -> {
             List<String> authors = new ArrayList<>();
+            List<String> keywords = new ArrayList<>();
             String title = titleView.getText().toString();
             String author = authorView.getText().toString();
             String desc = descView.getText().toString();
             String keyInput = keywordView.getText().toString();
-            String[] keyArray = keyInput.split("\\s*,\\s*");
-            List<String> keywords = Arrays.asList(keyArray);
             HashMap<String, String> owner = new HashMap<>();
             owner.put(email, "");
             authors.add(author);
+            keywords.add(keyInput);
             Book newBook = new Book(owner, authors, title, isbn, desc, keywords);
             addQuery.loadUsername(newBook);
             upload(newBook);

@@ -237,14 +237,23 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
         descView.setText(book.getDescription());
         titleView.setText(book.getTitle());
         StringBuilder authors = new StringBuilder();
-        for (int i = 0; i < book.getAuthor().size();i++) {
+        for (int i = 0; i < book.getAuthor().size(); i++) {
             authors.append(book.getAuthor().get(i));
-            if (i < book.getAuthor().size()-1){
+            if (i < book.getAuthor().size() - 1) {
                 authors.append(", ");
             }
         }
         authorView.setText(authors);
-        keywordView.setText("Keywords: " + book.getKeywords());
+        if (book.getKeywordList() != null) {
+            StringBuilder keywords = new StringBuilder();
+            for (int i = 0; i < book.getKeywordList().size(); i++) {
+                keywords.append(book.getKeywordList().get(i));
+                if (i < book.getKeywordList().size() - 1) {
+                    keywords.append(", ");
+                }
+            }
+            keywordView.setText(keywords);
+        }
         statusView.setText(book.getStatus());
         String status = book.getStatus();
         switch (status) {

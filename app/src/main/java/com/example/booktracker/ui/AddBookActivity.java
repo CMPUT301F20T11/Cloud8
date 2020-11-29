@@ -98,21 +98,21 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
 
         Button addBtn = findViewById(R.id.addbook_addbtn);
         addBtn.setOnClickListener(v -> {
-            List<String> authors = new ArrayList<>();
             String title = titleView.getText().toString();
             String author = authorView.getText().toString();
             String isbn = isbnView.getText().toString();
             String desc = descView.getText().toString();
             String keyInput = keywordView.getText().toString();
-            String[] keyArray = keyInput.split("\\s*,\\s*");
-            List<String> keywords = Arrays.asList(keyArray);
+            //String[] keyArray = keyInput.split("\\s*,\\s*");
+            //List<String> keywords = Arrays.asList(keyArray);
             HashMap<String, String> owner = new HashMap<>();
             owner.put(email, "");
             if (isbn.length() != 13 || !isbn.matches("^[0-9]*$")) {
                 isbnView.setError("ISBN must have 13 digits");
             } else {
                 ArrayList<String> listAuth = toArrayList(author.split(","));
-                Book newBook = new Book(owner, listAuth, title, isbn, desc, keywords);
+                ArrayList<String> listKeys = toArrayList(keyInput.split(","));
+                Book newBook = new Book(owner, listAuth, title, isbn, desc, listKeys);
                 addQuery.loadUsername(newBook);
                 upload(newBook);
             }
@@ -130,13 +130,15 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
             imageUri = null;
         });
     }
-    private ArrayList<String> toArrayList(String[] arg){
+
+    private ArrayList<String> toArrayList(String[] arg) {
         ArrayList<String> out = new ArrayList<>();
-        for (String str:arg){
+        for (String str : arg) {
             out.add(str);
         }
         return  out;
     }
+
     /**
      * Launches the 3rd party AndroidImageCropper activity
      * Uses a fixed aspect ratio of 1200x1200

@@ -154,7 +154,7 @@ public class GetBookQuery extends BookQuery {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot doc = task.getResult();
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             if (doc.exists()) {
                                                 outputBooks.add(docToBook(doc));
                                             } else {

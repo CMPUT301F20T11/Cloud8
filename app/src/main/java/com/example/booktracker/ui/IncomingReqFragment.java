@@ -156,8 +156,8 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
      */
     @Override
     public void onResume() {
-        //this is needed to refresh the list of books displayed when the user goes back to the
-        //home activity
+        // this is needed to refresh the list of books displayed when the user goes back to the
+        // home activity
         super.onResume();
         requestQuery.getRequests("incomingRequests");
 
