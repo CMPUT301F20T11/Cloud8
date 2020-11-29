@@ -1,6 +1,7 @@
 # Book Tracker 
 <img src="doc/images/booktracker_banner.jpg" />
-An android application for tracking book sharing. <br/>
+
+An android application for tracking book sharing.  
 
 Add books to your collection for other users to find and borrow. 
 
