@@ -369,6 +369,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
         }
+        finish();
     }
 }
 

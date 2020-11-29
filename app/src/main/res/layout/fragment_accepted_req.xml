@@ -32,17 +32,17 @@
             <Button
                 android:id="@+id/view_geo_button"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_blue_round"
-                android:textColor="@color/white"
-                android:layout_margin="5dp"
-                android:text="@string/view_pickup_location" />
+                android:text="@string/view_pickup_location"
+                android:textColor="@color/white" />
 
             <Button
                 android:id="@+id/view_button_accepted"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_blue_round"
                 android:textColor="@color/white"
@@ -52,7 +52,7 @@
             <Button
                 android:id="@+id/cancel_accepted"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_blue_round"
