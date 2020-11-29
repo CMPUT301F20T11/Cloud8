@@ -48,6 +48,7 @@ public class AddViewTest {
         solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
+        //solo.enterText((EditText) solo.getView(R.id.addbook_keywords),"Dank");
     }
 
     /**
@@ -55,8 +56,8 @@ public class AddViewTest {
      */
     private void login() {
         solo.assertCurrentActivity("Wrong activity, should be SignActivity", SignInActivity.class);
-        solo.enterText((EditText) solo.getView(R.id.email_field),email);
-        solo.enterText((EditText) solo.getView(R.id.password_field),pass);
+        solo.enterText((EditText) solo.getView(R.id.email_field), email);
+        solo.enterText((EditText) solo.getView(R.id.password_field), pass);
         solo.clickOnButton("Sign In");
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);

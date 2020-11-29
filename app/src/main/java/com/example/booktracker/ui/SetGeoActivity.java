@@ -29,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import static android.content.ContentValues.TAG;
 
 public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private static final float HUE_BLUE = 200f;
     private boolean mLocationPermissionGranted = false;
     public static final int ERROR_DIALOG_REQUEST = 9001;
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
@@ -119,6 +121,7 @@ public class SetGeoActivity extends AppCompatActivity implements OnMapReadyCallb
                 pickupMarker.setPosition(latLng);
             } else {
                 pickupMarker = map.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.defaultMarker(HUE_BLUE))
                         .position(latLng)
                         .title("Pickup location"));
             }

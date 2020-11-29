@@ -31,7 +31,7 @@ public abstract class BookQuery {
         storageReference = FirebaseStorage.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        if(user != null){
+        if (user != null) {
             uid = user.getUid();
         }
     }
