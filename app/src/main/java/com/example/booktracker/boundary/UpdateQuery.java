@@ -42,7 +42,7 @@ public class UpdateQuery {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         DocumentSnapshot res = task.getResult();
-                        if (res.exists()){
+                        if (res.exists()) {
                             bookRef.update(data);
                         }
                     }
@@ -124,7 +124,7 @@ public class UpdateQuery {
      * @param owner
      * @return
      */
-    private String getEmail(HashMap<String, String> owner){
+    private String getEmail(HashMap<String, String> owner) {
         String email = "";
         for (Map.Entry<String, String> entry: owner.entrySet()){
             email = entry.getKey();

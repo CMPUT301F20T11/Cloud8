@@ -77,6 +77,8 @@ public class RequestQuery {
         }
         List<String> authors =
                 (List<String>) res.get("author");
+        List<String> keywords =
+                (List<String>) res.get("keywords");
         if (res.get("owner") != null) {
             HashMap<String, String> owner =
                     (HashMap<String, String>) res.get("owner");
@@ -87,6 +89,7 @@ public class RequestQuery {
         emptyBook.setTitle((String) res.get("title"));
         emptyBook.setDescription((String) res.get(
                 "description"));
+        emptyBook.setKeywords(keywords);
         emptyBook.setStatus((String) res.get("status"));
     }
 

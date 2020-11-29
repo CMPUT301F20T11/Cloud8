@@ -99,7 +99,7 @@ public class DeleteBookQuery extends BookQuery {
                     QuerySnapshot res = task.getResult();
                     for (DocumentSnapshot doc : res){
                         String id = doc.getId();
-                        if (id != null){
+                        if (id != null) {
                             colRef.document(id).delete();
                         }
                     }

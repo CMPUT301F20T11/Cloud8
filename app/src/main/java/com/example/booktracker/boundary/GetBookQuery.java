@@ -69,10 +69,11 @@ public class GetBookQuery extends BookQuery {
      */
     private Book docToBook(DocumentSnapshot document) {
         List<String> authors = (List<String>) document.get("author");
+        List<String> keywords = (List<String>) document.get("keywords");
         HashMap<String, String> owner =
                 (HashMap<String, String>) document.get("owner");
         Book book = new Book(owner, authors, (String) document.get("title"),
-                document.getId(), (String) document.get("description"));
+                document.getId(), (String) document.get("description"), keywords);
         if (document.get("image_uri") != null) {
             Uri imageUri = Uri.parse((String) document.get("image_uri"));
             book.setUri(imageUri.toString());
@@ -128,7 +129,7 @@ public class GetBookQuery extends BookQuery {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
-                                            bookList.displayBooksStatus(status,outputBooks);
+                                            bookList.displayBooksStatus(status, outputBooks);
                                             outputBooks = new ArrayList<>();
                                             // empty outputBooks to clear results from last query
                                         } else {
@@ -165,7 +166,7 @@ public class GetBookQuery extends BookQuery {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot doc = task.getResult();
-                                        if (task.isSuccessful()){
+                                        if (task.isSuccessful()) {
                                             if (doc.exists()) {
                                                 outputBooks.add(docToBook(doc));
                                             } else {
@@ -359,7 +360,7 @@ public class GetBookQuery extends BookQuery {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.setBookList(outputBooks);
                                             bookList.displayBooks();
-                                            outputBooks = new ArrayList();
+                                            outputBooks = new ArrayList<>();
                                             // empty outputBooks to clear results from last query
                                         } else {
                                             // in case there no matches clear the current
@@ -432,6 +433,8 @@ public class GetBookQuery extends BookQuery {
                             }
                             List<String> authors =
                                     (List<String>) res.get("author");
+                            List<String> keywords =
+                                    (List<String>) res.get("keywords");
                             if (res.get("owner") != null) {
                                 HashMap<String, String> owner =
                                         (HashMap<String, String>) res.get("owner");
@@ -443,6 +446,7 @@ public class GetBookQuery extends BookQuery {
                                     "title"));
                             emptyBook.setDescription((String) res.get(
                                     "description"));
+                            emptyBook.setKeywords(keywords);
                             emptyBook.setStatus((String) res.get(
                                     "status"));
                             emptyBook.setBorrower(res.getString("borrower"));
@@ -462,7 +466,7 @@ public class GetBookQuery extends BookQuery {
         db.collection("books").get()
                 .addOnCompleteListener(task -> {
                     QuerySnapshot res = task.getResult();
-                    for (DocumentSnapshot doc:res){
+                    for (DocumentSnapshot doc : res) {
                         bookList.add(docToBook(doc));
                     }
                     callback.executeCallback();

@@ -1,9 +1,12 @@
 package com.example.booktracker.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     private String userEmail;
     private NotificationCircle notif;
     private NavigationView navigationView;
+    private long pressTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +95,7 @@ public class HomeActivity extends AppCompatActivity {
     public void notifRefresh(){
         notif.checkNotification();
     }
+
     public String getUserEmail() {
         return userEmail;
     }
@@ -122,5 +127,21 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            pressTime = System.currentTimeMillis();
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            long releaseTime = System.currentTimeMillis();
+            if (releaseTime - pressTime < 200) {
+                if (getCurrentFocus() != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

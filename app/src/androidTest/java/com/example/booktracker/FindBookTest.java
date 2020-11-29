@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -67,12 +68,14 @@ public class FindBookTest {
      */
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
-        ArrayList<String> author = new ArrayList<>();
+        List<String> author = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("Dank");
         author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book");
+                "6980671678814", "Test book", keywords);
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
@@ -85,6 +88,7 @@ public class FindBookTest {
         solo.enterText((EditText) solo.getView(R.id.addbook_author),"Karl Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),"6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),"Test book");
+        //solo.enterText((EditText) solo.getView(R.id.addbook_keywords),"Dank");
     }
 
     /**
@@ -109,7 +113,7 @@ public class FindBookTest {
         solo.clickOnImageButton(0);
         solo.clickOnText("Find Books");
         SearchView view = (SearchView) solo.getView(R.id.book_search);
-        view.setQuery("Test book",true);
+        view.setQuery("Dank",true);
         assertTrue("Book not found", solo.searchText("/pol/ Manifesto"));
     }
 
