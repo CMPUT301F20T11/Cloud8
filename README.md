@@ -32,3 +32,6 @@ Check out the [wiki](https://github.com/CMPUT301F20T11/Cloud8/wiki) for a more i
     </tr>
 <tr>
 </table>
+
+## License
+[MIT License](https://github.com/CMPUT301F20T11/Cloud8/blob/master/LICENSE)
