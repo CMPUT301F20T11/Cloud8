@@ -45,6 +45,7 @@ public class UserProfileTest {
         solo.waitForActivity(HomeActivity.class);
         solo.assertCurrentActivity("Wrong activity, should be HomeActivity", HomeActivity.class);
     }
+
     @Test
     public void testProfile() {
         login();

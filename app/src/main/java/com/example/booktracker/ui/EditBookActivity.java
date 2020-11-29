@@ -34,6 +34,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import java.util.List;
  * @author Edlee Ducay
  */
 public class EditBookActivity extends AppCompatActivity implements QueryOutputCallback {
-    private EditText titleView, authorView, descView;
+    private EditText titleView, authorView, descView, keywordView;
     private ImageView imageView;
     private String email, isbn;
     private Book book;
@@ -76,10 +77,14 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         titleView = findViewById(R.id.editbook_title);
         authorView = findViewById(R.id.editbook_author);
         descView = findViewById(R.id.editbook_description);
+        keywordView = findViewById(R.id.editbook_keywords);
         imageView = findViewById(R.id.editbook_image);
 
         titleView.setText(book.getTitle());
-        authorView.setText(TextUtils.join(",", book.getAuthor()));
+        authorView.setText(TextUtils.join(", ", book.getAuthor()));
+        if (book.getKeywordList() != null) {
+            keywordView.setText(book.getKeywords());
+        }
         descView.setText(book.getDescription());
         toast_output = new QueryOutput();
         updateQuery = new UpdateQuery();
@@ -97,13 +102,16 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         Button addBtn = findViewById(R.id.editbook_addbtn);
         addBtn.setOnClickListener(v -> {
             List<String> authors = new ArrayList<>();
+            List<String> keywords = new ArrayList<>();
             String title = titleView.getText().toString();
             String author = authorView.getText().toString();
             String desc = descView.getText().toString();
+            String keyInput = keywordView.getText().toString();
             HashMap<String, String> owner = new HashMap<>();
             owner.put(email, "");
             authors.add(author);
-            Book newBook = new Book(owner, authors, title, isbn, desc);
+            keywords.add(keyInput);
+            Book newBook = new Book(owner, authors, title, isbn, desc, keywords);
             addQuery.loadUsername(newBook);
             upload(newBook);
 
@@ -155,12 +163,14 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
     private HashMap<String, Object> createData(String title,
                                                List<String> author,
                                                String description,
+                                               List<String> keywords,
                                                String imageUri,
                                                String local_image_uri) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", title);
-        data.put("description", description);
         data.put("author", author);
+        data.put("description", description);
+        data.put("keywords", keywords);
         data.put("image_uri", imageUri);
         data.put("local_image_uri", local_image_uri);
         return data;
@@ -243,6 +253,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
                                 createData(newBook.getTitle(),
                                         newBook.getAuthor(),
                                         newBook.getDescription(),
+                                        newBook.getKeywordList(),
                                         newBook.getUri(),
                                         newBook.getLocalUri());
                         updateQuery.updateBook(newBook, instance, data,
@@ -255,7 +266,7 @@ public class EditBookActivity extends AppCompatActivity implements QueryOutputCa
         } else {
             newBook.setUri(null);
             HashMap<String, Object> data = createData(newBook.getTitle(),
-                    newBook.getAuthor(), newBook.getDescription(), null, localUri);
+                    newBook.getAuthor(), newBook.getDescription(), newBook.getKeywordList(), null, localUri);
             updateQuery.updateBook(newBook, instance, data, toast_output);
             progressDialog.dismiss();
 

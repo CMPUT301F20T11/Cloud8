@@ -73,7 +73,7 @@ public class BookCollection {
      * @param status
      */
     public void displayBooksStatus(String status,ArrayList<Book> books){
-        for (Book book:books){
+        for (Book book:books) {
             book.setStatus(status);
         }
         adapter = new BookAdapter(context, books);

@@ -69,7 +69,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         String title = book.getTitle();
         String isbn = book.getIsbn();
         String status = book.getStatus();
-        
+
         switch (status) {
             case "available":
                 statusView.setBackground(this.context.getResources().getDrawable(R.drawable.status_available, null));

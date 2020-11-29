@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -47,14 +48,15 @@ public class ViewBookTest {
      * Initialize entries in the AddBookActivity edit text.
      */
     private void mockBook() {
-        solo.enterText((EditText) solo.getView(R.id.addbook_title), "The " +
-                "/pol/ Manifesto");
+        solo.enterText((EditText) solo.getView(R.id.addbook_title), "/pol/ Manifesto");
         solo.enterText((EditText) solo.getView(R.id.addbook_author), "Karl " +
                 "Pogs");
         solo.enterText((EditText) solo.getView(R.id.addbook_isbn),
                 "6980671678814");
         solo.enterText((EditText) solo.getView(R.id.addbook_description),
                 "Test book");
+        solo.enterText((EditText) solo.getView(R.id.addbook_keywords),
+                "Dank");
     }
 
     /**
@@ -75,13 +77,12 @@ public class ViewBookTest {
      * Test if correct information is displayed in ViewBookActivity.
      */
     private void testView() {
-        assertTrue("title cant be found", solo.searchText("/pol/ " +
-                "Manifesto"));
-        assertTrue("author cant be found", solo.searchText("Karl Pogs"));
-        assertTrue("isbn cant be found", solo.searchText("6980671678814"));
-        assertTrue("description cant be found", solo.searchText("Test book"));
-        assertTrue("owner cant be found", solo.searchText("test@gmail.com"));
-        assertTrue("status cant be found", solo.searchText("Test book"));
+        assertTrue("Title cant be found", solo.searchText("/pol/ Manifesto"));
+        assertTrue("Author cannot be found", solo.searchText("Karl Pogs"));
+        assertTrue("Isbn cannot be found", solo.searchText("6980671678814"));
+        assertTrue("Description cannot be found", solo.searchText("Test book"));
+        assertTrue("Owner cannot be found", solo.searchText("test@gmail.com"));
+        //assertTrue("Keyword cannot be found", solo.searchText("Dank"));
     }
 
     /**
@@ -100,12 +101,14 @@ public class ViewBookTest {
      */
     private void addToDb() {
         AddBookQuery addBook = new AddBookQuery(email);
-        ArrayList<String> author = new ArrayList<>();
+        List<String> author = new ArrayList<>();
+        List<String> keywords = new ArrayList<>();
+        keywords.add("Dank");
         author.add("Karl Pogs");
         HashMap<String, String> owner = new HashMap<>();
         owner.put(email, "");
         book = new Book(owner, author, "/pol/ Manifesto",
-                "6980671678814", "Test book");
+                "6980671678814", "Test book", keywords);
         addBook.loadUsername(book);
         addBook.addBook(book);
     }
