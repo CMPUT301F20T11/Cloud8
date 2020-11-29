@@ -46,10 +46,5 @@ public class NotifTest {
     public void Total() {
         assertEquals(notifCount.getTotal(), accepted+incoming);
     }
-
-    @Test
-    public void Notification() {
-        assertEquals(notifCount.getTotal(), accepted+incoming);
-    }
-
+    
 }
