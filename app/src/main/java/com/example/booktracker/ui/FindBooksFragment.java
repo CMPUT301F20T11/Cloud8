@@ -29,6 +29,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -66,7 +68,7 @@ public class FindBooksFragment extends Fragment implements Callback {
         viewButton = view.findViewById(R.id.view_button);
         setViewListener();
         setSelectListener();
-
+        query.getBooks(instance, bookDataList);
         SearchView searchView = view.findViewById(R.id.book_search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -93,7 +95,6 @@ public class FindBooksFragment extends Fragment implements Callback {
                 updateQuery.incrementNotif(request.getToEmail(),"incomingCount");
                 request.sendRequest();
                 bookDataList = new ArrayList<>();
-                query.getBooks(instance, bookDataList);
             } else {
                 Toast.makeText(v.getContext(), "No book selected", Toast.LENGTH_SHORT).show();
             }
@@ -123,10 +124,25 @@ public class FindBooksFragment extends Fragment implements Callback {
         });
     }
 
+    /**
+     *This will sort bookDataList by title
+     */
+    private void sortBookList(){
+        Collections.sort(bookDataList, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+                // return Integer.valueOf(obj1.empId).compareTo(Integer.valueOf(obj2.empId)); // To compare integer values
+
+                // ## Descending order
+                // return obj2.firstName.compareToIgnoreCase(obj1.firstName); // To compare string values
+                // return Integer.valueOf(obj2.empId).compareTo(Integer.valueOf(obj1.empId)); // To compare integer values
+            }
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();
-        query.getBooks(instance, bookDataList);
         home.notifRefresh();
     }
     private ArrayList<String> lowerCaseString(List<String> arg){
@@ -157,6 +173,12 @@ public class FindBooksFragment extends Fragment implements Callback {
     }
 
     public void executeCallback() {
+        Collections.sort(bookDataList, new Comparator<Book>(){
+            public int compare(Book book1, Book book2) {
+                // ## Ascending order
+                return book1.getTitle().compareToIgnoreCase(book2.getTitle()); // To compare string values
+            }
+        });
         if (searchText == null) {
             updateBookList(bookDataList);
         } else {
