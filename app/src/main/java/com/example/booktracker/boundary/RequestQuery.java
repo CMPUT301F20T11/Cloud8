@@ -39,7 +39,7 @@ public class RequestQuery {
     private int outputSize;
 
     /**
-     * constructor will connect to database and initialized document
+     * Constructor will connect to database and initialized document
      * pertaining to user
      *
      * @param userEmail this must be a valid email that is in the database
@@ -58,9 +58,9 @@ public class RequestQuery {
     }
 
     /**
-     * turn the requested book into a book object
-     * @param res result of get query
-     * @param emptyBook book to be filled up by data attained from query
+     * Turn the requested book into a book object
+     * @param res Res is the result of get query
+     * @param emptyBook Is the book to be filled up by data attained from query
      */
     private void parseBook(DocumentSnapshot res, Book emptyBook) {
         if (res.get("image_uri") != null) {

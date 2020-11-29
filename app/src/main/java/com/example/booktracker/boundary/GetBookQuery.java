@@ -64,7 +64,7 @@ public class GetBookQuery extends BookQuery {
     /**
      * This will turn the document that resulted from a query to a Book object
      * @param document Document from firestore query
-     * @return
+     * @return Returns the resulting book object
      */
     private Book docToBook(DocumentSnapshot document) {
         List<String> authors = (List<String>) document.get("author");
@@ -186,7 +186,7 @@ public class GetBookQuery extends BookQuery {
     }
 
     /**
-     * get will get all contents of the specified collection reference and output it
+     * getAvailable will get all contents of the specified collection reference and output it
      * @param email email of the user who owns the book collection
      */
     public void getAvailable(String email) {
