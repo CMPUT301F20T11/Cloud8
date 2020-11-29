@@ -68,11 +68,6 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
 
     private Button borrowButton, giveButton, returnButton, receiveButton;
 
-    /**
-     * query database for book data
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -215,7 +210,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      * Helper method to set the contents of the text views to the contents of
      * the book
      *
-     * @param book
+     * @param book Book is the book we would like to display
      */
     private void updateTextViews(Book book) {
         // uses the first author
@@ -292,7 +287,7 @@ public class ViewBookActivity extends AppCompatActivity implements View.OnClickL
      * to the ID of the button
      * which has been pressed.
      *
-     * @param v
+     * @param v V is the view that has been clicked on
      */
     @Override
     public void onClick(View v) {

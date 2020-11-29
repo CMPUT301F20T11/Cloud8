@@ -208,8 +208,8 @@ public class AddBookActivity extends AppCompatActivity implements Callback,
     }
 
     /**
-     * Uploads the book to the Cloud Firestore and
-     * Uploads the photo to the Cloud Storage
+     * Uploads the book to Cloud Firestore and
+     * Uploads the photo to Cloud Storage
      *
      * @param newBook
      */
