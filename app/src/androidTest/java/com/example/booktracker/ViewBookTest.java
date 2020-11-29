@@ -77,7 +77,7 @@ public class ViewBookTest {
      * Test if correct information is displayed in ViewBookActivity.
      */
     private void testView() {
-        assertTrue("title cant be found", solo.searchText("/pol/ Manifesto"));
+        assertTrue("Title cant be found", solo.searchText("/pol/ Manifesto"));
         assertTrue("Author cannot be found", solo.searchText("Karl Pogs"));
         assertTrue("Isbn cannot be found", solo.searchText("6980671678814"));
         assertTrue("Description cannot be found", solo.searchText("Test book"));
