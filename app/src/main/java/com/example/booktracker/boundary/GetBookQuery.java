@@ -117,6 +117,8 @@ public class GetBookQuery extends BookQuery {
                                                 }else {
                                                     outputBooks.add(docToBook(doc));
                                                 }
+
+
                                             } else {
                                                 reference.document(bookRef.getId()).delete();
                                             }
@@ -128,61 +130,6 @@ public class GetBookQuery extends BookQuery {
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         if (querySize == outputBooks.size() && outputBooks.size() > 0) {
                                             bookList.displayBooksStatus(status, outputBooks);
-                                            outputBooks = new ArrayList<>();
-                                            // empty outputBooks to clear results from last query
-                                        } else {
-                                            // in case there no matches clear the current
-                                            // list
-                                            bookList.clearList();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-                        throw new RuntimeException("Error getting books");
-                    }
-
-                });
-    }
-    public void getPending(String user) {
-        CollectionReference reference = db.collection("users").document(user).collection("accepted");
-        reference.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        int querySize = task.getResult().size();
-                        outputBooks = new ArrayList<>();
-                        counter = 0;
-                        for (QueryDocumentSnapshot document :
-                                Objects.requireNonNull(task.getResult())) {
-                            DocumentReference bookRef = (DocumentReference) document.get("bookReference");
-                            if (bookRef != null){
-                                bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot doc = task.getResult();
-                                        if (task.isSuccessful()){
-                                            counter++;
-                                            if (doc.exists()) {
-                                                if (doc.getString("pendingRequest") != null && doc.getString("pendingRequest").equals("yes")){
-                                                    Book book = docToBook(doc);
-                                                    book.setStatus("pending");
-                                                    outputBooks.add(book);
-                                                }else{
-                                                    outputBooks.add(docToBook(doc));
-                                                }
-
-                                            } else {
-                                                reference.document(bookRef.getId()).delete();
-                                            }
-                                        }
-                                    }
-                                }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    // every step of the loop check if the list of books is full
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (querySize == counter && outputBooks.size() > 0) {
-                                            bookList.displayBooksList(outputBooks);
                                             outputBooks = new ArrayList<>();
                                             // empty outputBooks to clear results from last query
                                         } else {
