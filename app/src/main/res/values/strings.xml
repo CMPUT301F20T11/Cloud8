@@ -15,6 +15,7 @@
     <string name="menu_accepted">Accepted Requests</string>
     <string name="menu_requested">Requested Books</string>
     <string name="view_pickup_location">View Pickup Location</string>
+    <string name="cancel_request">Cancel Request</string>
     <string name="request_text">Request</string>
     <string name="accept_text">Accept</string>
     <string name="decline_text">Decline</string>

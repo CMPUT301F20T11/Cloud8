@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
@@ -31,6 +32,7 @@ public class GetBookQuery extends BookQuery {
     private BookCollection bookList;
     private Context context;
     private int counter = 0;
+    private String userEmail;
 
     /**
      * This will call its parent constructor from BookQuery
@@ -43,6 +45,7 @@ public class GetBookQuery extends BookQuery {
         super(userEmail);
         bookList = argBookList;
         context = argContext;
+        this.userEmail = email;
     }
 
     /**
@@ -97,21 +100,29 @@ public class GetBookQuery extends BookQuery {
                     if (task.isSuccessful()) {
                         int querySize = task.getResult().size();
                         outputBooks = new ArrayList<>();
+                        counter = 0;
                         for (QueryDocumentSnapshot document :
                                 Objects.requireNonNull(task.getResult())) {
                             DocumentReference bookRef = (DocumentReference) document.get("bookReference");
+
                             if (bookRef != null){
                                 bookRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         DocumentSnapshot doc = task.getResult();
                                         if (task.isSuccessful()){
+                                            counter++;
                                             if (doc.exists()) {
                                                 if (status == "requested"){
                                                     if (doc.getString("status").equals("available")){
                                                         outputBooks.add(docToBook(doc));
                                                     }else{
                                                         reference.document(doc.getId()).delete();
+                                                    }
+                                                }else if(status.equals("accepted")){
+                                                    String temp = getEmail((HashMap<String, String>) doc.get("owner"));
+                                                    if (!getEmail((HashMap<String, String>) doc.get("owner")).equals(userEmail)){
+                                                        outputBooks.add(docToBook(doc));
                                                     }
                                                 }else {
                                                     outputBooks.add(docToBook(doc));
@@ -127,14 +138,19 @@ public class GetBookQuery extends BookQuery {
                                     // every step of the loop check if the list of books is full
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (querySize == outputBooks.size() && outputBooks.size() > 0) {
+                                        if (querySize == counter && outputBooks.size() > 0) {
                                             bookList.displayBooksStatus(status, outputBooks);
                                             outputBooks = new ArrayList<>();
                                             // empty outputBooks to clear results from last query
                                         } else {
                                             // in case there no matches clear the current
                                             // list
-                                            bookList.clearList();
+                                            if (status.equals("accepted")){
+
+                                            }else{
+                                                bookList.clearList();
+                                            }
+
                                         }
                                     }
                                 });
@@ -317,7 +333,18 @@ public class GetBookQuery extends BookQuery {
         }
         return out;
     }
-
+    /**
+     * This will get the email of the user that is stored in firestore
+     * @param owner
+     * @return
+     */
+    private String getEmail(HashMap<String, String> owner) {
+        String email = "";
+        for (Map.Entry<String, String> entry: owner.entrySet()){
+            email = entry.getKey();
+        }
+        return email;
+    }
     /**
      * getAll will get all the borrowed and owned books
      * @param email email of user that owns the collection

@@ -56,7 +56,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_blue_round"
-                android:text="Cancel accept"
+                android:text="Cancel\nAccepted"
                 android:textColor="@color/white" />
 
         </LinearLayout>
