@@ -35,25 +35,26 @@ Check out the [wiki](https://github.com/CMPUT301F20T11/Cloud8/wiki) for a more i
 
 
 <p align="center">
-	<img width="200" src="doc/images/UI/Accepted Requests.png"/>
+	<img width="200" src="doc/images/UI/Login.png"/>
+	<img width="200" src="doc/images/UI/Sign Up.png"/>
 	<img width="200" src="doc/images/UI/Add Book.png"/>
-	<img width="200" src="doc/images/UI/Borrowed Books.png"/>
 	<img width="200" src="doc/images/UI/Edit Book.png"/>
-	<img width="200" src="doc/images/UI/Edit Profile.png"/>
 	<img width="200" src="doc/images/UI/Filter.png"/>
+	<img width="200" src="doc/images/UI/MyBooks.png"/>
+	<img width="200" src="doc/images/UI/Borrowed Books.png"/>
 	<img width="200" src="doc/images/UI/Find Books.png"/>
 	<img width="200" src="doc/images/UI/Incoming Requests.png"/>
-	<img width="200" src="doc/images/UI/Login.png"/>
-	<img width="200" src="doc/images/UI/MyBooks.png"/>
+	<img width="200" src="doc/images/UI/Accepted Requests.png"/>
+	<img width="200" src="doc/images/UI/Requested.png"/>
 	<img width="200" src="doc/images/UI/NavDrawer.png"/>
 	<img width="200" src="doc/images/UI/Profile.png"/>
-	<img width="200" src="doc/images/UI/Requested.png"/>
+	<img width="200" src="doc/images/UI/Edit Profile.png"/>
 	<img width="200" src="doc/images/UI/Scan.png"/>
-	<img width="200" src="doc/images/UI/SetGeo.png"/>
-	<img width="200" src="doc/images/UI/Sign Up.png"/>
 	<img width="200" src="doc/images/UI/View Book.png"/>
 	<img width="200" src="doc/images/UI/View User.png"/>
+	<img width="200" src="doc/images/UI/SetGeo.png"/>
 	<img width="200" src="doc/images/UI/ViewGeo.png"/>
+	
 </p>
 
 ## License
