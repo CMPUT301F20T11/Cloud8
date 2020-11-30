@@ -35,7 +35,7 @@ Check out the [wiki](https://github.com/CMPUT301F20T11/Cloud8/wiki) for a more i
 
 
 <p align="center">
-	<img width="200" src="doc/images/UI/Accepted Results.png"/>
+	<img width="200" src="doc/images/UI/Accepted Requests.png"/>
 </p>
 
 ## License
