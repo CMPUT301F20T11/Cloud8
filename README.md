@@ -33,5 +33,10 @@ Check out the [wiki](https://github.com/CMPUT301F20T11/Cloud8/wiki) for a more i
 <tr>
 </table>
 
+
+<p align="center">
+	<img width="200" src="doc/images/ui/Accepted Results.png"/>
+</p>
+
 ## License
 [MIT License](https://github.com/CMPUT301F20T11/Cloud8/blob/master/LICENSE)
