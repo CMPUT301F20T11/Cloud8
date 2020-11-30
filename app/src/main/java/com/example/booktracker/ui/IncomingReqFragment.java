@@ -194,7 +194,7 @@ public class IncomingReqFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void displayQueryResult(String result){
-        Toast.makeText(instance.getContext(), queryOutput.getOutput(), Toast.LENGTH_LONG).show();
+        Toast.makeText(instance.getContext(), "Book Accepted", Toast.LENGTH_LONG).show();
     }
 
     @Override

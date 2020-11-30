@@ -73,7 +73,7 @@ public class ScanActivity extends AppCompatActivity {
                             Intent intent = new Intent(ref,ViewBookActivity.class);
                             intent.putExtra(EXTRA_MESSAGE,result.getContents());
                             startActivity(intent);
-
+                            finish();
                         }
                     }
                 });
