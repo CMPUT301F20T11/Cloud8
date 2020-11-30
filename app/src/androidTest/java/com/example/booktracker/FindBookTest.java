@@ -110,7 +110,7 @@ public class FindBookTest {
         solo.clickOnImageButton(0);
         solo.clickOnText("Find Books");
         SearchView view = (SearchView) solo.getView(R.id.book_search);
-        view.setQuery("Dank",true);
+        view.setQuery("/pol/ Manifesto",true);
         assertTrue("Book not found", solo.searchText("/pol/ Manifesto"));
     }
 

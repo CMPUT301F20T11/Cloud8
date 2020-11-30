@@ -38,6 +38,7 @@ public class RequestedFragment extends Fragment {
     private Book selected_book = null;
     private DocumentSnapshot userDoc;
     private DeleteBookQuery deleteBookQuery;
+    private HomeActivity home;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

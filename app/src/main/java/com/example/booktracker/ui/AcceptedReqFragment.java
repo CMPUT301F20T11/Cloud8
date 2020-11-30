@@ -75,6 +75,7 @@ public class AcceptedReqFragment extends Fragment implements Callback {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                deleteBookQuery.deleteBookAccepted(selected_book.getIsbn(),email);
                 deleteBookQuery.deleteBookAccepted(selected_book.getIsbn(),selected_book.getOwnerEmail());
                 deleteBookQuery.deletePotentialBorrower(selected_book);
                 bookCollection.deleteBook(selected_book);
